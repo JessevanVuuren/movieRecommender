@@ -139,7 +139,7 @@ export default class MovieList extends React.Component {
 
               onLayout={this.props.footerPos}
               
-              style={{color:"#fff"}}>hello world</Text>
+              style={{color:"#fff", textAlign:"center"}}>loading...</Text>
             )
           }}/>
       </View>

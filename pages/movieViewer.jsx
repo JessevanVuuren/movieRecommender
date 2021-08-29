@@ -1,4 +1,5 @@
-import { StyleSheet, View, TouchableOpacity, Text, Animated, ScrollView } from "react-native"
+import { StyleSheet, View, TouchableOpacity, Text, Animated } from "react-native"
+import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import React, { useState, useRef, useEffect } from "react"
 import ProgressCircle from 'react-native-progress-circle'
 import MovieList from '../components/movieList';
@@ -13,7 +14,7 @@ const HEADER_MIN_HEIGHT = 0;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 
-const Movie = ({route, navigation}) => {
+const Movie = ({ route, navigation }) => {
 
   const [object] = useState(route.params.jsonObject)
   const [movieInfo, setMovieInfo] = useState(Object)
@@ -22,7 +23,7 @@ const Movie = ({route, navigation}) => {
   const [movieInfoDone, setMovieInfoDone] = useState(false)
   const [toWatchDone, setToWatchDone] = useState(false)
 
-  const [scrollHeight, setScrollHeight] = useState(1000)
+  const [scrollHeight, setScrollHeight] = useState(50000)
 
 
   useEffect(() => {
@@ -73,7 +74,7 @@ const Movie = ({route, navigation}) => {
         <View style={styles.purpleTop} />
         <View style={styles.topFixer}>
 
-          <Text fontSi={35} >{object.title}</Text>
+          <AutoSizeText fontSize={32} numberOfLines={1} style={styles.titleText} mode={ResizeTextMode.max_lines}> {object.title} </AutoSizeText>
 
           <TouchableOpacity style={styles.addButton}>
             <View style={styles.movieRating}>
@@ -135,10 +136,10 @@ const Movie = ({route, navigation}) => {
 
             </View>
           ) : null}
-          
+
           {screenColor == 2 ? (
-            <View style={[moviesStyles.container, {height:scrollHeight}]}>
-              <MovieList list="recommended" id={object.id} navigation={navigation} footerPos={(e) => { setScrollHeight(e.nativeEvent.layout.y + 1000) }} />
+            <View style={[moviesStyles.container, { height: scrollHeight }]}>
+              <MovieList list="recommended" id={object.id} navigation={navigation} footerPos={(e) => { setScrollHeight(e.nativeEvent.layout.y) }} />
             </View>
           ) : null}
 
@@ -210,8 +211,8 @@ const infoStyles = StyleSheet.create({
 
 const moviesStyles = StyleSheet.create({
   container: {
-    flex:1,
-    width:"100%",
+    flex: 1,
+    width: "100%",
   },
 })
 const castStyles = StyleSheet.create({
@@ -225,6 +226,12 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#272727",
     flex: 1
+  },
+  titleText: {
+    color: "#fff",
+    textAlign: "center",
+    fontWeight: "bold",
+    marginTop: 5
   },
   mainImg: {
     height: HEADER_MAX_HEIGHT,
@@ -244,7 +251,7 @@ const styles = StyleSheet.create({
   addButton: {
     marginRight: "3.33%",
     marginLeft: "3.33%",
-    marginTop: "5%",
+    marginTop: "1%",
     height: 50,
     borderRadius: 100,
     borderStyle: "solid",
