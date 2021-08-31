@@ -96,9 +96,9 @@ export default class MovieList extends React.Component {
   }
 
 
-  moveToMovie = (movie) => {
+  moveToMovie = async (movie) => {
     console.log(movie.title + ", " + movie.id)
-    this.props.navigation.navigate("Movie", { jsonObject: movie })
+    this.props.navigation.push("Movie", { jsonObject: movie })
   }
 
   rowRenderer = (type, data) => {
