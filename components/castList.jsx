@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 
 
 const getCastInfo = "https://api.themoviedb.org/3/movie/588228/credits?api_key=648d096ec16e3f691572593e44644d30&language=en-US"
+const baseImageLink = "https://image.tmdb.org/t/p/w500"
 
 export default class MovieList extends React.Component {
 
@@ -21,7 +22,7 @@ export default class MovieList extends React.Component {
       switch (type) {
         case 'NORMAL':
           dim.width = Dimensions.get('window').width;
-          dim.height = 100
+          dim.height = 130
           break;
       };
     })
@@ -29,39 +30,43 @@ export default class MovieList extends React.Component {
 
   componentDidMount() {
     fetch(getCastInfo)
-    .then((res) => res.json())
-    .then((data) => {
-      let dataList = []
+      .then((res) => res.json())
+      .then((data) => {
+        let dataList = []
 
-      for (let i = 0; i < data.cast.length; i++) {
-        dataList.push({
-          type: "NORMAL",
-          item: data.cast[i]
+        for (let i = 0; i < data.cast.length; i++) {
+          dataList.push({
+            type: "NORMAL",
+            item: data.cast[i]
+          })
+        }
+
+        this.setState({
+          list: this.state.list.cloneWithRows(dataList),
         })
-      }
-
-      this.setState({
-        list: this.state.list.cloneWithRows(dataList),
       })
-    })
-    .catch((error) => alert(error))
+      .catch((error) => alert(error))
   }
 
 
-  moveToMovie = async (movie) => {
-    console.log(movie.title + ", " + movie.id)
-    this.props.navigation.push("Movie", { jsonObject: movie })
+  moveToMovie = async (name) => {
+    console.log(name.name + ", " + name.id)
+    //this.props.navigation.push("Cast", { jsonObject: movie })
   }
 
   rowRenderer = (type, data) => {
-    const { name } = data.item;
+    const { name, profile_path, character } = data.item;
     return (
 
       <View style={styles.listItem}>
-        <Text>Name: { name }</Text>
-        {/* <TouchableOpacity style={styles.imageTouch} onPress={() => { this.moveToMovie(movieOne) }}>
-          <Image style={{ height: "100%", width: "100%" }} source={{ uri: baseImageLink + movieOne.poster_path }} />
-        </TouchableOpacity> */}
+        <TouchableOpacity style={styles.imageTouch} onPress={() => { this.moveToMovie(data.item) }}>
+          <View>
+            <Text>Name: {name}</Text>
+            <Text>Character: {character}</Text>
+
+          </View>
+          <Image style={{ height: "100%", width: "100%" }} source={{ uri: baseImageLink + profile_path }} />
+        </TouchableOpacity>
       </View>
     )
   }
@@ -75,7 +80,7 @@ export default class MovieList extends React.Component {
           rowRenderer={this.rowRenderer}
           dataProvider={this.state.list}
           layoutProvider={this.layoutProvider}
-          renderFooter={() => { return ( <Text onLayout={this.props.footerPos} style={{color:"#fff", textAlign:"center"}}>loading...</Text> ) }}/>
+          renderFooter={() => { return (<Text onLayout={this.props.footerPos} style={{ color: "#fff", textAlign: "center" }}>loading...</Text>) }} />
       </View>
     );
   }
@@ -83,11 +88,14 @@ export default class MovieList extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex:1
+    flex: 1
   },
   listItem: {
-    width:"100%"
-
-
+    width: "100%",
+    marginHorizontal: 15,
+    marginBottom: 10
   },
+  imageTouch: {
+    width: 80,
+  }
 });
