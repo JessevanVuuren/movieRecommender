@@ -3,6 +3,7 @@ import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import React, { useState, useRef, useEffect } from "react"
 import ProgressCircle from 'react-native-progress-circle'
 import MovieList from '../components/movieList';
+import CastList from '../components/castList';
 
 
 const baseUrl = "https://image.tmdb.org/t/p/w500/"
@@ -23,7 +24,8 @@ const Movie = ({ route, navigation }) => {
   const [movieInfoDone, setMovieInfoDone] = useState(false)
   const [toWatchDone, setToWatchDone] = useState(false)
 
-  const [scrollHeight, setScrollHeight] = useState(50000)
+  const [movieScrollHeight, setMovieScrollHeight] = useState(50000)
+  const [castScrollHeight, setCastScrollHeight] = useState(50000)
 
 
   useEffect(() => {
@@ -138,16 +140,14 @@ const Movie = ({ route, navigation }) => {
           ) : null}
 
           {screenColor == 2 ? (
-            <View style={[moviesStyles.container, { height: scrollHeight }]}>
-              <MovieList list="recommended" id={object.id} navigation={navigation} footerPos={(e) => { setScrollHeight(e.nativeEvent.layout.y) }} />
+            <View style={[styles.ScrollStyles, { height: movieScrollHeight }]}>
+              <MovieList list="recommended" id={object.id} navigation={navigation} footerPos={(e) => { setMovieScrollHeight(e.nativeEvent.layout.y) }} />
             </View>
           ) : null}
 
           {screenColor == 3 ? (
-            <View style={castStyles.container}>
-              <Text>
-                Cast
-              </Text>
+            <View style={[styles.ScrollStyles, { height: castScrollHeight }]}>
+              <CastList id={object.id} navigation={navigation} footerPos={(e) => { setCastScrollHeight(e.nativeEvent.layout.y) }}/>
             </View>
           ) : null}
 
@@ -157,6 +157,7 @@ const Movie = ({ route, navigation }) => {
     </View>
   )
 }
+
 
 const infoStyles = StyleSheet.create({
   container: {
@@ -207,19 +208,6 @@ const infoStyles = StyleSheet.create({
   },
 })
 
-
-
-const moviesStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-  },
-})
-const castStyles = StyleSheet.create({
-  container: {
-    alignSelf: "center",
-  },
-})
 
 
 const styles = StyleSheet.create({
@@ -306,6 +294,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center"
+  },
+  ScrollStyles: {
+    flex: 1,
+    marginTop: 40,
+    width: "100%"
   },
 })
 

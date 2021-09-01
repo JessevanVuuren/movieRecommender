@@ -133,15 +133,7 @@ export default class MovieList extends React.Component {
           onEndReached={this.increaseList}
           onEndReachedThreshold={300} 
           onScroll={this.props.onScrollList}  
-          renderFooter={() => {
-            return (
-              <Text 
-
-              onLayout={this.props.footerPos}
-              
-              style={{color:"#fff", textAlign:"center"}}>loading...</Text>
-            )
-          }}/>
+          renderFooter={() => { return ( <Text onLayout={this.props.footerPos} style={{color:"#fff", textAlign:"center"}}>loading...</Text> ) }}/>
       </View>
     );
   }
