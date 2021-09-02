@@ -13,7 +13,7 @@ const PopularMovieLink = "https://api.themoviedb.org/3/movie/popular?api_key=648
 
 const simList = ["https://api.themoviedb.org/3/movie/", "/similar?api_key=648d096ec16e3f691572593e44644d30&language=en-US&page="]
 const RecommendedMovie = ["https://api.themoviedb.org/3/movie/", "/recommendations?api_key=648d096ec16e3f691572593e44644d30&language=en-US&page="]
-const baseImageLink = "https://image.tmdb.org/t/p/w500"
+const baseImageLink = "https://image.tmdb.org/t/p/w342"
 
 export default class MovieList extends React.Component {
 
@@ -142,12 +142,11 @@ export default class MovieList extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: "3.33%",
   },
 
   imageTouch: {
     marginHorizontal:"1%",
-    marginBottom: "2%",
+    marginTop: "2%",
     width: "31.333%",
 
   },

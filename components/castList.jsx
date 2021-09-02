@@ -4,7 +4,7 @@ import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview
 import React, { Component } from 'react';
 
 
-const getCastInfo = "https://api.themoviedb.org/3/movie/588228/credits?api_key=648d096ec16e3f691572593e44644d30&language=en-US"
+const getCastInfo = ["https://api.themoviedb.org/3/movie/", "/credits?api_key=648d096ec16e3f691572593e44644d30&language=en-US"]
 const baseImageLink = "https://image.tmdb.org/t/p/w500"
 
 export default class MovieList extends React.Component {
@@ -14,6 +14,7 @@ export default class MovieList extends React.Component {
 
     this.state = {
       list: new DataProvider((r1, r2) => r1 !== r2),
+      doneLoading: false,
     };
 
     this.layoutProvider = new LayoutProvider((i) => {
@@ -22,14 +23,15 @@ export default class MovieList extends React.Component {
       switch (type) {
         case 'NORMAL':
           dim.width = Dimensions.get('window').width;
-          dim.height = 130
+          dim.height = 140
           break;
       };
     })
   }
 
   componentDidMount() {
-    fetch(getCastInfo)
+    this.setState({doneLoading:false})
+    fetch(getCastInfo[0] + this.props.id + getCastInfo[1])
       .then((res) => res.json())
       .then((data) => {
         let dataList = []
@@ -46,6 +48,7 @@ export default class MovieList extends React.Component {
         })
       })
       .catch((error) => alert(error))
+      .finally(() => {this.setState({doneLoading:true})})
   }
 
 
@@ -59,20 +62,20 @@ export default class MovieList extends React.Component {
     return (
 
       <View style={styles.listItem}>
-        <TouchableOpacity style={styles.imageTouch} onPress={() => { this.moveToMovie(data.item) }}>
-          <View>
-            <Text>Name: {name}</Text>
-            <Text>Character: {character}</Text>
+        <TouchableOpacity onPress={() => { this.moveToMovie(data.item) }}>
+          <Image style={{ height: 130, width: 90 }} source={{ uri: baseImageLink + profile_path }} />
+          <View style={styles.textView}>
+            <Text style={[styles.castName, {color:"#fff"}]}>{name}</Text>
+            <Text style={[styles.castName, {color:"#8226FB"}]}>{character}</Text>
 
           </View>
-          <Image style={{ height: "100%", width: "100%" }} source={{ uri: baseImageLink + profile_path }} />
         </TouchableOpacity>
       </View>
     )
   }
 
   render() {
-    if (this.state.list.length <= 0) return null
+    if(!this.state.doneLoading) return null
     return (
       <View style={styles.container} >
         <RecyclerListView
@@ -87,6 +90,14 @@ export default class MovieList extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  castName:{
+    fontSize: 17,
+    fontWeight:"bold"
+  },
+  textView:{
+    position:"absolute",
+    marginLeft:100
+  },
   container: {
     flex: 1
   },
@@ -97,5 +108,6 @@ const styles = StyleSheet.create({
   },
   imageTouch: {
     width: 80,
+    
   }
 });
