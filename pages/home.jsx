@@ -9,10 +9,18 @@ const Home = ({ navigation }) => {
   return (
 
     <View style={styles.container}>
-      <View style={styles.searchBarView}>
-        <Text style={{fontSize:40, marginLeft:8, color:"#a260f7"}}>☰</Text>
-        <TextInput style={styles.searchInput} />
+      <View style={styles.mainMenu}>
+        <TouchableOpacity style={styles.menuHamburger} onPress={() => navigation.openDrawer()}>
+          <Text style={{fontSize:35, color:"#a260f7"}}>☰</Text>
+        </TouchableOpacity>
 
+        <TouchableOpacity style={styles.menuLogo}>
+          <Text style={{fontSize:20, color:"#a260f7"}}>Movie Recommender</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.menuSearch} onPress={() => navigation.navigate("Search")} >
+          <Text style={{fontSize:28, color:"#a260f7"}}>🔎</Text>
+        </TouchableOpacity>
       </View>
 
 
@@ -26,20 +34,24 @@ export { Home }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop:22,
     backgroundColor: "#272727",
+    marginTop:22,
     flex:1
   },
-  searchBarView:{
-    height:50,
+  mainMenu:{
+    justifyContent:"space-between",
     backgroundColor:"#8226FB",
-    justifyContent:"center"
+    alignItems:"center",
+    flexDirection:"row",
+    height:50,
   },
-  searchInput:{
-    backgroundColor:"#a260f7",
-    position:"absolute",
-    width:"87%",
-    height:35,
-    marginLeft:50,
+  menuHamburger:{
+    margin:10
+  },
+  menuLogo:{
+
+  },
+  menuSearch:{
+    margin:10
   }
 });

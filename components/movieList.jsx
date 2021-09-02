@@ -88,17 +88,12 @@ export default class MovieList extends React.Component {
     })
   }
 
-  increaseList = () => {
-    this.loadMovieData()
-  }
-  componentDidMount() {
-    this.loadMovieData()
-  }
-
+  increaseList() { this.loadMovieData() }
+  componentDidMount() { this.loadMovieData() }
 
   moveToMovie = async (movie) => {
     console.log(movie.title + ", " + movie.id)
-    this.props.navigation.push("Movie", { jsonObject: movie })
+    this.props.navigation.push("Movie", { screen:"Movies", params: {jsonObject: movie }})
   }
 
   rowRenderer = (type, data) => {
