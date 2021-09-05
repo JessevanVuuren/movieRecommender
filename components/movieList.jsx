@@ -1,17 +1,14 @@
-
 import { StyleSheet, View, Dimensions, Image, TouchableOpacity, Text } from 'react-native';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import React, { Component } from 'react';
+import Colors from '../src/style';
 
-import InView from 'react-native-component-inview'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const ratio = SCREEN_WIDTH / 500
 
 const PopularMovieLink = "https://api.themoviedb.org/3/movie/popular?api_key=648d096ec16e3f691572593e44644d30&language=en-US&page="
 
-
-const simList = ["https://api.themoviedb.org/3/movie/", "/similar?api_key=648d096ec16e3f691572593e44644d30&language=en-US&page="]
 const RecommendedMovie = ["https://api.themoviedb.org/3/movie/", "/recommendations?api_key=648d096ec16e3f691572593e44644d30&language=en-US&page="]
 const baseImageLink = "https://image.tmdb.org/t/p/w342"
 
@@ -25,6 +22,7 @@ export default class MovieList extends React.Component {
       leftOverMovie: [],
       megaList: [],
       pageInt: 0,
+      disableFetching:false
     };
 
     this.layoutProvider = new LayoutProvider((i) => {
@@ -41,11 +39,12 @@ export default class MovieList extends React.Component {
 
   loadMovieData = () => {
     let dataList = []
+    if(this.state.disableFetching) return
     this.setState({ pageInt: this.state.pageInt + 1 }, () => {
 
-      if (this.props.list == "popular") { url = PopularMovieLink }
-      if (this.props.list == "recommended") { url = RecommendedMovie[0] + this.props.id + RecommendedMovie[1] }
-
+      if (this.props.list == "popular") url = PopularMovieLink
+      if (this.props.list == "recommended") url = RecommendedMovie[0] + this.props.id + RecommendedMovie[1]
+      console.log(url + this.state.pageInt)
       fetch(url + this.state.pageInt)
         .then((res) => res.json())
         .then((newData) => { dataList = newData.results })
@@ -60,12 +59,17 @@ export default class MovieList extends React.Component {
 
           this.state.leftOverMovie.length = 0
 
+          console.log(dataList.length)
+
           for (let i = 0; i < dataList.length; i += 3) {
 
             if (i + 2 >= dataList.length || i + 1 >= dataList.length) {
               if (i == dataList.length - 2) this.state.leftOverMovie.push(dataList[i], dataList[i + 1])
               if (i == dataList.length - 1) this.state.leftOverMovie.push(dataList[i])
-              break
+              if(this.props.list == "recommended")
+                this.setState({disableFetching: true})
+              else
+                break
             }
 
             compressList.push({
@@ -83,17 +87,18 @@ export default class MovieList extends React.Component {
             megaList: [...this.state.megaList, ...compressList]
           })
 
-          console.log("loaded new data form page: " + this.state.pageInt + ", added: " + this.state.leftOverMovie.length + " in cache")
+          console.log("loaded new data form page: " + this.state.pageInt + ", " + this.state.megaList.length + " in megalist Length")
         })
     })
   }
 
-  increaseList() { this.loadMovieData() }
+  increaseList = () => { this.loadMovieData() }
   componentDidMount() { this.loadMovieData() }
 
   moveToMovie = async (movie) => {
     console.log(movie.title + ", " + movie.id)
-    this.props.navigation.push("Movie", { screen:"Movies", params: {jsonObject: movie }})
+    // this.props.navigation.push("MovieScreen", { screen:"Movies", params: {jsonObject: movie }})
+    this.props.navigation.push("MovieScreen", {jsonObject: movie })
   }
 
   rowRenderer = (type, data) => {
@@ -117,7 +122,14 @@ export default class MovieList extends React.Component {
   }
 
   render() {
-    if (this.state.megaList.length <= 0) return null
+    if (this.state.megaList.length <= 0) {
+      return (
+        <View style={styles.movieLoading}>
+          <Text style={styles.movieLoadingText}>{this.props.list == "recommended" ? "No movies where found, please come back later or add to watchlist to keep you posted" : "loading..."}</Text>
+            
+        </View>
+      ) 
+    }
     return (
       <View style={styles.container} >
         <RecyclerListView
@@ -128,7 +140,7 @@ export default class MovieList extends React.Component {
           onEndReached={this.increaseList}
           onEndReachedThreshold={300} 
           onScroll={this.props.onScrollList}  
-          renderFooter={() => { return ( <Text onLayout={this.props.footerPos} style={{color:"#fff", textAlign:"center"}}>loading...</Text> ) }}/>
+          renderFooter={() => { return ( <Text onLayout={this.props.footerPos} style={{color:Colors.textColor, textAlign:"center"}}></Text> ) }}/>
       </View>
     );
   }
@@ -138,18 +150,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
   imageTouch: {
     marginHorizontal:"1%",
     marginTop: "2%",
     width: "31.333%",
-
   },
   listItem: {
     flexDirection: 'row',
     flex: 1,
   },
+  movieLoading:{
+    height:100,
+    width:"100%",
+    justifyContent:"center",
+    alignItems:"center"
+  },
+  movieLoadingText:{
+    color:Colors.textColor,
+    textAlign:"center"
+  }
 });
+
+
+
+
+
+
+
+
+
+
 
 
 // black widow 497698

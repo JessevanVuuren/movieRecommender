@@ -35,7 +35,8 @@
     "react-navigation-drawer": "^2.7.1",
     "react-navigation-tabs": "^2.11.1",
     "recyclerlistview": "^3.0.5",
-    "recyclerlistview-gridlayoutprovider": "^1.0.1"
+    "recyclerlistview-gridlayoutprovider": "^1.0.1",
+    "expo-constants": "~11.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

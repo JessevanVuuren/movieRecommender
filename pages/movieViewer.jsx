@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react"
 import ProgressCircle from 'react-native-progress-circle'
 import MovieList from '../components/movieList';
 import CastList from '../components/castList';
-
+import Colors from '../src/style';
 
 const baseUrl = "https://image.tmdb.org/t/p/w500/"
 const infoUrl = ["https://api.themoviedb.org/3/movie/", "?api_key=648d096ec16e3f691572593e44644d30&language=en-US"]
@@ -24,8 +24,8 @@ const Movie = ({ route, navigation }) => {
   const [movieInfoDone, setMovieInfoDone] = useState(false)
   const [toWatchDone, setToWatchDone] = useState(false)
 
-  const [movieScrollHeight, setMovieScrollHeight] = useState(50000)
-  const [castScrollHeight, setCastScrollHeight] = useState(50000)
+  const [movieScrollHeight, setMovieScrollHeight] = useState(5000)
+  const [castScrollHeight, setCastScrollHeight] = useState(5000)
 
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const Movie = ({ route, navigation }) => {
     extrapolate: 'clamp',
   });
 
-  const getBgColor = (button) => { return button == screenColor ? "#8226FB" : "#4E4E4E" }
+  const getBgColor = (button) => { return button == screenColor ? Colors.mainColor : "#4E4E4E" }
   const infoButtons = (button) => { setInfoColor(button) }
 
   return (
@@ -76,7 +76,7 @@ const Movie = ({ route, navigation }) => {
         <View style={styles.purpleTop} />
         <View style={styles.topFixer}>
 
-          <AutoSizeText fontSize={32} numberOfLines={1} style={styles.titleText} mode={ResizeTextMode.max_lines}> {object.title} </AutoSizeText>
+          <AutoSizeText fontSize={32} numberOfLines={1} style={[styles.titleText, {marginVertical:object.title.length * 0.3 + 5}]} mode={ResizeTextMode.max_lines}> {object.title} </AutoSizeText>
 
           <TouchableOpacity style={styles.addButton}>
             <View style={styles.movieRating}>
@@ -84,10 +84,10 @@ const Movie = ({ route, navigation }) => {
                 percent={object.vote_average * 10}
                 radius={22}
                 borderWidth={5}
-                color="#8226FB"
+                color={Colors.mainColor}
                 bgColor="#fff"
                 shadowColor="#fff">
-                <Text style={{ fontSize: 17, fontWeight: "bold", color: "#8226FB" }}>{Math.round(object.vote_average * 10) / 10}</Text>
+                <Text style={{ fontSize: 17, fontWeight: "bold", color: Colors.mainColor }}>{Math.round(object.vote_average * 10) / 10}</Text>
               </ProgressCircle>
             </View>
             <Text style={styles.addToList}>Add to watchlist</Text>
@@ -169,12 +169,12 @@ const infoStyles = StyleSheet.create({
     marginBottom: 30
   },
   description: {
-    color: "#fff",
+    color:  Colors.textColor,
     fontSize: 20,
     fontWeight: "bold"
   },
   infoText: {
-    color: "#fff",
+    color: Colors.textColor,
     marginTop: 0,
     fontSize: 14
   },
@@ -184,13 +184,13 @@ const infoStyles = StyleSheet.create({
     marginRight: 10,
     marginTop: 10,
     borderStyle: "solid",
-    borderColor: "#8226FB",
+    borderColor: Colors.mainColor,
     borderWidth: 1,
     borderRadius: 100
   },
   genresText: {
     fontSize: 15,
-    color: "#fff",
+    color:  Colors.textColor,
   },
   toWatchView: {
     paddingHorizontal: 15,
@@ -198,13 +198,13 @@ const infoStyles = StyleSheet.create({
     marginRight: 10,
     marginTop: 10,
     borderStyle: "solid",
-    borderColor: "#8226FB",
+    borderColor: Colors.mainColor,
     borderWidth: 1,
     borderRadius: 100
   },
   toWatchText: {
     fontSize: 13,
-    color: "#fff",
+    color:  Colors.textColor,
   },
 })
 
@@ -212,14 +212,13 @@ const infoStyles = StyleSheet.create({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#272727",
+    backgroundColor: Colors.background,
     flex: 1
   },
   titleText: {
-    color: "#fff",
+    color: Colors.textColor,
     textAlign: "center",
     fontWeight: "bold",
-    marginTop: 5
   },
   mainImg: {
     height: HEADER_MAX_HEIGHT,
@@ -230,21 +229,20 @@ const styles = StyleSheet.create({
     top: 0,
   },
   purpleTop: {
-    backgroundColor: "#8226FB",
+    backgroundColor: Colors.mainColor,
     height: 3,
   },
   topFixer: {
-    backgroundColor: "#272727",
+    backgroundColor: Colors.background,
   },
   addButton: {
     marginRight: "3.33%",
     marginLeft: "3.33%",
-    marginTop: "1%",
     height: 50,
     borderRadius: 100,
     borderStyle: "solid",
     borderWidth: 3,
-    borderColor: "#8226FB",
+    borderColor: Colors.mainColor,
     flexDirection: "row-reverse"
   },
   movieRating: {
@@ -266,7 +264,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignSelf: "flex-start",
     fontWeight: "bold",
-    color: "#fff"
+    color: Colors.textColor
   },
   buttonRow: {
     marginTop: 30,
@@ -290,7 +288,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 100
   },
   rowText: {
-    color: "#fff",
+    color:  Colors.textColor,
     fontSize: 20,
     fontWeight: "bold",
     textAlign: "center"

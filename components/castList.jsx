@@ -2,7 +2,7 @@
 import { StyleSheet, View, Dimensions, Image, TouchableOpacity, Text } from 'react-native';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import React, { Component } from 'react';
-
+import Colors from '../src/style';
 
 const getCastInfo = ["https://api.themoviedb.org/3/movie/", "/credits?api_key=648d096ec16e3f691572593e44644d30&language=en-US"]
 const baseImageLink = "https://image.tmdb.org/t/p/w500"
@@ -65,8 +65,8 @@ export default class MovieList extends React.Component {
         <TouchableOpacity onPress={() => { this.moveToMovie(data.item) }}>
           <Image style={{ height: 130, width: 90 }} source={{ uri: baseImageLink + profile_path }} />
           <View style={styles.textView}>
-            <Text style={[styles.castName, {color:"#fff"}]}>{name}</Text>
-            <Text style={[styles.castName, {color:"#8226FB"}]}>{character}</Text>
+            <Text style={[styles.castName, {color:Colors.textColor}]}>{name}</Text>
+            <Text style={[styles.castName, {color:Colors.mainColor}]}>{character}</Text>
 
           </View>
         </TouchableOpacity>
@@ -83,7 +83,7 @@ export default class MovieList extends React.Component {
           rowRenderer={this.rowRenderer}
           dataProvider={this.state.list}
           layoutProvider={this.layoutProvider}
-          renderFooter={() => { return (<Text onLayout={this.props.footerPos} style={{ color: "#fff", textAlign: "center" }}>loading...</Text>) }} />
+          renderFooter={() => { return (<Text onLayout={this.props.footerPos} style={{ color: Colors.textColor, textAlign: "center" }}>loading...</Text>) }} />
       </View>
     );
   }
