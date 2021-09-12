@@ -3,6 +3,7 @@ import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview
 import React, { Component } from 'react';
 import Colors from '../src/style';
 
+import { CommonActions } from '@react-navigation/native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const ratio = SCREEN_WIDTH / 500
@@ -97,7 +98,6 @@ export default class MovieList extends React.Component {
 
   moveToMovie = async (movie) => {
     console.log(movie.title + ", " + movie.id)
-    // this.props.navigation.push("MovieScreen", { screen:"Movies", params: {jsonObject: movie }})
     this.props.navigation.push("MovieScreen", {jsonObject: movie })
   }
 

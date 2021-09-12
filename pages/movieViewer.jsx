@@ -6,6 +6,8 @@ import MovieList from '../components/movieList';
 import CastList from '../components/castList';
 import Colors from '../src/style';
 
+import { saveMovieToWatchList, ifMovieAdded, removeMovie } from "../src/saveLoadWatchList";
+
 const baseUrl = "https://image.tmdb.org/t/p/w500/"
 const infoUrl = ["https://api.themoviedb.org/3/movie/", "?api_key=648d096ec16e3f691572593e44644d30&language=en-US"]
 const whereToWatch = ["https://api.themoviedb.org/3/movie/", "/watch/providers?api_key=648d096ec16e3f691572593e44644d30"]
@@ -16,19 +18,47 @@ const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 
 const Movie = ({ route, navigation }) => {
+  useEffect(() => { 
+    checkMovie()
+    loadMovieData()
+  }, [])
 
+  checkMovie = async () => { 
+    setWatchListText(await ifMovieAdded(object.id) ? "Remove from watchlist" : "Add to watchlist" ) 
+  } 
+  
   const [object] = useState(route.params.jsonObject)
   const [movieInfo, setMovieInfo] = useState(Object)
   const [toWatch, setToWatch] = useState(Object)
-
+  
   const [movieInfoDone, setMovieInfoDone] = useState(false)
   const [toWatchDone, setToWatchDone] = useState(false)
-
+  
   const [movieScrollHeight, setMovieScrollHeight] = useState(5000)
   const [castScrollHeight, setCastScrollHeight] = useState(5000)
 
+  const [watchListText, setWatchListText] = useState("")
+  
+  const [screenColor, setInfoColor] = useState(1)
+  const scrollY = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
+
+  const addRemoveMovie = async (movie) => { 
+    if(watchListText == "Add to watchlist") {
+      await saveMovieToWatchList(movie)
+    } else {
+      await removeMovie(movie)
+    }
+    checkMovie()
+  }
+
+  const imageTranslateY = scrollY.interpolate({
+    inputRange: [0, HEADER_SCROLL_DISTANCE],
+    outputRange: [0, -100],
+    extrapolate: 'clamp',
+  });
+
+  const loadMovieData = () => {
     fetch(whereToWatch[0] + object.id + whereToWatch[1])
       .then((res) => res.json())
       .then((newData) => {
@@ -50,18 +80,7 @@ const Movie = ({ route, navigation }) => {
       .then((newData) => { setMovieInfo(newData) })
       .catch((error) => alert(error))
       .finally(() => setToWatchDone(true))
-
-  }, [])
-
-  const [screenColor, setInfoColor] = useState(1)
-  const scrollY = useRef(new Animated.Value(0)).current;
-
-  const imageTranslateY = scrollY.interpolate({
-    inputRange: [0, HEADER_SCROLL_DISTANCE],
-    outputRange: [0, -100],
-    extrapolate: 'clamp',
-  });
-
+  }
   const getBgColor = (button) => { return button == screenColor ? Colors.mainColor : "#4E4E4E" }
   const infoButtons = (button) => { setInfoColor(button) }
 
@@ -78,7 +97,7 @@ const Movie = ({ route, navigation }) => {
 
           <AutoSizeText fontSize={32} numberOfLines={1} style={[styles.titleText, {marginVertical:object.title.length * 0.3 + 5}]} mode={ResizeTextMode.max_lines}> {object.title} </AutoSizeText>
 
-          <TouchableOpacity style={styles.addButton}>
+          <TouchableOpacity style={styles.addButton} onPress={() => {addRemoveMovie(object)}}>
             <View style={styles.movieRating}>
               <ProgressCircle
                 percent={object.vote_average * 10}
@@ -90,7 +109,8 @@ const Movie = ({ route, navigation }) => {
                 <Text style={{ fontSize: 17, fontWeight: "bold", color: Colors.mainColor }}>{Math.round(object.vote_average * 10) / 10}</Text>
               </ProgressCircle>
             </View>
-            <Text style={styles.addToList}>Add to watchlist</Text>
+            <Text style={styles.addToList}>{watchListText}</Text>
+            
           </TouchableOpacity>
           <View style={styles.buttonRow}>
             <TouchableOpacity style={[styles.infoBut, { backgroundColor: getBgColor(1) }]} onPress={() => infoButtons(1)}>

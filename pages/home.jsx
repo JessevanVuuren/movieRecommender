@@ -1,17 +1,17 @@
-import { StyleSheet, TextInput, TouchableOpacity, View, Text } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import MovieList from '../components/movieList';
 import { FontAwesome } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
 import Colors from '../src/style';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 
 
 const Home = ({ navigation }) => {
 
   return (
-
+    
     <View style={styles.container}>
       <View style={{ backgroundColor: Colors.mainLight, height:Constants.statusBarHeight}}></View>
       <View style={styles.mainMenu}>
