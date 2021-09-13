@@ -1,22 +1,23 @@
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
 import Colors from '../src/style';
 import React, { useEffect, useState } from 'react';
 
 import { getAllMovies } from "../src/saveLoadWatchList"
 
-const watchList = ({ navigation }) => {
+const watchList = ({ route, navigation }) => {
 
   const [watchList, setWatchList] = useState([])
 
+  const { number } = route.params;
+
   useEffect(() => {
     getAsyncMovies()
-  }, [])
+  }, [number])
 
   const getAsyncMovies = async () => {
     setWatchList(await getAllMovies())
   }
 
-  
   return (
     <View style={styles.container}>
         <Text style={{color:Colors.textColor}}>My WatchList</Text>

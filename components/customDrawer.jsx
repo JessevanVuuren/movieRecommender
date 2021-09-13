@@ -9,12 +9,12 @@ function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
       <View>
-          <View style={styles.header}>
-            
-          </View>
-          <DrawerItem style={styles.ItemsCard} label="Home" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('Home'); }} />
-          <DrawerItem style={styles.ItemsCard} label="My watchlist" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('watchlist'); }} />
-          <DrawerItem style={styles.ItemsCard} label="Settings" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('Settings'); }} />
+        <View style={styles.header}>
+
+        </View>
+        <DrawerItem style={styles.ItemsCard} label="Home" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('Home'); }} />
+        <DrawerItem style={styles.ItemsCard} label="My watchlist" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('watchlist', {number: Math.random() * 1000}); }} />
+        <DrawerItem style={styles.ItemsCard} label="Settings" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('Settings'); }} />
 
 
       </View>
@@ -25,10 +25,10 @@ function CustomDrawerContent(props) {
 export { CustomDrawerContent }
 
 const styles = StyleSheet.create({
-  header:{
-    height:100
+  header: {
+    height: 100
   },
-  ItemsCard:{
-    height:50
+  ItemsCard: {
+    height: 50
   },
 });

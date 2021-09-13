@@ -9,7 +9,7 @@ const Settings = ({ navigation }) => {
   return (
 
     <View style={styles.container}>
-        <Text style={{color:Colors.textColor}}>Settings</Text>
+      <Text style={{ color: Colors.textColor }}>Settings</Text>
     </View>
   );
 }
@@ -19,8 +19,8 @@ export { Settings }
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.background,
-    alignItems:"center",
-    justifyContent:"center",
-    flex:1
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1
   },
 });

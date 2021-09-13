@@ -18,11 +18,11 @@ const Drawer = createDrawerNavigator()
 
 
 
-const HomeStackScreen = ({navigator}) => (
+const HomeStackScreen = ({route, navigator}) => (
   <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />} screenOptions={{drawerStyle:{backgroundColor:Colors.background}}}>
     <Drawer.Screen name="Home" component={Home} options={{ header: () => null }} />
     <Drawer.Screen name="Settings" component={Settings} options={{ header: () => null }} />
-    <Drawer.Screen name="watchlist" component={watchList} options={{ header: () => null }} />
+    <Drawer.Screen name="watchlist"  initialParams={{ params: route.params }} component={watchList} options={{ header: () => null }} />
     <Drawer.Screen name="Movies" component={Movie} options={{ header: () => null, drawerLabel: () => null, drawerIcon: () => null, title: null,}} />
   </Drawer.Navigator>
 )

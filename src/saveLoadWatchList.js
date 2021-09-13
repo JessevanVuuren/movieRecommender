@@ -2,14 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export const saveMovieToWatchList = async (movie) => {
-  const list = await getMovieToWatchList()
-  if(!list) {
-    console.log("async list empty, make empty object \"movieList: []\"")
-    AsyncStorage.setItem('watchList', JSON.stringify({"movieList": []}))
-    return
-  }
-
-  const listObject = JSON.parse(list)
+  const listObject = JSON.parse(await getMovieToWatchList())
   const todayDate = new Date(Date.now()).toLocaleString().split(',')[0]
 
   if(await ifMovieAdded(movie.id)) {
@@ -35,8 +28,15 @@ export const removeMovie = async (movie) => {
 }
 
 
-export const getMovieToWatchList = () => {
-  return AsyncStorage.getItem('watchList')
+export const getMovieToWatchList = async () => {
+  const list = await AsyncStorage.getItem('watchList')
+
+  if(!list) {
+    console.log("async list empty, make empty object \"movieList: []\"")
+    AsyncStorage.setItem('watchList', JSON.stringify({"movieList": []}))
+  }
+
+  return list
 };
 
 export const ifMovieAdded = async (id) => {
