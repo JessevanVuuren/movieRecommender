@@ -3,25 +3,30 @@ import Colors from '../src/style';
 import React, { useEffect, useState } from 'react';
 
 import { getAllMovies } from "../src/saveLoadWatchList"
+import WatchList from '../components/watchList';
+
 
 const watchList = ({ route, navigation }) => {
 
+
   const [watchList, setWatchList] = useState([])
+  const [newNumber, setNewNumber] = useState(1)
 
   const { number } = route.params;
 
-  useEffect(() => {
-    getAsyncMovies()
-  }, [number])
+  React.useEffect(() => {
+    setNewNumber(Math.random)
+    const willFocusSubscription = navigation.addListener('focus', () => {
+      setNewNumber(Math.random)
+    });
 
-  const getAsyncMovies = async () => {
-    setWatchList(await getAllMovies())
-  }
+    return willFocusSubscription;
+  }, []);
+
 
   return (
     <View style={styles.container}>
-        <Text style={{color:Colors.textColor}}>My WatchList</Text>
-        <Text style={{color:Colors.textColor}}>watchlist: {watchList.length}</Text>
+      <WatchList key={Math.random() * newNumber} navigation={navigation} />
     </View>
   );
 }
@@ -31,8 +36,7 @@ export { watchList }
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.background,
-    alignItems:"center",
-    justifyContent:"center",
-    flex:1
+    width: "100%",
+    flex: 1,
   },
 });

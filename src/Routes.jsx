@@ -6,7 +6,7 @@ import { CustomDrawerContent } from "../components/customDrawer"
 
 import { Movie } from "../pages/movieViewer"
 import { Settings } from "../pages/settings"
-import { watchList } from "../pages/watchList"
+import { watchList } from "../pages/watchListViewer"
 import { Home } from '../pages/home'
 
 import React from 'react'
@@ -18,16 +18,16 @@ const Drawer = createDrawerNavigator()
 
 
 
-const HomeStackScreen = ({route, navigator}) => (
-  <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />} screenOptions={{drawerStyle:{backgroundColor:Colors.background}}}>
+const HomeStackScreen = ({ route, navigator }) => (
+  <Drawer.Navigator drawerContent={(props) => <CustomDrawerContent {...props} />} screenOptions={{ drawerStyle: { backgroundColor: Colors.background } }}>
     <Drawer.Screen name="Home" component={Home} options={{ header: () => null }} />
     <Drawer.Screen name="Settings" component={Settings} options={{ header: () => null }} />
-    <Drawer.Screen name="watchlist"  initialParams={{ params: route.params }} component={watchList} options={{ header: () => null }} />
-    <Drawer.Screen name="Movies" component={Movie} options={{ header: () => null, drawerLabel: () => null, drawerIcon: () => null, title: null,}} />
+    <Drawer.Screen name="watchlist" initialParams={{ params: route.params }} component={watchList} options={{ header: () => null }} />
+    <Drawer.Screen name="Movies" component={Movie} options={{ header: () => null, drawerLabel: () => null, drawerIcon: () => null, title: null, }} />
   </Drawer.Navigator>
 )
 
-export const Routes = ({}) => {
+export const Routes = ({ }) => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="HomeScreen" >

@@ -3,7 +3,6 @@ import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview
 import React, { Component } from 'react';
 import Colors from '../src/style';
 
-import { CommonActions } from '@react-navigation/native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const ratio = SCREEN_WIDTH / 500

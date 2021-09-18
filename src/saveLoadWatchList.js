@@ -10,17 +10,19 @@ export const saveMovieToWatchList = async (movie) => {
     return
   }
 
-  console.log("Added: " + movie.title + " to watchList")
-  listObject["movieList"].push({"id": movie.id, "title": movie.title, "Date": todayDate})
+  listObject["movieList"].push({"movieData": movie, "addedDate": todayDate})
+
+  console.log("Added: " + movie.title + " to watchList, length of list: " + listObject["movieList"].length)
+  
   AsyncStorage.setItem('watchList', JSON.stringify(listObject))
 }
 
 export const removeMovie = async (movie) => {
   const list = JSON.parse(await getMovieToWatchList())
   list["movieList"].map((item, index) => {
-    if(item.id == movie.id) {
-      console.log("Deleted movie: " + movie.title)
-      list["movieList"].splice(index)
+    if(item["movieData"].id == movie.id) {
+      list["movieList"].splice(index, 1)
+      console.log("Deleted movie: " + movie.title + " length of list: " + (list["movieList"].length))
     }
   })
 
@@ -40,10 +42,12 @@ export const getMovieToWatchList = async () => {
 };
 
 export const ifMovieAdded = async (id) => {
+
   const listObject = JSON.parse(await getMovieToWatchList())
 
   let alreadyExist = false
-  listObject["movieList"].map(item => { if(item.id == id) alreadyExist = true })
+  listObject["movieList"].map(item => { if(item["movieData"].id == id) alreadyExist = true })
+
   return alreadyExist
 }
 
