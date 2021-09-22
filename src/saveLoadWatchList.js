@@ -55,3 +55,8 @@ export const getAllMovies = async () => {
   const data = JSON.parse(await getMovieToWatchList())["movieList"]
   return data
 } 
+
+
+export const removeFullList = async () => {
+  await AsyncStorage.setItem('watchList', "")
+} 

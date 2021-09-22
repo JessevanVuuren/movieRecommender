@@ -1,10 +1,10 @@
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
-import MovieList from '../components/movieList';
 import { FontAwesome } from '@expo/vector-icons';
+import MovieList from '../components/movieList';
 import { StatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
 import Colors from '../src/style';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 
 
@@ -24,7 +24,7 @@ const Home = ({ navigation }) => {
           <Text style={{ fontSize: 20, color: Colors.textColor }}>Movie Recommender</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.menuSearch}  >
+        <TouchableOpacity style={styles.menuSearch} onPress={() => {navigation.navigate('SearchPage')}} >
           <FontAwesome style={{ color: Colors.textColor }} name="search" size={30} color="black" />
         </TouchableOpacity>
       </View>

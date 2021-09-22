@@ -1,18 +1,13 @@
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View, Button } from 'react-native';
 import Colors from '../src/style';
 import React, { useEffect, useState } from 'react';
 
-import { getAllMovies } from "../src/saveLoadWatchList"
 import WatchList from '../components/watchList';
-
+import {removeFullList} from "../src/saveLoadWatchList"
 
 const watchList = ({ route, navigation }) => {
 
-
-  const [watchList, setWatchList] = useState([])
   const [newNumber, setNewNumber] = useState(1)
-
-  const { number } = route.params;
 
   React.useEffect(() => {
     setNewNumber(Math.random)
@@ -23,9 +18,12 @@ const watchList = ({ route, navigation }) => {
     return willFocusSubscription;
   }, []);
 
+  
+
 
   return (
     <View style={styles.container}>
+      <Button title={"dell list"} onPress={() => { removeFullList() }}></Button>
       <WatchList key={Math.random() * newNumber} navigation={navigation} />
     </View>
   );

@@ -4,7 +4,7 @@ import React from 'react';
 
 
 
-const Settings = ({ navigation }) => {
+const SettingsPage = ({ navigation }) => {
 
   return (
 
@@ -14,7 +14,7 @@ const Settings = ({ navigation }) => {
   );
 }
 
-export { Settings }
+export { SettingsPage }
 
 const styles = StyleSheet.create({
   container: {
