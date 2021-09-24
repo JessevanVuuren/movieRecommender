@@ -62,13 +62,19 @@ export default class SearchPage extends React.Component {
 
         </View>
 
-        <ScrollView horizontal={true} style={{flexGrow: 1, flexWrap: "wrap", marginLeft:10}}>
-          {movieGenres.map((genre, key) => {
-            return (<TouchableOpacity onPress={() => this.searchGenre(genre)} key={key} style={styles.genresView}><Text style={styles.genresText}>{genre}</Text></TouchableOpacity>)
-          })}
-        </ScrollView>
+        <View style={styles.scrollViewFix} colors={['#4c669f', '#192f6a']}>
+          <ScrollView horizontal={true} style={{ flexGrow: 1, flexWrap: "wrap" }}>
+            {movieGenres.map((genre, key) => {
+              return (<TouchableOpacity onPress={() => this.searchGenre(genre)} key={key} style={styles.genresView}><Text style={styles.genresText}>{genre}</Text></TouchableOpacity>)
+            })}
+          </ScrollView>
 
-        <Text style={{ color: Colors.textColor, textAlign: "center" }}>{this.state.loadingMovies ? ("Loading...") : this.state.userText}</Text>
+        </View >
+
+        <MovieList list="search" topPadding={"0%"} navigation={this.props.navigation} />
+
+
+        {/* <Text style={{ color: Colors.textColor, textAlign: "center" }}>{this.state.loadingMovies ? ("Loading...") : this.state.userText}</Text> */}
 
       </View>
     );
@@ -113,6 +119,9 @@ const styles = StyleSheet.create({
   },
   genresText: {
     fontSize: 15,
-    color:  Colors.textColor,
+    color: Colors.textColor,
+  },
+  scrollViewFix: {
+    height: 50
   },
 });

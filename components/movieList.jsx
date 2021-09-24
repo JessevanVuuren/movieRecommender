@@ -8,8 +8,10 @@ const SCREEN_WIDTH = Dimensions.get('window').width
 const ratio = SCREEN_WIDTH / 500
 
 const PopularMovieLink = "https://api.themoviedb.org/3/movie/popular?api_key=648d096ec16e3f691572593e44644d30&language=en-US&page="
-
 const RecommendedMovie = ["https://api.themoviedb.org/3/movie/", "/recommendations?api_key=648d096ec16e3f691572593e44644d30&language=en-US&page="]
+const SearchMovie = ["https://api.themoviedb.org/3/search/movie?api_key=648d096ec16e3f691572593e44644d30&language=en-US&query=limitless", "&include_adult=false&page="]
+
+
 const baseImageLink = "https://image.tmdb.org/t/p/w342"
 
 export default class MovieList extends React.Component {
@@ -19,10 +21,10 @@ export default class MovieList extends React.Component {
 
     this.state = {
       list: new DataProvider((r1, r2) => r1 !== r2),
+      disableFetching: false,
       leftOverMovie: [],
       megaList: [],
       pageInt: 0,
-      disableFetching:false
     };
 
     this.layoutProvider = new LayoutProvider((i) => {
@@ -31,7 +33,7 @@ export default class MovieList extends React.Component {
       switch (type) {
         case 'NORMAL':
           dim.width = SCREEN_WIDTH;
-          dim.height =(ratio * 750 / 3);
+          dim.height = (ratio * 750 / 3);
           break;
       };
     })
@@ -39,11 +41,13 @@ export default class MovieList extends React.Component {
 
   loadMovieData = () => {
     let dataList = []
-    if(this.state.disableFetching) return
+    if (this.state.disableFetching) return
     this.setState({ pageInt: this.state.pageInt + 1 }, () => {
 
       if (this.props.list == "popular") url = PopularMovieLink
       if (this.props.list == "recommended") url = RecommendedMovie[0] + this.props.id + RecommendedMovie[1]
+      if (this.props.list == "search") url = SearchMovie[0] + SearchMovie[1]
+
       console.log(url + this.state.pageInt)
       fetch(url + this.state.pageInt)
         .then((res) => res.json())
@@ -51,23 +55,39 @@ export default class MovieList extends React.Component {
         .catch((error) => alert(error))
         .finally(() => {
 
+          let cleanArray = []
+
+          if(this.props.list == "search") {
+
+            console.log("len before " + dataList.length)
+            for (let i = 0; i < dataList.length; i++) {
+              if (dataList[i].backdrop_path){
+                cleanArray.push(dataList[i])
+              }
+            }
+            console.log("len after " + cleanArray.length)
+          }
+          else {
+            cleanArray = dataList
+          }
+
+
+
 
           let compressList = []
 
-          if (this.state.leftOverMovie.length == 1) dataList.unshift(this.state.leftOverMovie[0])
-          if (this.state.leftOverMovie.length == 2) dataList.unshift(this.state.leftOverMovie[0], this.state.leftOverMovie[1])
+          if (this.state.leftOverMovie.length == 1) cleanArray.unshift(this.state.leftOverMovie[0])
+          if (this.state.leftOverMovie.length == 2) cleanArray.unshift(this.state.leftOverMovie[0], this.state.leftOverMovie[1])
 
           this.state.leftOverMovie.length = 0
 
-          console.log(dataList.length)
+          for (let i = 0; i < cleanArray.length; i += 3) {
 
-          for (let i = 0; i < dataList.length; i += 3) {
-
-            if (i + 2 >= dataList.length || i + 1 >= dataList.length) {
-              if (i == dataList.length - 2) this.state.leftOverMovie.push(dataList[i], dataList[i + 1])
-              if (i == dataList.length - 1) this.state.leftOverMovie.push(dataList[i])
-              if(this.props.list == "recommended")
-                this.setState({disableFetching: true})
+            if (i + 2 >= cleanArray.length || i + 1 >= cleanArray.length) {
+              if (i == cleanArray.length - 2) this.state.leftOverMovie.push(cleanArray[i], cleanArray[i + 1])
+              if (i == cleanArray.length - 1) this.state.leftOverMovie.push(cleanArray[i])
+              if (this.props.list == "recommended" || this.props.list == "search")
+                this.setState({ disableFetching: true })
               else
                 break
             }
@@ -75,9 +95,9 @@ export default class MovieList extends React.Component {
             compressList.push({
               type: "NORMAL",
               item: {
-                movieOne: dataList[i],
-                movieTwo: i + 1 >= dataList.length ? "empty" : dataList[i + 1],
-                movieThr: i + 2 >= dataList.length ? "empty" : dataList[i + 2],
+                movieOne: cleanArray[i],
+                movieTwo: i + 1 >= cleanArray.length ? "empty" : cleanArray[i + 1],
+                movieThr: i + 2 >= cleanArray.length ? "empty" : cleanArray[i + 2],
               }
             })
           }
@@ -97,7 +117,7 @@ export default class MovieList extends React.Component {
 
   moveToMovie = async (movie) => {
     console.log(movie.title + ", " + movie.id)
-    this.props.navigation.push("MovieScreen", {jsonObject: movie })
+    this.props.navigation.push("MovieScreen", { jsonObject: movie })
   }
 
   rowRenderer = (type, data) => {
@@ -105,15 +125,15 @@ export default class MovieList extends React.Component {
     return (
 
       <View style={styles.listItem}>
-        <TouchableOpacity style={styles.imageTouch} onPress={() => { this.moveToMovie(movieOne) }}>
+        <TouchableOpacity style={[styles.imageTouch, { marginTop: this.props.topPadding }]} onPress={() => { this.moveToMovie(movieOne) }}>
           <Image style={{ height: "100%", width: "100%" }} source={{ uri: baseImageLink + movieOne.poster_path }} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.imageTouch} onPress={() => { this.moveToMovie(movieTwo) }}>
+        <TouchableOpacity style={[styles.imageTouch, { marginTop: this.props.topPadding }]} onPress={() => { this.moveToMovie(movieTwo) }}>
           <Image style={{ height: "100%", width: "100%" }} source={{ uri: baseImageLink + movieTwo.poster_path }} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.imageTouch} onPress={() => { this.moveToMovie(movieThr) }}>
+        <TouchableOpacity style={[styles.imageTouch, { marginTop: this.props.topPadding }]} onPress={() => { this.moveToMovie(movieThr) }}>
           <Image style={{ height: "100%", width: "100%" }} source={{ uri: baseImageLink + movieThr.poster_path }} />
         </TouchableOpacity>
       </View>
@@ -125,9 +145,9 @@ export default class MovieList extends React.Component {
       return (
         <View style={styles.movieLoading}>
           <Text style={styles.movieLoadingText}>{this.props.list == "recommended" ? "No movies where found, please come back later or add to watchlist to keep you posted" : "loading..."}</Text>
-            
+
         </View>
-      ) 
+      )
     }
     return (
       <View style={styles.container} >
@@ -137,9 +157,9 @@ export default class MovieList extends React.Component {
           dataProvider={this.state.list}
           layoutProvider={this.layoutProvider}
           onEndReached={this.increaseList}
-          onEndReachedThreshold={300} 
-          onScroll={this.props.onScrollList}  
-          renderFooter={() => { return ( <Text onLayout={this.props.footerPos} style={{color:Colors.textColor, textAlign:"center"}}></Text> ) }}/>
+          onEndReachedThreshold={300}
+          onScroll={this.props.onScrollList}
+          renderFooter={() => { return (<Text onLayout={this.props.footerPos} style={{ color: Colors.textColor, textAlign: "center" }}></Text>) }} />
       </View>
     );
   }
@@ -150,23 +170,23 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageTouch: {
-    marginHorizontal:"1%",
-    marginTop: "2%",
+    marginHorizontal: "1%",
+    // marginTop:"2%",
     width: "31.333%",
   },
   listItem: {
     flexDirection: 'row',
     flex: 1,
   },
-  movieLoading:{
-    height:100,
-    width:"100%",
-    justifyContent:"center",
-    alignItems:"center"
+  movieLoading: {
+    height: 100,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center"
   },
-  movieLoadingText:{
-    color:Colors.textColor,
-    textAlign:"center"
+  movieLoadingText: {
+    color: Colors.textColor,
+    textAlign: "center"
   }
 });
 

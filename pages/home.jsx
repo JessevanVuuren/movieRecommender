@@ -31,7 +31,7 @@ const Home = ({ navigation }) => {
 
 
 
-      <MovieList list="popular" id="0" navigation={navigation} />
+      <MovieList list="popular" topPadding={"2%"} navigation={navigation} />
     </View>
   );
 }
