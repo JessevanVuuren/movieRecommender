@@ -18,7 +18,7 @@ function CustomDrawerContent(props) {
         <DrawerItem style={styles.ItemsCard} label="Home" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('Home') }} />
         <DrawerItem style={styles.ItemsCard} label="Search movie" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('SearchPage', {number: Math.random() * 1000})}} />
         <DrawerItem style={styles.ItemsCard} label="My watchlist" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('watchlist', {number: Math.random() * 1000}) }} />
-        <DrawerItem style={styles.ItemsCard} label="Settings" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('Settings') }} />
+        {/* <DrawerItem style={styles.ItemsCard} label="Settings" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('Settings') }} /> */}
 
       </View>
     </DrawerContentScrollView>

@@ -4,8 +4,8 @@ import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview
 import React, { Component } from 'react';
 import Colors from '../src/style';
 
-const getCastInfo = ["https://api.themoviedb.org/3/movie/", "/credits?api_key=648d096ec16e3f691572593e44644d30&language=en-US"]
-const baseImageLink = "https://image.tmdb.org/t/p/w500"
+const getCastInfo = ["https://api.themoviedb.org/3/movie/", "/credits?api_key=" + EXPO_API_URL + "&language=en-US"]
+const baseImageLink = "https://image.tmdb.org/t/p/w342"
 
 export default class MovieList extends React.Component {
 

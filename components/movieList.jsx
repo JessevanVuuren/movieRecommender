@@ -1,15 +1,18 @@
 import { StyleSheet, View, Dimensions, Image, TouchableOpacity, Text } from 'react-native';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
-import React, { Component } from 'react';
+import React from 'react';
 import Colors from '../src/style';
+
+import { EXPO_API_URL } from '@env'
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const ratio = SCREEN_WIDTH / 500
 
-const PopularMovieLink = "https://api.themoviedb.org/3/movie/popular?api_key=648d096ec16e3f691572593e44644d30&language=en-US&page="
-const RecommendedMovie = ["https://api.themoviedb.org/3/movie/", "/recommendations?api_key=648d096ec16e3f691572593e44644d30&language=en-US&page="]
-const SearchMovie = ["https://api.themoviedb.org/3/search/movie?api_key=648d096ec16e3f691572593e44644d30&language=en-US&query=limitless", "&include_adult=false&page="]
+const PopularMovieLink = "https://api.themoviedb.org/3/movie/popular?api_key=" + EXPO_API_URL + "&language=en-US&page="
+const RecommendedMovie = ["https://api.themoviedb.org/3/movie/", "/recommendations?api_key=" + EXPO_API_URL + "&language=en-US&page="]
+const SearchMovie = ["https://api.themoviedb.org/3/search/movie?api_key=" + EXPO_API_URL + "&language=en-US&query=", "&include_adult=false&page="]
+const GenreMovie = ["https://api.themoviedb.org/3/discover/movie?api_key=" + EXPO_API_URL + "&language=en-US&sort_by=popularity.desc&include_adult=false&page=1&with_genres=35&with_watch_monetization_types=flatrate"]
 
 
 const baseImageLink = "https://image.tmdb.org/t/p/w342"
@@ -17,6 +20,7 @@ const baseImageLink = "https://image.tmdb.org/t/p/w342"
 export default class MovieList extends React.Component {
 
   constructor(props) {
+
     super(props);
 
     this.state = {
@@ -42,36 +46,41 @@ export default class MovieList extends React.Component {
   loadMovieData = () => {
     let dataList = []
     if (this.state.disableFetching) return
+
     this.setState({ pageInt: this.state.pageInt + 1 }, () => {
 
       if (this.props.list == "popular") url = PopularMovieLink
       if (this.props.list == "recommended") url = RecommendedMovie[0] + this.props.id + RecommendedMovie[1]
-      if (this.props.list == "search") url = SearchMovie[0] + SearchMovie[1]
+      if (this.props.list == "search") {
+        if (this.props.searchQuery == "") {
+          return
+        }
+        url = SearchMovie[0] + this.props.searchQuery + SearchMovie[1]
+      }
+
 
       console.log(url + this.state.pageInt)
       fetch(url + this.state.pageInt)
         .then((res) => res.json())
-        .then((newData) => { dataList = newData.results })
+        .then((newData) => { dataList = newData })
         .catch((error) => alert(error))
         .finally(() => {
 
           let cleanArray = []
 
-          if(this.props.list == "search") {
+          if (this.props.list == "search") {
 
-            console.log("len before " + dataList.length)
-            for (let i = 0; i < dataList.length; i++) {
-              if (dataList[i].backdrop_path){
-                cleanArray.push(dataList[i])
+            console.log("len before " + dataList.results.length)
+            for (let i = 0; i < dataList.results.length; i++) {
+              if (dataList.results[i].backdrop_path && dataList.results[i].poster_path) {
+                cleanArray.push(dataList.results[i])
               }
             }
             console.log("len after " + cleanArray.length)
           }
           else {
-            cleanArray = dataList
+            cleanArray = dataList.results
           }
-
-
 
 
           let compressList = []
@@ -86,11 +95,16 @@ export default class MovieList extends React.Component {
             if (i + 2 >= cleanArray.length || i + 1 >= cleanArray.length) {
               if (i == cleanArray.length - 2) this.state.leftOverMovie.push(cleanArray[i], cleanArray[i + 1])
               if (i == cleanArray.length - 1) this.state.leftOverMovie.push(cleanArray[i])
-              if (this.props.list == "recommended" || this.props.list == "search")
-                this.setState({ disableFetching: true })
-              else
-                break
+
+
+
+              if (cleanArray.length < 9 && this.state.pageInt <= dataList.total_pages) { this.loadMovieData(); break }
+              if (this.state.pageInt <= dataList.total_pages) break
+              if (dataList.results.length == 0) this.setState({ disableFetching: true })
+              if (this.props.list == "recommended") this.setState({ disableFetching: true })
+              else if (this.props.list == "popular") break
             }
+
 
             compressList.push({
               type: "NORMAL",
@@ -102,10 +116,13 @@ export default class MovieList extends React.Component {
             })
           }
 
+
+
           this.setState({
             list: this.state.list.cloneWithRows([...this.state.megaList, ...compressList]),
             megaList: [...this.state.megaList, ...compressList]
           })
+
 
           console.log("loaded new data form page: " + this.state.pageInt + ", " + this.state.megaList.length + " in megalist Length")
         })
@@ -116,8 +133,11 @@ export default class MovieList extends React.Component {
   componentDidMount() { this.loadMovieData() }
 
   moveToMovie = async (movie) => {
-    console.log(movie.title + ", " + movie.id)
-    this.props.navigation.push("MovieScreen", { jsonObject: movie })
+    if (movie.title != undefined) {
+      console.log(movie.title + ", " + movie.id)
+      this.props.navigation.push("MovieScreen", { jsonObject: movie })
+    }
+
   }
 
   rowRenderer = (type, data) => {
@@ -125,15 +145,15 @@ export default class MovieList extends React.Component {
     return (
 
       <View style={styles.listItem}>
-        <TouchableOpacity style={[styles.imageTouch, { marginTop: this.props.topPadding }]} onPress={() => { this.moveToMovie(movieOne) }}>
+        <TouchableOpacity style={styles.imageTouch} onPress={() => { this.moveToMovie(movieOne) }}>
           <Image style={{ height: "100%", width: "100%" }} source={{ uri: baseImageLink + movieOne.poster_path }} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.imageTouch, { marginTop: this.props.topPadding }]} onPress={() => { this.moveToMovie(movieTwo) }}>
+        <TouchableOpacity style={styles.imageTouch} onPress={() => { this.moveToMovie(movieTwo) }}>
           <Image style={{ height: "100%", width: "100%" }} source={{ uri: baseImageLink + movieTwo.poster_path }} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.imageTouch, { marginTop: this.props.topPadding }]} onPress={() => { this.moveToMovie(movieThr) }}>
+        <TouchableOpacity style={styles.imageTouch} onPress={() => { this.moveToMovie(movieThr) }}>
           <Image style={{ height: "100%", width: "100%" }} source={{ uri: baseImageLink + movieThr.poster_path }} />
         </TouchableOpacity>
       </View>
@@ -144,8 +164,8 @@ export default class MovieList extends React.Component {
     if (this.state.megaList.length <= 0) {
       return (
         <View style={styles.movieLoading}>
-          <Text style={styles.movieLoadingText}>{this.props.list == "recommended" ? "No movies where found, please come back later or add to watchlist to keep you posted" : "loading..."}</Text>
-
+          <Text style={styles.movieLoadingText}></Text>
+          {/* <Text style={styles.movieLoadingText}>{this.props.list == "recommended" ? "No movies where found, please come back later" : "loading..."}</Text> */}
         </View>
       )
     }
@@ -170,8 +190,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageTouch: {
+    marginTop: "2%",
     marginHorizontal: "1%",
-    // marginTop:"2%",
     width: "31.333%",
   },
   listItem: {

@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View, Text, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text, TextInput, ScrollView, ActivityIndicator } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import Constants from 'expo-constants';
 import Colors from '../src/style';
@@ -60,6 +60,11 @@ export default class SearchPage extends React.Component {
               placeholderTextColor={Colors.textColor} />
           </TouchableOpacity>
 
+
+          <View style={styles.loadingMovies}>
+            <ActivityIndicator size="large" color="#ffffff" animating={this.state.loadingMovies}/>
+          </View>
+
         </View>
 
         <View style={styles.scrollViewFix} colors={['#4c669f', '#192f6a']}>
@@ -71,11 +76,7 @@ export default class SearchPage extends React.Component {
 
         </View >
 
-        <MovieList list="search" topPadding={"0%"} navigation={this.props.navigation} />
-
-
-        {/* <Text style={{ color: Colors.textColor, textAlign: "center" }}>{this.state.loadingMovies ? ("Loading...") : this.state.userText}</Text> */}
-
+        <MovieList list="search" searchQuery={this.state.userText} topPadding={"2%"} navigation={this.props.navigation} key={this.state.userText}/>
       </View>
     );
   }
@@ -88,6 +89,9 @@ const styles = StyleSheet.create({
     flex: 1
   },
   mainMenu: {
+    justifyContent:"center",
+
+
     backgroundColor: Colors.mainColor,
     flexDirection: "row",
     height: 50,
@@ -95,6 +99,11 @@ const styles = StyleSheet.create({
   menuHamburger: {
     marginLeft: "2%",
     width: "8%"
+  },
+  loadingMovies:{
+    height:50,
+    marginRight:"3%",
+    justifyContent:"center"
   },
   userInput: {
     paddingLeft: 20,
@@ -104,7 +113,7 @@ const styles = StyleSheet.create({
     color: Colors.textColor
   },
   menuSearch: {
-    width: "90%"
+    width: "80%"
   },
   genresView: {
     flexGrow: 1,
