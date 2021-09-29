@@ -12,7 +12,7 @@ const ratio = SCREEN_WIDTH / 500
 const PopularMovieLink = "https://api.themoviedb.org/3/movie/popular?api_key=" + EXPO_API_URL + "&language=en-US&page="
 const RecommendedMovie = ["https://api.themoviedb.org/3/movie/", "/recommendations?api_key=" + EXPO_API_URL + "&language=en-US&page="]
 const SearchMovie = ["https://api.themoviedb.org/3/search/movie?api_key=" + EXPO_API_URL + "&language=en-US&query=", "&include_adult=false&page="]
-const GenreMovie = ["https://api.themoviedb.org/3/discover/movie?api_key=" + EXPO_API_URL + "&language=en-US&sort_by=popularity.desc&include_adult=false&page=1&with_genres=35&with_watch_monetization_types=flatrate"]
+const GenreMovie = ["https://api.themoviedb.org/3/discover/movie?api_key=" + EXPO_API_URL + "&language=en-US&sort_by=popularity.desc&include_adult=false&with_genres=", "&with_watch_monetization_types=flatrate&page="]
 
 
 const baseImageLink = "https://image.tmdb.org/t/p/w342"
@@ -52,10 +52,15 @@ export default class MovieList extends React.Component {
       if (this.props.list == "popular") url = PopularMovieLink
       if (this.props.list == "recommended") url = RecommendedMovie[0] + this.props.id + RecommendedMovie[1]
       if (this.props.list == "search") {
-        if (this.props.searchQuery == "") {
-          return
+        
+        if (this.props.genreArray.length > 0){
+          const genreArrayID = (() => {let fs = ""; for (let i = 0; i < this.props.genreArray.length; i++) {fs+=this.props.genreArray[i][1] + ","} return fs})()
+          url = GenreMovie[0] + genreArrayID + GenreMovie[1]
         }
-        url = SearchMovie[0] + this.props.searchQuery + SearchMovie[1]
+        else {
+          if (this.props.searchQuery == "") return
+          url = SearchMovie[0] + this.props.searchQuery + SearchMovie[1]
+        }
       }
 
 
@@ -209,11 +214,6 @@ const styles = StyleSheet.create({
     textAlign: "center"
   }
 });
-
-
-
-
-
 
 
 

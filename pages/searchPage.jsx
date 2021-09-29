@@ -10,6 +10,10 @@ const movieGenres = [
   "Action", "Adventure", "Animation", "Comedy", "Crime", "Documentary", "Drama", "Family", "Fantasy", "History", "Horror", "Music", "Mystery", "Romance", "Science", "Fiction", "Thriller", "TV Movie", "War, an", "Wester",
 ]
 
+const genreList = [["Action",28],["Adventure",12],["Animation",16],["Comedy",35],["Crime",80],["Documentary",99],["Drama",18],["Family",10751],["Fantasy",14],["History",36],["Horror",27],["Music",10402],["Mystery",9648],["Romance",10749],["Science Fiction",878],["TV Movie",10770],["Thriller",53],["War",10752],["Western",37]]
+
+
+
 export default class SearchPage extends React.Component {
 
   constructor(props) {
@@ -18,7 +22,9 @@ export default class SearchPage extends React.Component {
 
     this.state = {
       userText: "",
-      loadingMovies: false
+      loadingMovies: false,
+      genreSearchList: [],
+      update: 1
     }
   }
 
@@ -26,17 +32,29 @@ export default class SearchPage extends React.Component {
     this.setState({ loadingMovies: true })
     clearTimeout(this.searchTimer)
     this.searchTimer = setTimeout(() => {
-      console.log(text)
       this.setState({ userText: text, loadingMovies: false })
-    }, 1500)
+    }, 1000)
   }
 
 
-  componentDidUpdate() { setTimeout(() => this._input.focus(), 250) }
+  componentDidUpdate() { 
+    if(this.state.genreSearchList.length == 0) {
+      setTimeout(() => this._input.focus(), 250)
+    }
+   }
   componentDidMount() { setTimeout(() => this._input.focus(), 250) }
 
   searchGenre(genre) {
-    console.log(genre)
+
+    if(this.state.genreSearchList.includes(genre)){
+      const index = this.state.genreSearchList.indexOf(genre)
+      this.state.genreSearchList.splice(index, 1)      
+    }
+    else {
+      this.state.genreSearchList.push(genre)
+    }
+    this.userSearching(this.state.genreSearchList.length.toString())
+    this.setState({update: this.state.update + 1})
   }
 
   render() {
@@ -62,21 +80,25 @@ export default class SearchPage extends React.Component {
 
 
           <View style={styles.loadingMovies}>
-            <ActivityIndicator size="large" color="#ffffff" animating={this.state.loadingMovies}/>
+            <ActivityIndicator size="large" color="#ffffff" animating={this.state.loadingMovies} />
           </View>
 
         </View>
 
         <View style={styles.scrollViewFix} colors={['#4c669f', '#192f6a']}>
           <ScrollView horizontal={true} style={{ flexGrow: 1, flexWrap: "wrap" }}>
-            {movieGenres.map((genre, key) => {
-              return (<TouchableOpacity onPress={() => this.searchGenre(genre)} key={key} style={styles.genresView}><Text style={styles.genresText}>{genre}</Text></TouchableOpacity>)
+
+            {genreList.map((genre, key) => {
+              return (
+                <TouchableOpacity onPress={() => this.searchGenre(genre)} key={genre[1] + this.state.update} style={[styles.genresView, { backgroundColor: this.state.genreSearchList.includes(genre) ? Colors.mainColor : Colors.background }]}>
+                  <Text style={styles.genresText}>{genre[0]}</Text>
+                </TouchableOpacity>
+              )
             })}
           </ScrollView>
-
         </View >
 
-        <MovieList list="search" searchQuery={this.state.userText} topPadding={"2%"} navigation={this.props.navigation} key={this.state.userText}/>
+        <MovieList list="search" searchQuery={this.state.userText} genreArray={this.state.genreSearchList} topPadding={"2%"} navigation={this.props.navigation} key={this.state.userText} />
       </View>
     );
   }
@@ -89,7 +111,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   mainMenu: {
-    justifyContent:"center",
+    justifyContent: "center",
 
 
     backgroundColor: Colors.mainColor,
@@ -100,10 +122,10 @@ const styles = StyleSheet.create({
     marginLeft: "2%",
     width: "8%"
   },
-  loadingMovies:{
-    height:50,
-    marginRight:"3%",
-    justifyContent:"center"
+  loadingMovies: {
+    height: 50,
+    marginRight: "3%",
+    justifyContent: "center"
   },
   userInput: {
     paddingLeft: 20,
@@ -128,7 +150,7 @@ const styles = StyleSheet.create({
   },
   genresText: {
     fontSize: 15,
-    color: Colors.textColor,
+    color: Colors.textColor
   },
   scrollViewFix: {
     height: 50

@@ -3,6 +3,7 @@ import { StyleSheet, View, Dimensions, Image, TouchableOpacity, Text } from 'rea
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import React, { Component } from 'react';
 import Colors from '../src/style';
+import { EXPO_API_URL } from '@env'
 
 const getCastInfo = ["https://api.themoviedb.org/3/movie/", "/credits?api_key=" + EXPO_API_URL + "&language=en-US"]
 const baseImageLink = "https://image.tmdb.org/t/p/w342"
