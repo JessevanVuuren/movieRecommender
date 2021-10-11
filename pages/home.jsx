@@ -13,7 +13,7 @@ const Home = ({ navigation }) => {
   return (
     
     <View style={styles.container}>
-      <View style={{ backgroundColor: Colors.mainLight, height:Constants.statusBarHeight}}></View>
+      <View style={{ backgroundColor: Colors.mainDark, height:Constants.statusBarHeight}}></View>
       <View style={styles.mainMenu}>
         <StatusBar style="light" />
         <TouchableOpacity style={styles.menuHamburger} onPress={() => navigation.openDrawer()}>

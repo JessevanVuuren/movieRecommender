@@ -8,6 +8,7 @@ import { Movie } from "../pages/movieViewer"
 import { SettingsPage } from "../pages/settingsPage"
 import { watchList } from "../pages/watchListViewer"
 import  SearchPage  from "../pages/searchPage"
+import  AdvancedSearch  from "../pages/advancedSearch"
 import { Home } from '../pages/home'
 
 import React from 'react'
@@ -23,6 +24,7 @@ const HomeStackScreen = ({ route, navigator }) => (
     <Drawer.Screen name="Settings" component={SettingsPage} options={{ header: () => null }} />
     <Drawer.Screen name="watchlist" initialParams={{ params: route.params }} component={watchList} options={{ header: () => null }} />
     <Drawer.Screen name="SearchPage" initialParams={{ params: route.params }} component={SearchPage} options={{ header: () => null }} />
+    <Drawer.Screen name="AdvancedSearch" initialParams={{ params: route.params }} component={AdvancedSearch} options={{ header: () => null }} />
 
     <Drawer.Screen name="Movies" component={Movie} options={{ header: () => null, drawerLabel: () => null, drawerIcon: () => null, title: null, }} />
   </Drawer.Navigator>

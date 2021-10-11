@@ -51,16 +51,15 @@ export default class MovieList extends React.Component {
 
       if (this.props.list == "popular") url = PopularMovieLink
       if (this.props.list == "recommended") url = RecommendedMovie[0] + this.props.id + RecommendedMovie[1]
-      if (this.props.list == "search") {
-        
-        if (this.props.genreArray.length > 0){
+      if (this.props.list == "search") { 
+        if (this.props.searchQuery == "") return
+        url = SearchMovie[0] + this.props.searchQuery + SearchMovie[1] 
+      }
+
+      if (this.props.list == "advancedSearch" ){
           const genreArrayID = (() => {let fs = ""; for (let i = 0; i < this.props.genreArray.length; i++) {fs+=this.props.genreArray[i][1] + ","} return fs})()
           url = GenreMovie[0] + genreArrayID + GenreMovie[1]
-        }
-        else {
-          if (this.props.searchQuery == "") return
-          url = SearchMovie[0] + this.props.searchQuery + SearchMovie[1]
-        }
+        
       }
 
 
@@ -71,9 +70,12 @@ export default class MovieList extends React.Component {
         .catch((error) => alert(error))
         .finally(() => {
 
+          if(dataList.total_pages + 1 < this.state.pageInt)
+            return
+
           let cleanArray = []
 
-          if (this.props.list == "search") {
+          if (this.props.list == "search" || this.props.list == "advancedSearch") {
 
             console.log("len before " + dataList.results.length)
             for (let i = 0; i < dataList.results.length; i++) {
@@ -129,7 +131,7 @@ export default class MovieList extends React.Component {
           })
 
 
-          console.log("loaded new data form page: " + this.state.pageInt + ", " + this.state.megaList.length + " in megalist Length")
+          console.log("loaded new data form page: " + this.state.pageInt + ", max api page: " + dataList.total_pages + ", " + this.state.megaList.length + " in megalist Length")
         })
     })
   }

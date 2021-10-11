@@ -9,7 +9,7 @@ import Colors from "../src/style"
 function CustomDrawerContent(props) {
 
   return (
-    <DrawerContentScrollView contentContainerStyle={{paddingTop: Constants.statusBarHeight, backgroundColor:Colors.mainLight}} {...props}>
+    <DrawerContentScrollView contentContainerStyle={{paddingTop: Constants.statusBarHeight, backgroundColor:Colors.mainDark}} {...props}>
       <View style={{backgroundColor:Colors.background}}>
         <View style={styles.header}>
 
@@ -17,6 +17,7 @@ function CustomDrawerContent(props) {
 
         <DrawerItem style={styles.ItemsCard} label="Home" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('Home') }} />
         <DrawerItem style={styles.ItemsCard} label="Search movie" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('SearchPage', {number: Math.random() * 1000})}} />
+        <DrawerItem style={styles.ItemsCard} label="Genre search" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('AdvancedSearch', {number: Math.random() * 1000})}} />
         <DrawerItem style={styles.ItemsCard} label="My watchlist" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('watchlist', {number: Math.random() * 1000}) }} />
         {/* <DrawerItem style={styles.ItemsCard} label="Settings" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('Settings') }} /> */}
 

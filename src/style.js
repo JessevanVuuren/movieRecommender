@@ -8,6 +8,6 @@
 export default Colors = {
     background: "#03071E",
     mainColor: "#E85D04",
-    mainLight: "#6A040F",
+    mainDark: "#6A040F",
     textColor: "#FFFFFF"
 }

@@ -64,13 +64,13 @@ const Movie = ({ route, navigation }) => {
       .then((newData) => {
 
         const data = newData.results.US
-        if (data == undefined) { setToWatch([{ provider_name: "No data found" }]) }
+        if (data == undefined) { setToWatch([{ provider_name: "No providers found" }]) }
         else if ("flatrate_and_buy" in data) { setToWatch(data.flatrate_and_buy) }
         else if ("flatrate" in data) { setToWatch(data.flatrate) }
         else if ("rent" in data) { setToWatch(data.rent) }
         else if ("buy" in data) { setToWatch(data.buy) }
 
-        else { setToWatch([{ provider_name: "No data found" }]) }
+        else { setToWatch([{ provider_name: "No providers found" }]) }
       })
       .catch((error) => console.log(error))
       .finally(() => setMovieInfoDone(true))
