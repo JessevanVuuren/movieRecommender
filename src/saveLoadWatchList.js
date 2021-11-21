@@ -46,7 +46,8 @@ export const ifMovieAdded = async (id) => {
   const listObject = JSON.parse(await getMovieToWatchList())
 
   let alreadyExist = false
-  listObject["movieList"].map(item => { if(item["movieData"].id == id) alreadyExist = true })
+  if (listObject != null)
+    listObject["movieList"].map(item => { if(item["movieData"].id == id) alreadyExist = true })
 
   return alreadyExist
 }

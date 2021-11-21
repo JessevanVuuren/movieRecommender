@@ -1,5 +1,5 @@
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, Feather } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import Constants from 'expo-constants';
@@ -10,16 +10,16 @@ import WatchList from '../components/watchList';
 
 const watchList = ({ route, navigation }) => {
 
-  const [newNumber, setNewNumber] = useState(1)
+  // const [newNumber, setNewNumber] = useState(1)
 
-  useEffect(() => {
-    const willFocusSubscription = navigation.addListener('focus', () => {
-      setNewNumber(Math.random)
-    });
-    setNewNumber(Math.random)
+  // useEffect(() => {
+  //   // const willFocusSubscription = navigation.addListener('focus', () => {
+  //   //   setNewNumber(Math.random)
+  //   // });
+  //   setNewNumber(Math.random)
 
-    return willFocusSubscription;
-  }, []);
+  //   //return willFocusSubscription;
+  // }, []);
 
   
 
@@ -30,7 +30,7 @@ const watchList = ({ route, navigation }) => {
       <View style={styles.mainMenu}>
         <StatusBar style="light" />
         <TouchableOpacity style={styles.menuHamburger} onPress={() => navigation.openDrawer()}>
-          <Text style={{ fontSize: 35, color: Colors.textColor }}>☰</Text>
+          <Feather name="menu" size={40} color="white" />
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.menuLogo}>
@@ -43,7 +43,7 @@ const watchList = ({ route, navigation }) => {
       </View>
 
 
-      <WatchList key={Math.random() * newNumber} navigation={navigation} />
+      <WatchList navigation={navigation} />
     </View>
   );
 }
