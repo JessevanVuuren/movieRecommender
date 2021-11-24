@@ -3,9 +3,9 @@ import { StyleSheet, View, Dimensions, Image, TouchableOpacity, Text } from 'rea
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import React from 'react';
 
-import { MatchingMovies, baseUrl342, round, getNowPlaying, getUpComing, getTopRated, getPopular } from "../src/helper"
-import { FontText } from './fontText';
-import Colors from '../src/style';
+import { MatchingMovies, baseUrl342, round, getNowPlaying, getUpComing, getTopRated, getPopular } from "../../src/helper"
+import { FontText } from '../fontText';
+import Colors from '../../src/style';
 
 
 export default class MovieListScroll extends React.Component {
@@ -78,7 +78,7 @@ export default class MovieListScroll extends React.Component {
             <FontText color={Colors.mainColor} font={"Roboto-Bold"} fontSize={12}>{release_date.split("-")[0]}</FontText>
             <View style={{ alignItems:"center", flex: 1 }}>
               <View style={{ flexDirection: "row" }}>
-                <Image source={require("../assets/star-symbol.png")} style={[styles.topStar, { height: 10, width: 10 }]} />
+                <Image source={require("../../assets/star-symbol.png")} style={[styles.topStar, { height: 10, width: 10 }]} />
                 <FontText color={Colors.textColor} font={"Roboto-Bold"} fontSize={12}>{round(vote_average, 3)}</FontText>
               </View>
             </View>

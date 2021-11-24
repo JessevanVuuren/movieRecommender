@@ -7,9 +7,9 @@ import Constants from 'expo-constants'
 
 import { saveMovieToWatchList, ifMovieAdded, removeMovie } from "../src/saveLoadWatchList";
 import { baseUrl500, descriptionFix, getDate, genreDict } from "../src/helper";
-import MovieListScroll from "../components/MovieListScroll"
-import VideoPlayerScroll from "../components/videoPlayerScroll"
-import CastListScroll from "../components/castListScroll"
+import MovieListScroll from "../components/scrollView/MovieListScroll"
+import VideoPlayerScroll from "../components/scrollView/videoPlayerScroll"
+import CastListScroll from "../components/scrollView/castListScroll"
 import { FontText } from "../components/fontText"
 import Colors from '../src/style'
 

@@ -1,17 +1,14 @@
 
-import { StyleSheet, View, Dimensions, Image, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, Dimensions, Image, TouchableOpacity } from 'react-native';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
-import * as Linking from 'expo-linking';
-import React, { Component } from 'react';
+import React from 'react';
 
-import { getVideos } from "../src/helper"
-
-import { FontText } from './fontText';
-
-import Colors from '../src/style';
+import { getCast, baseUrl342 } from "../../src/helper"
+import { FontText } from '../fontText';
+import Colors from '../../src/style';
 
 
-export default class VideoPlayerScroll extends React.Component {
+export default class CastListScroll extends React.Component {
 
   constructor(props) {
     super(props);
@@ -26,24 +23,27 @@ export default class VideoPlayerScroll extends React.Component {
     }, (type, dim) => {
       switch (type) {
         case 'NORMAL':
-          dim.width = 213 + (Dimensions.get('window').width * 0.04);
-          dim.height = 120
+          dim.width = 100 + (Dimensions.get('window').width * 0.04);
+          dim.height = 150
           break;
       };
     })
   }
 
   componentDidMount = async () => {
-    console.log("Get videos: " + getVideos[0] + this.props.id + getVideos[1])
-    const getMovies = await fetch(getVideos[0] + this.props.id + getVideos[1])
+
+    console.log("Get cast list: " + getCast[0] + this.props.id + getCast[1])
+    const getMovies = await fetch(getCast[0] + this.props.id + getCast[1])
     const json = await getMovies.json()
 
     const fullList = []
-    for (let i = 0; i < json.results.length; i++) {
-      fullList.push({
-        type: "NORMAL", 
-        item: json.results[i]
-      })
+    for (let i = 0; i < json.cast.length; i++) {
+      if (json.cast[i].profile_path != null){
+        fullList.push({
+          type: "NORMAL", 
+          item: json.cast[i]
+        })
+      }
     }
 
 
@@ -54,15 +54,13 @@ export default class VideoPlayerScroll extends React.Component {
   }
 
   rowRenderer = (type, data) => {
-    const { key, name } = data.item;
+    const { profile_path } = data.item;
     return (
 
       <View style={styles.listItem}>
-        <TouchableOpacity onPress={() => Linking.openURL("http://www.youtube.com/watch?v=" + key)}>
-          <View style={styles.playButton}>
-            <Image style={styles.playImg} source={require("../assets/play.png")} />
-          </View>
-          <Image style={styles.img} source={{ uri: "https://img.youtube.com/vi/" + key + "/mqdefault.jpg" }} />
+        <TouchableOpacity>
+          <Image style={styles.img} source={{ uri: baseUrl342 + profile_path }} />
+          {/* <FontText style={styles.videoText} font={"Roboto-Regular"} fontSize={15}>{name}</FontText> */}
         </TouchableOpacity>
       </View>
     )
@@ -92,28 +90,11 @@ const styles = StyleSheet.create({
   listItem: {
     paddingLeft: Dimensions.get('window').width * 0.04,
   },
-  playButton:{
-    justifyContent:"center",
-    position:"absolute",
-    alignSelf:"center",
-    opacity:0.6,
-    height:120,
-    zIndex:10,
-    
-  },
-  playImg:{
 
-    height:20,
-    width:20
-  },
-
-  videoText: {
-    color:Colors.textColor,
-  },
 
   img: {
-    height: 120,
-    width: 213,
+    height: 150,
+    width: 100,
     borderRadius: 10,
     marginBottom:10
   }

@@ -1,5 +1,5 @@
-import { StyleSheet, View, Text, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native'
-import { FontAwesome, Feather } from '@expo/vector-icons';
+import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { FontAwesome, Feather, Ionicons } from '@expo/vector-icons';
 import React, { useState } from "react"
 import Colors from '../src/style'
 import Constants from 'expo-constants';
@@ -10,49 +10,36 @@ import { FontText } from "../components/fontText"
 
 export const TopBar = (props) => {
 
-
-
-
+  const hamburger = () => {
+    if (props.hambAction == "openD")
+      props.navigation.openDrawer()
+    if (props.hambAction == "goBack")
+      props.navigation.goBack()
+  }
 
   return (
     <View>
       <View style={{ backgroundColor: Colors.background, height: Constants.statusBarHeight }}></View>
       <View style={styles.mainMenu}>
         <StatusBar style="light" />
-        <TouchableOpacity style={styles.menuHamburger} onPress={() => props.navigation.openDrawer()}>
-          <Feather name="menu" size={30} color="white" />
+        <TouchableOpacity style={styles.menuHamburger} onPress={hamburger}>
+          {props.hambAction == "openD" ? <Feather name="menu" size={30} color="white" /> : <Ionicons name="arrow-back-sharp" size={30} color="white" />}
         </TouchableOpacity>
 
+        {props.extra != "hideSearchBar" && (
+          <TouchableOpacity style={styles.searchBar} onPress={() => props.navigation.navigate('SearchScreen')}>
+            <View style={styles.menuSearch}>
+              <View style={{ justifyContent: "center" }}>
+                <FontAwesome style={{ color: Colors.textColor }} name="search" size={15} color="black" />
+              </View>
+              <View style={{ marginLeft: 10 }}>
+                <FontText font={"Roboto-Medium"} fontSize={15}>Search for a movie</FontText>
+              </View>
+            </View>
+          </TouchableOpacity> )}
 
-        <View style={styles.searchBar}>
-          <View style={styles.menuSearch}>
-            <View style={{justifyContent:"center"}}>
-              <FontAwesome style={{ color: Colors.textColor }} name="search" size={15} color="black" />
-            </View>
-            <View style={{marginLeft:10}}>
-              <FontText font={"Roboto-Medium"} fontSize={15}>Search for a movie</FontText>
-            </View>
-          </View>
-        </View>
       </View>
 
-
-
-      {/* <View style={{ backgroundColor: Colors.mainDark, height:Constants.statusBarHeight}}></View>
-      <View style={styles.mainMenu}>
-        <StatusBar style="light" />
-        <TouchableOpacity style={styles.menuHamburger} onPress={() => props.navigation.openDrawer()}>
-          <Feather name="menu" size={40} color="white" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuLogo}>
-          <Text style={{ fontSize: 20, color: Colors.textColor }}>Movie Recommender</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuSearch} onPress={() => {props.navigation.navigate('SearchPage')}} >
-          <FontAwesome style={{ color: Colors.textColor }} name="search" size={30} color="black" />
-        </TouchableOpacity>
-      </View> */}
 
     </View>
   );

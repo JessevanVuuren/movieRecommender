@@ -5,10 +5,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
-import { MatchingMovies, baseUrl342, round, getNowPlaying, getUpComing, getTopRated, getPopular } from "../src/helper"
-import { FontText } from './fontText';
-import Colors from '../src/style';
-import { TopBar } from './topBar';
+import { MatchingMovies, baseUrl342, round, getNowPlaying, getUpComing, getTopRated, getPopular } from "../../src/helper"
+import { FontText } from '../fontText';
+import Colors from '../../src/style';
+import { TopBar } from '../topBar';
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width

@@ -17,6 +17,7 @@ function CustomDrawerContent(props) {
         </View>
 
         <DrawerItem style={styles.ItemsCard} label={() => <FontText fontSize={16} color={Colors.mainColor} font={"Roboto-Bold"}>Home</FontText>} onPress={() => { props.navigation.navigate('Home') }} />
+        <DrawerItem style={styles.ItemsCard} label={() => <FontText fontSize={16} color={Colors.mainColor} font={"Roboto-Bold"}>Search Movie</FontText>} onPress={() => { props.navigation.navigate('SearchScreen') }} />
         {/* <DrawerItem style={styles.ItemsCard} label="Search movie" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('SearchPage', {number: Math.random() * 1000})}} />
         <DrawerItem style={styles.ItemsCard} label="Genre search" labelStyle={{ color: Colors.textColor }} onPress={() => { props.navigation.navigate('AdvancedSearch', {number: Math.random() * 1000})}} /> */}
         <DrawerItem style={styles.ItemsCard}label={() => <FontText fontSize={16} color={Colors.mainColor} font={"Roboto-Bold"}>My watchlist</FontText>} onPress={() => { props.navigation.navigate('watchlist', {number: Math.random() * 1000}) }} />
