@@ -1,19 +1,29 @@
 import { StyleSheet, View, TextInput, TouchableOpacity, SafeAreaView, ScrollView, Text } from 'react-native';
 
+import MovieListVerticalScroll from '../components/scrollView/MovieListVerticalScroll';
+
 import { FontAwesome, Feather } from '@expo/vector-icons';
 import { FontText } from '../components/fontText';
 import { TopBar } from '../components/topBar';
 
 import Colors from '../src/style';
-import React from 'react';
+import React, { useState } from 'react';
 
 
 import { genreDict, genreList } from "../src/helper"
 
 const SearchPage = ({ navigation }) => {
 
+  const [loadingMovies, setLoadingMovies] = useState(false)
+  const [searchTimer, setSearchTimer] = useState(null)
+
   const userSearching = (text) => {
-    console.log(text)
+    setLoadingMovies(true)
+    clearTimeout(searchTimer)
+    setSearchTimer(setTimeout(() => {
+      console.log(text)
+      //this.setState({ userText: text, loadingMovies: false })
+    }, 1000))
   }
 
   return (
@@ -41,7 +51,7 @@ const SearchPage = ({ navigation }) => {
             {genreList.map((genre, index) => {
               if (index % 2 == 0) {
                 return (
-                  <TouchableOpacity key={index} style={styles.genreElement}>
+                  <TouchableOpacity key={index} style={[styles.genreElement, { marginLeft: "25%", marginRight:"7%" }]}>
                     <FontText fontSize={15} font={"Roboto-Bold"}>{genre[0]}</FontText>
                   </TouchableOpacity>
                 )
@@ -52,7 +62,7 @@ const SearchPage = ({ navigation }) => {
             {genreList.map((genre, index) => {
               if (index % 2 == 1) {
                 return (
-                  <TouchableOpacity key={index} style={styles.genreElement}>
+                  <TouchableOpacity key={index} style={[styles.genreElement, { marginRight: "25%", marginLeft: "7%" }]}>
                     <FontText fontSize={15} font={"Roboto-Bold"}>{genre[0]}</FontText>
                   </TouchableOpacity>
                 )
@@ -61,6 +71,10 @@ const SearchPage = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
+
+
+      <MovieListVerticalScroll id={"popular"} navigation={navigation} />
+
 
     </View>
   );
@@ -102,8 +116,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.darkLight,
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: "20%",
-    marginVertical: "10%",
+    marginVertical: "8%",
     borderRadius: 17
 
   },

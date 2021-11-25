@@ -1,12 +1,13 @@
 import { StyleSheet, View, Text } from 'react-native';
 import Colors from '../src/style';
-import React from 'react';
-
+import React, { useState } from 'react';
 
 
 const SettingsPage = ({ navigation }) => {
 
+
   return (
+
 
     <View style={styles.container}>
       <Text style={{ color: Colors.textColor }}>Settings</Text>
@@ -24,3 +25,4 @@ const styles = StyleSheet.create({
     flex: 1
   },
 });
+
