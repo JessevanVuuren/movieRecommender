@@ -30,10 +30,10 @@ export const TopBar = (props) => {
           <TouchableOpacity style={styles.searchBar} onPress={() => props.navigation.navigate('SearchScreen')}>
             <View style={styles.menuSearch}>
               <View style={{ justifyContent: "center" }}>
-                <FontAwesome style={{ color: Colors.textColor }} name="search" size={15} color="black" />
+                <FontAwesome style={{ color: Colors.textColor }} name="search" size={17} color="black" />
               </View>
               <View style={{ marginLeft: 10 }}>
-                <FontText font={"Roboto-Medium"} fontSize={15}>Search for a movie</FontText>
+                <FontText font={"Roboto-Medium"} fontSize={17}>Search for a movie</FontText>
               </View>
             </View>
           </TouchableOpacity> )}
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   searchBar: {
-    height: 30,
+    height: 40,
     width: "60%",
     borderRadius: 25,
     marginRight: "20%",

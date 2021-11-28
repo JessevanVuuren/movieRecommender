@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "movierecommender",
     "name": "MovieRecommender",
     "slug": "MovieRecommender",
     "version": "2.0.0",
@@ -19,15 +20,37 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.jesse.movieRecommender",
-      "buildNumber": "4"
+      "buildNumber": "6"
     },
     "android": {
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "http",
+              "host": "*.movieapp.42web.io",
+              "pathPattern ": "/"
+            },
+            {
+              "scheme": "http",
+              "host": "movieapp.42web.io",
+              "pathPattern ": "/"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.jesse.movieRecommender",
-      "versionCode": 4,
+      "versionCode": 6,
       "permissions": []
     },
     "web": {

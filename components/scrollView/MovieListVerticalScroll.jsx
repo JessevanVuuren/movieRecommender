@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
-import { MatchingMovies, baseUrl342, round, getNowPlaying, getUpComing, getTopRated, getPopular } from "../../src/helper"
+import { MatchingMovies, baseUrl342, SearchMovie, getNowPlaying, getUpComing, getTopRated, getPopular } from "../../src/helper"
 import { FontText } from '../fontText';
 import Colors from '../../src/style';
 import { TopBar } from '../topBar';
@@ -23,7 +23,8 @@ export default class MovieListVerticalScroll extends React.Component {
       list: new DataProvider((r1, r2) => r1 !== r2),
       imageSize: this.calcImgSize(),
       pageCount: 1,
-      megaList: []
+      megaList: [],
+      currentPageCount: 0,
     };
 
     this.layoutProvider = new LayoutProvider((i) => {
@@ -42,6 +43,9 @@ export default class MovieListVerticalScroll extends React.Component {
           dim.width = SCREEN_WIDTH;
           dim.height = 50
           break;
+        case 'SEARCH':
+          dim.width = SCREEN_WIDTH;
+          dim.height = 10
       };
     })
   }
@@ -70,6 +74,11 @@ export default class MovieListVerticalScroll extends React.Component {
     else if (this.props.id == "upComing") urlToFetch = getUpComing + "1"
     else if (this.props.id == "topRated") urlToFetch = getTopRated + "1"
     else if (this.props.id == "popular") urlToFetch = getPopular + this.state.pageCount
+    else if (this.props.id == "search") {
+      if (this.props.searchQuery == "") return
+      urlToFetch = SearchMovie[0] + this.props.searchQuery + SearchMovie[1] + "1"
+    }
+
     else urlToFetch = MatchingMovies[0] + this.props.id + MatchingMovies[1] + "1"
 
 
@@ -81,15 +90,19 @@ export default class MovieListVerticalScroll extends React.Component {
 
     if (initialize) {
       fullList.push({ type: "COMP", item: "" })
-      fullList.push({ type: "TITLE", item: "Popular" })
+
+      if (this.props.id == "popular") fullList.push({ type: "TITLE", item: "Popular" })
+      else fullList.push({ type: "SEARCH", item: "search" })
     }
 
 
     for (let i = 0; i < json.results.length; i++) {
-      fullList.push({
-        type: "NORMAL",
-        item: json.results[i]
-      })
+      if (json.results[i].poster_path != null || json.results[i].backdrop_path != null) {
+        fullList.push({
+          type: "NORMAL",
+          item: json.results[i]
+        })
+      }
     }
 
     if (fullList.length > 0) {
@@ -98,13 +111,20 @@ export default class MovieListVerticalScroll extends React.Component {
         megaList: [...this.state.megaList, ...fullList],
 
         doneLoading: true,
-        pageCount: this.state.pageCount + 1
+        pageCount: this.state.pageCount + 1,
+        currentPageCount: json.total_pages
       })
     }
 
   }
 
-  componentDidMount () { this.getMovieList(true) }
+  componentDidMount() { this.getMovieList(true) }
+
+  checkIfEnd() {
+    if (this.state.currentPageCount > this.state.pageCount) {
+      this.getMovieList(false)
+    }
+  }
 
   moveToMovie = async (movie) => {
     console.log(movie.title + ", " + movie.id)
@@ -125,10 +145,12 @@ export default class MovieListVerticalScroll extends React.Component {
         )
       case "TITLE":
         return (
-          <View style={{marginLeft:"4%"}}>
+          <View style={{ marginLeft: "4%" }}>
             <FontText fontSize={30} font={"Roboto-Bold"}>Popular</FontText>
           </View>
         )
+      case "SEARCH":
+        return (<View></View>)
       case "NORMAL":
         const { poster_path, title, release_date, vote_average } = data.item;
         return (
@@ -154,7 +176,7 @@ export default class MovieListVerticalScroll extends React.Component {
           rowRenderer={this.rowRenderer}
           dataProvider={this.state.list}
           layoutProvider={this.layoutProvider}
-          onEndReached={() => this.getMovieList(false)}
+          onEndReached={() => this.checkIfEnd()}
           onEndReachedThreshold={300}
           renderFooter={() => { return (<View style={{ width: Dimensions.get('window').width * 0.04 }}><Text>hey!</Text></View>) }} />
 
@@ -170,7 +192,8 @@ const styles = StyleSheet.create({
   listItem: {
     // alignSelf:"center",
     // alignItems:"center"
-    marginLeft: "10.5%"
+    // marginLeft: "10.5%"
+    marginLeft:"12.3%"
   },
   img: {
     borderRadius: 10,

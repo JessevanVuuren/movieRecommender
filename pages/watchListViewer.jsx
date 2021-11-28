@@ -7,41 +7,19 @@ import Colors from '../src/style';
 
 import WatchList from '../components/watchList';
 
+import { TopBar } from '../components/topBar';
 
-const watchList = ({ route, navigation }) => {
+const watchList = ({ navigation }) => {
 
-  // const [newNumber, setNewNumber] = useState(1)
-
-  // useEffect(() => {
-  //   // const willFocusSubscription = navigation.addListener('focus', () => {
-  //   //   setNewNumber(Math.random)
-  //   // });
-  //   setNewNumber(Math.random)
-
-  //   //return willFocusSubscription;
-  // }, []);
-
-  
 
   return (
     <View style={styles.container}>
 
-      <View style={{ backgroundColor: Colors.mainDark, height: Constants.statusBarHeight }}></View>
-      <View style={styles.mainMenu}>
-        <StatusBar style="light" />
-        <TouchableOpacity style={styles.menuHamburger} onPress={() => navigation.openDrawer()}>
-          <Feather name="menu" size={40} color="white" />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuLogo}>
-          <Text style={{ fontSize: 20, color: Colors.textColor }}>Movie Recommender</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuSearch} onPress={() => { navigation.navigate('SearchPage') }} >
-          <FontAwesome style={{ color: Colors.textColor }} name="search" size={30} color="black" />
-        </TouchableOpacity>
+      <TopBar navigation={navigation} hambAction={"openD"}/>
+      
+      <View style={{paddingTop:"4%"}}>
+        
       </View>
-
 
       <WatchList navigation={navigation} />
     </View>

@@ -39,7 +39,7 @@ export default class MovieListScroll extends React.Component {
     else urlToFetch = MatchingMovies[0] + this.props.id + MatchingMovies[1] + "1"
     
 
-    console.log("Get matching movies: " + urlToFetch)
+    console.log("Get movies: " + urlToFetch)
     const getMovies = await fetch(urlToFetch)
     const json = await getMovies.json()
 

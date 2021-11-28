@@ -34,6 +34,8 @@ export const getNowPlaying = ["https://api.themoviedb.org/3/movie/now_playing?ap
 // movies based on a movie
 export const MatchingMovies = ["https://api.themoviedb.org/3/movie/", "/recommendations?api_key=" + EXPO_API_URL + "&language=en-US&page="]
 
+// user input for specific movie
+export const SearchMovie = ["https://api.themoviedb.org/3/search/movie?api_key=" + EXPO_API_URL + "&language=en-US&query=", "&include_adult=false&page="]
 
 
 

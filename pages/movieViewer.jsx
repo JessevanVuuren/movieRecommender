@@ -1,4 +1,4 @@
-import { StyleSheet, View, TouchableOpacity, Text, Animated, Image } from "react-native"
+import { StyleSheet, View, TouchableOpacity, Text, Animated, Image, Share } from "react-native"
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text'
 import React, { useState, useRef, useEffect } from "react"
 import { LinearGradient } from "expo-linear-gradient"
@@ -23,11 +23,8 @@ const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 
 const Movie = ({ route, navigation }) => {
-  useEffect(() => {
-    checkMovie()
-  }, [])
 
-  const [object] = useState(route.params.jsonObject)
+  const [object, setObject] = useState(route.params.jsonObject)
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const [toggleDisc, setToggleDisc] = useState(false)
@@ -39,7 +36,19 @@ const Movie = ({ route, navigation }) => {
     extrapolate: 'clamp',
   });
 
+  useEffect(() => { 
+    checkMovie() 
+  }, [])
 
+
+
+  const share = async () => {
+    const result = await Share.share({
+      message: 'hoi',
+      title:"yoo",
+      url:"movierecommender://"
+    });
+  }
 
 
   const addRemoveMovie = async (movie) => {
@@ -98,9 +107,9 @@ const Movie = ({ route, navigation }) => {
 
 
 
-                  {/* <TouchableOpacity>
+                  <TouchableOpacity onPress={share}>
                     <Image source={require("../assets/share.png")} style={[styles.topButtons, { height: 20, width: 24 }]} />
-                  </TouchableOpacity> */}
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>

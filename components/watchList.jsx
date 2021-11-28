@@ -1,20 +1,18 @@
-
 import { StyleSheet, View, Dimensions, Image, TouchableOpacity, Text } from 'react-native';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
-import React, { Component } from 'react';
 import Colors from '../src/style';
+import React from 'react';
 
 import { getAllMovies } from "../src/saveLoadWatchList"
-
+import { baseUrl342, round } from "../src/helper"
+import { FontText } from './fontText';
 
 export default class WatchList extends React.Component {
 
   constructor(props) {
     super(props);
 
-    this.state = {
-      list: new DataProvider((r1, r2) => r1 !== r2),
-    };
+    this.state = { list: new DataProvider((r1, r2) => r1 !== r2) };
 
     this.layoutProvider = new LayoutProvider((i) => {
       return this.state.list.getDataForIndex(i).type;
@@ -22,7 +20,7 @@ export default class WatchList extends React.Component {
       switch (type) {
         case 'NORMAL':
           dim.width = Dimensions.get('window').width;
-          dim.height = 140
+          dim.height = 165
           break;
       };
     })
@@ -31,7 +29,7 @@ export default class WatchList extends React.Component {
   componentDidMount = async () => {
 
     const watchList = await getAllMovies()
-    
+
     for (let i = 0; i < watchList.length; i++) {
       watchList[i]["type"] = "NORMAL"
     }
@@ -48,17 +46,33 @@ export default class WatchList extends React.Component {
   }
 
   rowRenderer = (type, data) => {
-    const { title, date, poster_path } = data["movieData"];
+    const { poster_path, title, release_date, vote_average } = data.movieData;
     return (
 
       <View style={styles.listItem}>
-        <TouchableOpacity onPress={() => { this.moveToMovie(data["movieData"]) }}>
-          <Image style={{ height: 130, width: 90 }} source={{ uri: "https://image.tmdb.org/t/p/w342/" + poster_path}} />
-          <View style={styles.textView}>
-            <Text style={[styles.castName, { color: Colors.textColor }]}>{title}</Text>
-            <Text style={[styles.castName, { color: Colors.mainColor }]}>{date}</Text>
+        <TouchableOpacity onPress={() => { this.moveToMovie(data.movieData) }}>
+
+          <View style={{ alignItems: "flex-start", flex: 1 }}>
+            <Image style={styles.img} source={{ uri: baseUrl342 + poster_path }} />
 
           </View>
+
+          <View style={{ marginLeft: 110, marginBottom: 2 }}>
+
+            <FontText font={"Roboto-Bold"} fontSize={12} numberOfLines={2} >{title}</FontText>
+          </View>
+
+          <View style={styles.movieRatingRow}>
+            <FontText color={Colors.mainColor} font={"Roboto-Bold"} fontSize={12}>{release_date.split("-")[0]}</FontText>
+            <View style={{ marginLeft: 10, flex: 1 }}>
+              <View style={{ flexDirection: "row" }}>
+                <Image source={require("../assets/star-symbol.png")} style={[styles.topStar, { height: 10, width: 10 }]} />
+                <FontText color={Colors.textColor} font={"Roboto-Bold"} fontSize={12}>{round(vote_average, 3)}</FontText>
+              </View>
+            </View>
+          </View>
+
+
         </TouchableOpacity>
       </View>
     )
@@ -79,24 +93,29 @@ export default class WatchList extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  castName: {
-    fontSize: 17,
-    fontWeight: "bold"
-  },
-  textView: {
-    position: "absolute",
-    marginLeft: 100
-  },
   container: {
     flex: 1
   },
   listItem: {
-    width: "100%",
-    marginHorizontal: 15,
-    marginBottom: 10
+    paddingLeft: Dimensions.get('window').width * 0.04,
   },
-  imageTouch: {
-    width: 80,
-
-  }
+  img: {
+    height: 150,
+    width: 100,
+    borderRadius: 10,
+  },
+  movieRatingRow: {
+    marginLeft: 110,
+    marginBottom: 10,
+    flexDirection: "row",
+  },
+  voteAverage: {
+    color: Colors.textColor,
+    fontSize: 16,
+    marginTop: 5,
+  },
+  topStar: {
+    marginTop: 3,
+    marginRight: 3
+  },
 });
