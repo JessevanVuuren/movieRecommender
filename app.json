@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.jesse.movieRecommender",
-      "buildNumber": "6"
+      "buildNumber": "10"
     },
     "android": {
       "intentFilters": [
@@ -48,7 +48,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.jesse.movieRecommender",
-      "versionCode": 6,
+      "versionCode": 10,
       "permissions": []
     },
     "web": {
