@@ -3,16 +3,17 @@
     "version": ">= 0.38.3"
   },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
+    "globalData": {
+      "env": {
+        "EXPO_API_URL": "648d096ec16e3f691572593e44644d30"
+      }
     },
     "preview": {
+      "extends": "globalData",
       "distribution": "internal"
     },
-    "production": {}
-  },
-  "submit": {
-    "production": {}
+    "production": {
+      "extends": "globalData"
+    }
   }
 }
