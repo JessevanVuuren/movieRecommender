@@ -35,6 +35,14 @@
             {
               "scheme": "http",
               "host": "movieapp.42web.io"
+            },
+            {
+              "scheme": "https",
+              "host": "*testmovieapp123.000webhostapp.com"
+            },
+            {
+              "scheme": "https",
+              "host": "*.testmovieapp123.000webhostapp.com"
             }
           ],
           "category": [

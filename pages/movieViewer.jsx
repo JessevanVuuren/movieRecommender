@@ -43,13 +43,18 @@ const Movie = ({ route, navigation }) => {
 
 
   const share = async () => {
-    const result = await Share.share({
-      message: 'hoi',
-      title:"yoo",
-      url:"movierecommender://"
-    });
+    if (object.id == "580489") {
+      await Share.share({
+        message: "Have you seen " + object.title + " yet?\n\nhttps://testmovieapp123.000webhostapp.com/?id=" + object.id
+      });
+    } else {
+      await Share.share({
+        message: "Have you seen " + object.title + " yet?\n\nhttp://movieapp.42web.io/?id=" + object.id
+      });
+    }
   }
 
+  
 
   const addRemoveMovie = async (movie) => {
     if (!InWatchList) await saveMovieToWatchList(movie)
