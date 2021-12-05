@@ -24,7 +24,7 @@
       ],
       "supportsTablet": true,
       "bundleIdentifier": "com.jesse.movieRecommender",
-      "buildNumber": "11"
+      "buildNumber": "12"
     },
     "android": {
       "intentFilters": [
@@ -60,7 +60,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.jesse.movieRecommender",
-      "versionCode": 11,
+      "versionCode": 12,
       "permissions": []
     },
     "web": {
