@@ -1,5 +1,6 @@
 {
   "expo": {
+    "jsEngine": "hermes",
     "scheme": "movierecommender",
     "name": "MovieRecommender",
     "slug": "MovieRecommender",
@@ -18,6 +19,9 @@
       "**/*"
     ],
     "ios": {
+      "associatedDomains": [
+        "applinks:movierecommender.ga"
+      ],
       "supportsTablet": true,
       "bundleIdentifier": "com.jesse.movieRecommender",
       "buildNumber": "11"
@@ -38,11 +42,11 @@
             },
             {
               "scheme": "https",
-              "host": "*testmovieapp123.000webhostapp.com"
+              "host": "*movierecommender.ga"
             },
             {
               "scheme": "https",
-              "host": "*.testmovieapp123.000webhostapp.com"
+              "host": "*.movierecommender.ga"
             }
           ],
           "category": [

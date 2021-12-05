@@ -43,15 +43,7 @@ const Movie = ({ route, navigation }) => {
 
 
   const share = async () => {
-    if (object.id == "580489") {
-      await Share.share({
-        message: "Have you seen " + object.title + " yet?\n\nhttps://testmovieapp123.000webhostapp.com/?id=" + object.id
-      });
-    } else {
-      await Share.share({
-        message: "Have you seen " + object.title + " yet?\n\nhttp://movieapp.42web.io/?id=" + object.id
-      });
-    }
+    await Share.share({ message: "Have you seen " + object.title + " yet?\n\nhttps://movierecommender.ga/movie?id=" + object.id });
   }
 
   
