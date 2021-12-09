@@ -24,7 +24,7 @@ const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 const Movie = ({ route, navigation }) => {
 
-  const [object, setObject] = useState(route.params.jsonObject)
+  const [object] = useState(route.params.jsonObject)
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const [toggleDisc, setToggleDisc] = useState(false)
@@ -145,7 +145,7 @@ const Movie = ({ route, navigation }) => {
             <FontText fontSize={20} font={"Roboto-Bold"}>Cast</FontText>
           </View>
           <View style={{ flex: 1, height: 150 }}>
-            <CastListScroll id={object.id} />
+            <CastListScroll id={object.id} navigation={navigation} />
           </View>
 
 

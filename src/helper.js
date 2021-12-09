@@ -18,9 +18,13 @@ export const getCast = ["https://api.themoviedb.org/3/movie/", "/credits?api_key
 export const getVideos = ["https://api.themoviedb.org/3/movie/", "/videos?api_key=" + EXPO_API_URL + "&language=en-US"]
 
 
+// get more info over actor
+export const getActorInfo = ["https://api.themoviedb.org/3/person/", "?api_key=" + EXPO_API_URL + "&language=en-US"]
+
+
 
 // get popular 
-export const  getPopular = ["https://api.themoviedb.org/3/movie/popular?api_key=" + EXPO_API_URL + "&language=en-US&page="]
+export const getPopular = ["https://api.themoviedb.org/3/movie/popular?api_key=" + EXPO_API_URL + "&language=en-US&page="]
 
 //get Upcoming 
 export const getUpComing = ["https://api.themoviedb.org/3/movie/upcoming?api_key=" + EXPO_API_URL + "&language=en-US&page="]
@@ -37,12 +41,33 @@ export const MatchingMovies = ["https://api.themoviedb.org/3/movie/", "/recommen
 // user input for specific movie
 export const SearchMovie = ["https://api.themoviedb.org/3/search/movie?api_key=" + EXPO_API_URL + "&language=en-US&query=", "&include_adult=false&page="]
 
+export const GenreMovie = ["https://api.themoviedb.org/3/discover/movie?api_key=" + EXPO_API_URL + "&language=en-US&sort_by=popularity.desc&include_adult=false&with_genres=", "&with_watch_monetization_types=flatrate&page="]
 
 
 
 // genre List + id
-export const genreList = [["Action", 28], ["Adventure", 12], ["Animation", 16], ["Comedy", 35], ["Crime", 80], ["Documentary", 99], ["Drama", 18], ["Family", 10751], ["Fantasy", 14], ["History", 36], ["Horror", 27], ["Music", 10402], ["Mystery", 9648], ["Romance", 10749], ["Science Fiction", 878], ["TV Movie", 10770], ["Thriller", 53], ["War", 10752], ["Western", 37]]
-// the cooler list + id
+export const genreList = [
+        ["Action", 28],
+        ["Adventure", 12],
+        ["Animation", 16],
+        ["Comedy", 35],
+        ["Crime", 80],
+        ["Documentary", 99],
+        ["Drama", 18],
+        ["Family", 10751],
+        ["Fantasy", 14],
+        ["History", 36],
+        ["Horror", 27],
+        ["Music", 10402],
+        ["Mystery", 9648],
+        ["Romance", 10749],
+        ["Science Fiction", 878],
+        ["TV Movie", 10770],
+        ["Thriller", 53],
+        ["War", 10752],
+        ["Western", 37]
+    ]
+    // the cooler list + id
 export const genreDict = { 28: "Action", 12: "Adventure", 16: "Animation", 35: "Comedy", 80: "Crime", 99: "Documentary", 18: "Drama", 10751: "Family", 14: "Fantasy", 36: "History", 27: "Horror", 10402: "Music", 9648: "Mystery", 10749: "Romance", 878: "Science Fiction", 10770: "TV Movie", 53: "Thriller", 10752: "War", 37: "Western", }
 
 
@@ -61,6 +86,12 @@ export const getDate = (object) => {
     if (object.release_date == undefined) return ""
     const date = new Date(object.release_date)
     return monthNames[date.getMonth()] + " " + date.getFullYear()
+}
+
+export const getActorDate = (object) => {
+    if (object == undefined) return ""
+    const date = new Date(object)
+    return date.getDay() + " " + monthNames[date.getMonth()] + " " + date.getFullYear()
 }
 
 export const descriptionFix = (object, toggleDisc, short = 180) => {

@@ -41,6 +41,10 @@ const SearchPage = ({ navigation }) => {
     }, 950))
   }
 
+  const goToGenre = (genre) => {
+    navigation.push("GenrePage", { genre: genre })
+  }
+
   return (
     <View style={styles.container}>
       <TopBar navigation={navigation} extra="hideSearchBar" hambAction="goBack" />
@@ -67,7 +71,7 @@ const SearchPage = ({ navigation }) => {
                 {genreList.map((genre, index) => {
                   if (index % 2 == 0) {
                     return (
-                      <TouchableOpacity key={index} style={[styles.genreElement, { marginLeft: "25%", marginRight: "7%" }]}>
+                      <TouchableOpacity onPress={() => goToGenre(genre[1])} key={index} style={[styles.genreElement, { marginLeft: "25%", marginRight: "7%" }]}>
                         <FontText fontSize={15} font={"Roboto-Bold"}>{genre[0]}</FontText>
                       </TouchableOpacity>
                     )
@@ -78,7 +82,7 @@ const SearchPage = ({ navigation }) => {
                 {genreList.map((genre, index) => {
                   if (index % 2 == 1) {
                     return (
-                      <TouchableOpacity key={index} style={[styles.genreElement, { marginRight: "25%", marginLeft: "7%" }]}>
+                      <TouchableOpacity onPress={() => goToGenre(genre[1])} key={index} style={[styles.genreElement, { marginRight: "25%", marginLeft: "7%" }]}>
                         <FontText fontSize={15} font={"Roboto-Bold"}>{genre[0]}</FontText>
                       </TouchableOpacity>
                     )

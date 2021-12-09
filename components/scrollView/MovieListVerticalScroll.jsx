@@ -1,14 +1,11 @@
-
 import { StyleSheet, View, Dimensions, Image, TouchableOpacity, Text } from 'react-native';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import React from 'react';
-import PropTypes from 'prop-types';
 
 
-import { MatchingMovies, baseUrl342, SearchMovie, getNowPlaying, getUpComing, getTopRated, getPopular } from "../../src/helper"
+import { MatchingMovies, baseUrl342, SearchMovie, getNowPlaying, getUpComing, getTopRated, getPopular, GenreMovie } from "../../src/helper"
 import { FontText } from '../fontText';
 import Colors from '../../src/style';
-import { TopBar } from '../topBar';
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width
@@ -73,6 +70,7 @@ export default class MovieListVerticalScroll extends React.Component {
     if (this.props.id == "nowPlaying") urlToFetch = getNowPlaying + "1"
     else if (this.props.id == "upComing") urlToFetch = getUpComing + "1"
     else if (this.props.id == "topRated") urlToFetch = getTopRated + "1"
+    else if (this.props.id == "genreSearch") urlToFetch = GenreMovie[0] + this.props.searchQuery + GenreMovie[1] + this.state.pageCount
     else if (this.props.id == "popular") urlToFetch = getPopular + this.state.pageCount
     else if (this.props.id == "search") {
       if (this.props.searchQuery == "") return

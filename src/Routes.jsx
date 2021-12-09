@@ -6,7 +6,8 @@ import { CustomDrawerContent } from "../components/customDrawer"
 
 import { SettingsPage } from "../pages/settingsPage"
 import { watchList } from "../pages/watchListViewer"
-// import { Actor } from "../pages/actorViewer"
+import { ActorPage } from "../pages/ActorPage"
+import { genrePage } from "../pages/genrePage"
 import { Movie } from "../pages/movieViewer"
 import { Home } from '../pages/home'
 
@@ -27,10 +28,7 @@ const HomeStackScreen = ({ route, navigator }) => (
     <Drawer.Screen name="watchlist" initialParams={{ params: route.params }} component={watchList} options={{ header: () => null }} />
 
 
-    {/* <Drawer.Screen name="SearchPage" initialParams={{ params: route.params }} component={SearchPage} options={{ header: () => null }} /> */}
-
-    <Drawer.Screen name="Movies" component={Movie} options={{ header: () => null, drawerLabel: () => null, drawerIcon: () => null, title: null, }} />
-
+    {/* <Drawer.Screen name="Movies" component={Movie} options={{ header: () => null, drawerLabel: () => null, drawerIcon: () => null, title: null, }} /> */}
     {/* <Drawer.Screen name="AdvancedSearch" initialParams={{ params: route.params }} component={AdvancedSearch} options={{ header: () => null }} /> */}
     {/* <Drawer.Screen name="Actor" component={Actor} options={{ header: () => null, drawerLabel: () => null, drawerIcon: () => null, title: null, }} /> */}
   </Drawer.Navigator>
@@ -43,9 +41,8 @@ export const Routes = ({ }) => {
         <Stack.Screen name="HomeScreen" component={HomeStackScreen} options={{ header: () => null }} />
         <Stack.Screen name="MovieScreen" component={Movie} options={{ header: () => null }} />
         <Stack.Screen name="SearchScreen" component={SearchPage} options={{ header: () => null }} />
-
-
-        {/* <Stack.Screen name="ActorScreen" component={Actor} options={{ header: () => null }} /> */}
+        <Stack.Screen name="GenrePage" component={genrePage} options={{ header: () => null }} />
+        <Stack.Screen name="ActorPage" component={ActorPage} options={{ header: () => null }} />
       </Stack.Navigator>
     </NavigationContainer>
   )

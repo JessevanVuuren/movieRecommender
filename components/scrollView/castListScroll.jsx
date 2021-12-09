@@ -53,12 +53,17 @@ export default class CastListScroll extends React.Component {
     })
   }
 
+  goToActor = async (ActorObject) => {
+    console.log("Go to: " + ActorObject.name)
+    this.props.navigation.push("ActorPage", { ActorObject: ActorObject })
+  }
+
   rowRenderer = (type, data) => {
-    const { profile_path } = data.item;
+    const { profile_path, name } = data.item;
     return (
 
       <View style={styles.listItem}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => this.goToActor(data.item)}>
           <Image style={styles.img} source={{ uri: baseUrl342 + profile_path }} />
           {/* <FontText style={styles.videoText} font={"Roboto-Regular"} fontSize={15}>{name}</FontText> */}
         </TouchableOpacity>
