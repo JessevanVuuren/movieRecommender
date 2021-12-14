@@ -3,7 +3,7 @@ import { StyleSheet, View, Dimensions, Image, TouchableOpacity, Text } from 'rea
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import React from 'react';
 
-import { MatchingMovies, baseUrl342, round, getNowPlaying, getUpComing, getTopRated, getPopular } from "../../src/helper"
+import { MatchingMovies, baseUrl342, round, getNowPlaying, getUpComing, getTopRated, ActorList } from "../../src/helper"
 import { FontText } from '../fontText';
 import Colors from '../../src/style';
 
@@ -15,6 +15,9 @@ export default class MovieListScroll extends React.Component {
 
     this.state = {
       doneLoading: false,
+      currentPageCount: 0,
+      megaList: [],
+      pageCount: 1,
       list: new DataProvider((r1, r2) => r1 !== r2),
     };
 
@@ -30,14 +33,17 @@ export default class MovieListScroll extends React.Component {
     })
   }
 
-  componentDidMount = async () => {
+  componentDidMount() {this.loadMovies()}
+
+  loadMovies = async () => {
     let urlToFetch = ""
 
-    if(this.props.id == "nowPlaying") urlToFetch = getNowPlaying + "1"
-    else if(this.props.id == "upComing") urlToFetch = getUpComing + "1"
-    else if(this.props.id == "topRated") urlToFetch = getTopRated + "1"
+    if (this.props.id == "nowPlaying") urlToFetch = getNowPlaying + "1"
+    else if (this.props.id == "upComing") urlToFetch = getUpComing + "1"
+    else if (this.props.id == "topRated") urlToFetch = getTopRated + "1"
+    else if (this.props.id == "actorMovieList") urlToFetch = ActorList[0] + this.props.actorID + ActorList[1] + this.state.pageCount
     else urlToFetch = MatchingMovies[0] + this.props.id + MatchingMovies[1] + "1"
-    
+
 
     console.log("Get movies: " + urlToFetch)
     const getMovies = await fetch(urlToFetch)
@@ -45,18 +51,28 @@ export default class MovieListScroll extends React.Component {
 
     const fullList = []
     for (let i = 0; i < json.results.length; i++) {
-      fullList.push({
-        type: "NORMAL",
-        item: json.results[i]
-      })
+      if (json.results[i].poster_path != null || json.results[i].backdrop_path != null) {
+        fullList.push({
+          type: "NORMAL",
+          item: json.results[i]
+        })
+      }
     }
 
     if (fullList.length > 0) {
       this.setState({
-        list: this.state.list.cloneWithRows(fullList),
-        doneLoading: true
+        list: this.state.list.cloneWithRows([...this.state.megaList, ...fullList]),
+        megaList: [...this.state.megaList, ...fullList],
+
+        doneLoading: true,
+        pageCount: this.state.pageCount + 1,
+        currentPageCount: json.total_pages
       })
     }
+
+
+
+
   }
 
   moveToMovie = async (movie) => {
@@ -100,7 +116,7 @@ export default class MovieListScroll extends React.Component {
           rowRenderer={this.rowRenderer}
           dataProvider={this.state.list}
           layoutProvider={this.layoutProvider}
-          onEndReached={() => {console.log("event horizontal scroll")}}
+          onEndReached={() => { if (this.props.id == "actorMovieList") this.loadMovies()}}
           renderFooter={() => { return (<View style={{ width: Dimensions.get('window').width * 0.04 }}><Text>hey!</Text></View>) }} />
       </View>
     );

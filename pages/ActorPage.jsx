@@ -5,10 +5,12 @@ import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from '@expo/vector-icons'
 import Constants from 'expo-constants'
 
-import { baseUrl500, getActorInfo, getActorDate, descriptionFix } from "../src/helper";
+import { baseUrl500, getActorInfo, getActorDate, descriptionFix } from "../src/helper"
+import MovieListVerticalScroll from '../components/scrollView/MovieListVerticalScroll'
+import MovieListScroll from "../components/scrollView/MovieListScroll"
+import ActorImgViewer from "../components/scrollView/actorImgViewer"
 import { FontText } from "../components/fontText"
 import Colors from '../src/style'
-
 
 // "adult": false
 // "cast_id": 7
@@ -43,11 +45,11 @@ import Colors from '../src/style'
 // ]
 // "biography": "<<text>>"
 // "birthday": "1977-09-15"
-// "deathday": null                                     <=== 4 Sep 1977 - deathday
+// "deathday": null                                     <=== 4 Sep 1977 - deathday    //////////
 // "gender": 2
 // "homepage": null                                     <=== instead of share button
 // "id": 2524
-// "imdb_id": "nm0362766"                               <== to imdb if deeplink
+// "imdb_id": "nm0362766"                               <=== to imdb if deeplink
 // "known_for_department": "Acting"
 // "name": "Tom Hardy"
 // "place_of_birth": "Hammersmith, London, England, UK" <=== miss????
@@ -73,9 +75,9 @@ const ActorPage = ({ route, navigation }) => {
 
   useEffect(() => {
     const getActorInfoAsync = async () => {
+      console.log("get Actor Info: " + getActorInfo[0] + object.id + getActorInfo[1])
       const getMovies = await fetch(getActorInfo[0] + object.id + getActorInfo[1])
       const json = await getMovies.json()
-      console.log(json)
       setExtraInfo(json)
       setBiography(json.biography)
     }
@@ -117,7 +119,14 @@ const ActorPage = ({ route, navigation }) => {
               <Text style={styles.releaseDate}>{getActorDate(extraInfo.birthday)}
                 {extraInfo.deathday && " - " + getActorDate(extraInfo.deathday)}
               </Text>
+
+              <View style={{ alignItems: "flex-end", flex: 1 }}>
+                <View style={{ flexDirection: "row" }}>
+                </View>
+              </View>
             </View>
+
+
 
             <View style={{ marginTop: 29 }}>
               <FontText font={"Roboto-Bold"} fontSize={20}>Biography</FontText>
@@ -126,6 +135,14 @@ const ActorPage = ({ route, navigation }) => {
               <Text onPress={() => setToggleDisc(!toggleDisc)} style={{ color: Colors.mainColor }}>{!toggleDisc ? " More" : " Less"}</Text>
             )}</FontText>
 
+          </View>
+
+
+          <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
+            <FontText fontSize={20} font={"Roboto-Bold"}>Filmography</FontText>
+          </View>
+          <View style={{ flex: 1, height: 250 }}>
+            <MovieListScroll id={"actorMovieList"} navigation={navigation} actorID={object.id} />
           </View>
 
         </View>

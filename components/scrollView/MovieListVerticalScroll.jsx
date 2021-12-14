@@ -3,7 +3,7 @@ import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview
 import React from 'react';
 
 
-import { MatchingMovies, baseUrl342, SearchMovie, getNowPlaying, getUpComing, getTopRated, getPopular, GenreMovie } from "../../src/helper"
+import { MatchingMovies, baseUrl342, SearchMovie, getNowPlaying, getUpComing, getTopRated, getPopular, GenreMovie, ActorList } from "../../src/helper"
 import { FontText } from '../fontText';
 import Colors from '../../src/style';
 

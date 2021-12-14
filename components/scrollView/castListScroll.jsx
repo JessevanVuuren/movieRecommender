@@ -54,7 +54,7 @@ export default class CastListScroll extends React.Component {
   }
 
   goToActor = async (ActorObject) => {
-    console.log("Go to: " + ActorObject.name)
+    console.log("Go to: " + ActorObject.name + " - " + ActorObject.id)
     this.props.navigation.push("ActorPage", { ActorObject: ActorObject })
   }
 

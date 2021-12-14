@@ -45,6 +45,15 @@ export const GenreMovie = ["https://api.themoviedb.org/3/discover/movie?api_key=
 
 
 
+// get all images actor tagged in
+export const ActorImgs = ["https://api.themoviedb.org/3/person/", "/tagged_images?api_key=" + EXPO_API_URL + "&language=en-US&page="]
+// get all movies a actor played in
+export const ActorList = ["https://api.themoviedb.org/3/discover/movie?api_key=" + EXPO_API_URL + "&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&with_people=", "&with_watch_monetization_types=flatrate&page="]
+
+
+
+
+
 // genre List + id
 export const genreList = [
         ["Action", 28],
@@ -91,7 +100,7 @@ export const getDate = (object) => {
 export const getActorDate = (object) => {
     if (object == undefined) return ""
     const date = new Date(object)
-    return date.getDay() + " " + monthNames[date.getMonth()] + " " + date.getFullYear()
+    return object.split("-")[2] + " " + monthNames[date.getMonth()] + " " + date.getFullYear()
 }
 
 export const descriptionFix = (object, toggleDisc, short = 180) => {

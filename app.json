@@ -36,7 +36,7 @@
               "scheme": "http",
               "host": "*.movieapp.42web.io"
             },
-            {
+            { 
               "scheme": "http",
               "host": "movieapp.42web.io"
             },
@@ -60,7 +60,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.jesse.movieRecommender",
-      "versionCode": 13,
+      "versionCode": 14,
       "permissions": []
     },
     "web": {
