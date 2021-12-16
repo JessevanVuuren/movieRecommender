@@ -144,12 +144,12 @@ const Movie = ({ route, navigation }) => {
           <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
             <FontText fontSize={20} font={"Roboto-Bold"}>Cast</FontText>
           </View>
-          <View style={{ flex: 1, height: 150 }}>
+          <View style={{ flex: 1, height: 200 }}>
             <CastListScroll id={object.id} navigation={navigation} />
           </View>
 
 
-          <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
+          <View style={{ marginLeft: "4%", marginTop: 10, marginBottom: 5 }}>
             <FontText fontSize={20} font={"Roboto-Bold"}>Matching movie's</FontText>
           </View>
           <View style={{ flex: 1, height: 250 }}>
