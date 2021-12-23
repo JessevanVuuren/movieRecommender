@@ -24,7 +24,7 @@
       ],
       "supportsTablet": true,
       "bundleIdentifier": "com.jesse.movieRecommender",
-      "buildNumber": "12"
+      "buildNumber": "13"
     },
     "android": {
       "intentFilters": [

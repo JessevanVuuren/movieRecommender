@@ -65,7 +65,8 @@ export default class CastListScroll extends React.Component {
       <View style={styles.listItem}>
         <TouchableOpacity onPress={() => this.goToActor(data.item)}>
           <Image style={styles.img} source={{ uri: baseUrl342 + profile_path }} />
-          {/* <FontText style={styles.videoText} font={"Roboto-Regular"} fontSize={15}>{name}</FontText> */}
+          <FontText font={"Roboto-Bold"} fontSize={14}>{name}</FontText>
+
         </TouchableOpacity>
       </View>
     )
