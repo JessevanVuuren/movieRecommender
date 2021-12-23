@@ -1,27 +1,33 @@
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import { FontAwesome, Feather } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, View, BackHandler } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import Constants from 'expo-constants';
+
 import Colors from '../src/style';
 
-import WatchList from '../components/watchList';
-
+import WatchList from '../components/scrollView/watchList';
 import { TopBar } from '../components/topBar';
 
 const watchList = ({ navigation }) => {
 
+  const [reload, setReload] = useState();
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
+      setReload(Math.random())
+    });
+
+    return () => backHandler.remove();
+  }, []);
 
   return (
     <View style={styles.container}>
 
-      <TopBar navigation={navigation} hambAction={"openD"}/>
-      
-      <View style={{paddingTop:"4%"}}>
-        
+      <TopBar navigation={navigation} hambAction={"openD"} />
+
+      <View style={{ paddingTop: "4%" }}>
+
       </View>
 
-      <WatchList navigation={navigation} />
+      <WatchList navigation={navigation} key={Math.random() + reload} />
     </View>
   );
 }

@@ -6,9 +6,7 @@ import { Ionicons } from '@expo/vector-icons'
 import Constants from 'expo-constants'
 
 import { baseUrl500, getActorInfo, getActorDate, descriptionFix } from "../src/helper"
-import MovieListVerticalScroll from '../components/scrollView/MovieListVerticalScroll'
 import MovieListScroll from "../components/scrollView/MovieListScroll"
-import ActorImgViewer from "../components/scrollView/actorImgViewer"
 import { FontText } from "../components/fontText"
 import Colors from '../src/style'
 

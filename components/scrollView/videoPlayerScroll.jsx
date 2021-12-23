@@ -1,13 +1,10 @@
 
-import { StyleSheet, View, Dimensions, Image, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, Dimensions, Image, TouchableOpacity } from 'react-native';
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import * as Linking from 'expo-linking';
-import React, { Component } from 'react';
+import React, { } from 'react';
 
 import { getVideos } from "../../src/helper"
-
-import { FontText } from '../fontText';
-
 import Colors from '../../src/style';
 
 

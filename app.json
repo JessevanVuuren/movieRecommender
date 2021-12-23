@@ -2,15 +2,15 @@
   "expo": {
     "jsEngine": "hermes",
     "scheme": "movierecommender",
-    "name": "MovieRecommender",
+    "name": "Movie App",
     "slug": "MovieRecommender",
     "version": "2.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon.jpg",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#1f2029"
+      "backgroundColor": "#03071E"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -56,11 +56,11 @@
         }
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.jpg",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.jesse.movieRecommender",
-      "versionCode": 14,
+      "versionCode": 15,
       "permissions": []
     },
     "web": {

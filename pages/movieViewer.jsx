@@ -1,14 +1,14 @@
-import { StyleSheet, View, TouchableOpacity, Text, Animated, Image, Share } from "react-native"
+import { StyleSheet, View, TouchableOpacity, Text, Animated, Image, Share, ScrollView } from "react-native"
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text'
 import React, { useState, useRef, useEffect } from "react"
 import { LinearGradient } from "expo-linear-gradient"
 import { Ionicons } from '@expo/vector-icons'
 import Constants from 'expo-constants'
 
+import { baseUrl500, descriptionFix, getDate, genreDict, whereToWatch, baseUrlOri, baseUrl342 } from "../src/helper";
 import { saveMovieToWatchList, ifMovieAdded, removeMovie } from "../src/saveLoadWatchList";
-import { baseUrl500, descriptionFix, getDate, genreDict } from "../src/helper";
-import MovieListScroll from "../components/scrollView/MovieListScroll"
 import VideoPlayerScroll from "../components/scrollView/videoPlayerScroll"
+import MovieListScroll from "../components/scrollView/MovieListScroll"
 import CastListScroll from "../components/scrollView/castListScroll"
 import { FontText } from "../components/fontText"
 import Colors from '../src/style'
@@ -30,23 +30,66 @@ const Movie = ({ route, navigation }) => {
   const [toggleDisc, setToggleDisc] = useState(false)
   const descriptionText = descriptionFix(object.overview, toggleDisc)
 
+  const [providers, setProviders] = useState({})
+
   const imageTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_SCROLL_DISTANCE],
     outputRange: [0, -100],
     extrapolate: 'clamp',
   });
 
-  useEffect(() => { 
-    checkMovie() 
+  useEffect(() => {
+    checkMovie()
+    getStreamProviders()
   }, [])
 
+  const getStreamProviders = async () => {
+    console.log("Get provider: " + whereToWatch[0] + object.id + whereToWatch[1])
+    const data = await fetch(whereToWatch[0] + object.id + whereToWatch[1])
+    const json = await data.json()
+    if (json.results.US) {
+      const fullArray = { "data": [] }
+      const pro = json.results.US
+      const nameAlreadyIn = []
 
+      if (pro.buy) {
+        for (let i = 0; i < pro.buy.length; i++) {
+          let provider = pro.buy[i];
+          nameAlreadyIn.push(provider.provider_name)
+          fullArray["data"].push(provider)
+        }
+      }
+
+      if (pro.rent) {
+        for (let i = 0; i < pro.rent.length; i++) {
+          let provider = pro.rent[i];
+          if (!nameAlreadyIn.includes(provider.provider_name)) {
+            nameAlreadyIn.push(provider.provider_name)
+            fullArray["data"].push(provider)
+          }
+        }
+      }
+      if (pro.flatrate) {
+        for (let i = 0; i < pro.flatrate.length; i++) {
+          let provider = pro.flatrate[i];
+          if (!nameAlreadyIn.includes(provider.provider_name)) {
+            fullArray["data"].push(provider)
+          }
+        }
+      }
+
+      setProviders(fullArray)
+
+    }
+
+    //object["providers"] = json["results"]
+  }
 
   const share = async () => {
     await Share.share({ message: "Have you seen " + object.title + " yet?\n\nhttps://movierecommender.ga/movie?id=" + object.id });
   }
 
-  
+
 
   const addRemoveMovie = async (movie) => {
     if (!InWatchList) await saveMovieToWatchList(movie)
@@ -111,49 +154,80 @@ const Movie = ({ route, navigation }) => {
               </View>
             </View>
 
-            <View style={{ marginTop: 29 }}>
-              <FontText font={"Roboto-Bold"} fontSize={20}>Description</FontText>
-            </View>
-            <FontText font={"Roboto-Regular"} fontSize={14} >{descriptionText.text} {descriptionText.shortened && (
-              <Text onPress={() => setToggleDisc(!toggleDisc)} style={{ color: Colors.mainColor }}>{!toggleDisc ? " More" : " Less"}</Text>
-            )}</FontText>
-
-
-            <View style={{ marginTop: 29 }}>
-              <FontText fontSize={20} font={"Roboto-Bold"}>Genres</FontText>
-            </View>
-            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-              {object.genre_ids.map((genreID, key) => {
-                // return (<TouchableOpacity key={key} style={styles.genresView}><Text style={[styles.genresText, { fontFamily: "Roboto-Medium" }]}>{genreDict[genreID]}</Text></TouchableOpacity>)
-                return (<TouchableOpacity key={key} style={styles.genresView}><FontText fontSize={15} font={"Roboto-Regular"} >{genreDict[genreID]}</FontText></TouchableOpacity>)
-              })}
+            {/* description */}
+            <View>
+              <View style={{ marginTop: 29 }}>
+                <FontText font={"Roboto-Bold"} fontSize={20}>Description</FontText>
+              </View>
+              <FontText font={"Roboto-Regular"} fontSize={14} >{descriptionText.text} {descriptionText.shortened && (
+                <Text onPress={() => setToggleDisc(!toggleDisc)} style={{ color: Colors.mainColor }}>{!toggleDisc ? " More" : " Less"}</Text>
+              )}</FontText>
             </View>
 
+            {/* Genres */}
+            <View>
+              <View style={{ marginTop: 29 }}>
+                <FontText fontSize={20} font={"Roboto-Bold"}>Genres</FontText>
+              </View>
+              <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+                {object.genre_ids.map((genreID, key) => {
+                  return (<View key={key} style={styles.genresView}><FontText fontSize={15} font={"Roboto-Regular"} >{genreDict[genreID]}</FontText></View>)
+                })}
+              </View>
+            </View>
 
+            {/* watch here */}
+            <View>
+              {providers.data && (
+                <View>
+                  <View style={{ marginTop: 29, marginBottom: 5 }}>
+                    <FontText fontSize={20} font={"Roboto-Bold"}>Watch here</FontText>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <ScrollView horizontal={true}>
+                      {providers.data.map(provider => {
+                        return (<Image key={provider.provider_id} style={{ height: 40, width: 40, marginRight: 10, borderRadius: 9 }} source={{ uri: baseUrlOri + provider.logo_path }} />)
+                      }
+                      )}
+                    </ScrollView>
+                  </View>
+                </View>
+              )}
+            </View>
 
           </View>
 
-          <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
-            <FontText fontSize={20} font={"Roboto-Bold"}>Trailer's & Video's</FontText>
-          </View>
-          <View style={{ flex: 1, height: 120 }}>
-            <VideoPlayerScroll id={object.id} />
-          </View>
-
-
-          <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
-            <FontText fontSize={20} font={"Roboto-Bold"}>Cast</FontText>
-          </View>
-          <View style={{ flex: 1, height: 150 }}>
-            <CastListScroll id={object.id} navigation={navigation} />
+          {/* Trailer's and Video's */}
+          <View>
+            <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
+              <FontText fontSize={20} font={"Roboto-Bold"}>Trailer's & Video's</FontText>
+            </View>
+            <View style={{ flex: 1, height: 120 }}>
+              <VideoPlayerScroll id={object.id} />
+            </View>
           </View>
 
 
-          <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
-            <FontText fontSize={20} font={"Roboto-Bold"}>Matching movie's</FontText>
+          {/* Cast */}
+          <View>
+
+            <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
+              <FontText fontSize={20} font={"Roboto-Bold"}>Cast</FontText>
+            </View>
+            <View style={{ flex: 1, height: 150 }}>
+              <CastListScroll id={object.id} navigation={navigation} />
+            </View>
           </View>
-          <View style={{ flex: 1, height: 250 }}>
-            <MovieListScroll id={object.id} navigation={navigation} />
+
+
+          {/* Matching Movie's */}
+          <View>
+            <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
+              <FontText fontSize={20} font={"Roboto-Bold"}>Matching movie's</FontText>
+            </View>
+            <View style={{ flex: 1, height: 250 }}>
+              <MovieListScroll id={object.id} navigation={navigation} />
+            </View>
           </View>
 
         </View>

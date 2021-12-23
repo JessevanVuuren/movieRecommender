@@ -2,14 +2,15 @@ import * as Font from "expo-font"
 import { EXPO_API_URL } from '@env'
 
 // base url for img // w500 is for quality 
-export const baseUrl500 = "https://image.tmdb.org/t/p/w500/"
+export const baseUrl500 = "https://image.tmdb.org/t/p/w500"
 export const baseUrl342 = "https://image.tmdb.org/t/p/w342"
+export const baseUrlOri = "https://image.tmdb.org/t/p/original"
 
 // url for info from a movie 
 export const infoUrl = ["https://api.themoviedb.org/3/movie/", "?api_key=" + EXPO_API_URL + "&language=en-US"]
 
 // stream provider 
-export const whereToWatch = ["https://api.themoviedb.org/3/movie/", "/watch/providers?api_key=" + EXPO_API_URL]
+export const whereToWatch = ["https://api.themoviedb.org/3/movie/", "/watch/providers?api_key=" + EXPO_API_URL + "&language=en-US"]
 
 // get cast list
 export const getCast = ["https://api.themoviedb.org/3/movie/", "/credits?api_key=" + EXPO_API_URL + "&language=en-US"]
