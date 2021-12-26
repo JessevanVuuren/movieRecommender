@@ -79,10 +79,7 @@ const Movie = ({ route, navigation }) => {
       }
 
       setProviders(fullArray)
-
     }
-
-    //object["providers"] = json["results"]
   }
 
   const share = async () => {
@@ -109,7 +106,6 @@ const Movie = ({ route, navigation }) => {
         <Ionicons style={styles.backArrow} name="arrow-back" size={24} color="white" />
       </TouchableOpacity>
 
-
       <Animated.Image style={[styles.mainImg, { transform: [{ translateY: imageTranslateY }] }]} source={{ uri: baseUrl500 + object.backdrop_path }} />
 
       <Animated.ScrollView
@@ -118,12 +114,10 @@ const Movie = ({ route, navigation }) => {
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })} >
 
         <LinearGradient colors={['rgba(255,255,255,0)', 'rgba(3, 7, 30,1)']} start={{ x: 1, y: 0 }} end={{ x: 1, y: 1 }} style={{ flex: 1, height: 80, width: "100%", marginTop: -80 }} />
-
         <View style={{ backgroundColor: Colors.background }}>
 
           <AutoSizeText fontSize={43} numberOfLines={1} style={styles.titleText} mode={ResizeTextMode.max_lines}> {object.title} </AutoSizeText>
           <View style={styles.scrollContainer}>
-
 
 
             <View style={styles.addButton}>
@@ -154,6 +148,7 @@ const Movie = ({ route, navigation }) => {
               </View>
             </View>
 
+
             {/* description */}
             <View>
               <View style={{ marginTop: 29 }}>
@@ -163,6 +158,7 @@ const Movie = ({ route, navigation }) => {
                 <Text onPress={() => setToggleDisc(!toggleDisc)} style={{ color: Colors.mainColor }}>{!toggleDisc ? " More" : " Less"}</Text>
               )}</FontText>
             </View>
+
 
             {/* Genres */}
             <View>
@@ -175,6 +171,7 @@ const Movie = ({ route, navigation }) => {
                 })}
               </View>
             </View>
+
 
             {/* watch here */}
             <View>
@@ -194,8 +191,8 @@ const Movie = ({ route, navigation }) => {
                 </View>
               )}
             </View>
-
           </View>
+
 
           {/* Trailer's and Video's */}
           <View>
@@ -214,7 +211,7 @@ const Movie = ({ route, navigation }) => {
             <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
               <FontText fontSize={20} font={"Roboto-Bold"}>Cast</FontText>
             </View>
-            <View style={{ flex: 1, height: 150 }}>
+            <View style={{ flex: 1, height: 200 }}>
               <CastListScroll id={object.id} navigation={navigation} />
             </View>
           </View>

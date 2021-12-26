@@ -1,10 +1,11 @@
 import { StyleSheet, View, BackHandler } from 'react-native';
 import React, { useState, useEffect } from 'react';
 
+import WatchList from '../components/scrollView/watchList';
+import { FontText } from "../components/fontText"
+import { TopBar } from '../components/topBar';
 import Colors from '../src/style';
 
-import WatchList from '../components/scrollView/watchList';
-import { TopBar } from '../components/topBar';
 
 const watchList = ({ navigation }) => {
 
@@ -23,7 +24,10 @@ const watchList = ({ navigation }) => {
 
       <TopBar navigation={navigation} hambAction={"openD"} />
 
-      <View style={{ paddingTop: "4%" }}>
+
+
+      <View style={{ marginBottom: "4%", marginLeft:"4%", marginTop: "5%" }}>
+      <FontText fontSize={22} font={"Roboto-Bold"}>Your Watchlist</FontText>
 
       </View>
 
