@@ -1,6 +1,5 @@
 {
   "expo": {
-    "jsEngine": "hermes",
     "scheme": "movierecommender",
     "name": "Movie App",
     "slug": "MovieRecommender",
