@@ -23,7 +23,7 @@
       ],
       "supportsTablet": true,
       "bundleIdentifier": "com.jesse.movieRecommender",
-      "buildNumber": "13"
+      "buildNumber": "16"
     },
     "android": {
       "intentFilters": [
@@ -35,7 +35,7 @@
               "scheme": "http",
               "host": "*.movieapp.42web.io"
             },
-            { 
+            {
               "scheme": "http",
               "host": "movieapp.42web.io"
             },
@@ -59,11 +59,16 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.jesse.movieRecommender",
-      "versionCode": 15,
+      "versionCode": 16,
       "permissions": []
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b1b04025-da10-418a-b3b8-151f2e590adc"
+      }
     }
   }
 }

@@ -69,10 +69,6 @@ export default class MovieListScroll extends React.Component {
         currentPageCount: json.total_pages
       })
     }
-
-
-
-
   }
 
   moveToMovie = async (movie) => {
@@ -107,7 +103,10 @@ export default class MovieListScroll extends React.Component {
   }
 
   render() {
-    if (!this.state.doneLoading) return null
+    this.props.listLength?.(this.state.megaList.length)
+    if (!this.state.doneLoading) {
+      return null
+    }
     return (
       <View style={styles.container} >
         <RecyclerListView

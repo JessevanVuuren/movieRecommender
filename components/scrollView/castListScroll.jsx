@@ -5,7 +5,6 @@ import React from 'react';
 
 import { getCast, baseUrl342 } from "../../src/helper"
 import { FontText } from '../fontText';
-import Colors from '../../src/style';
 
 
 export default class CastListScroll extends React.Component {
@@ -31,11 +30,8 @@ export default class CastListScroll extends React.Component {
   }
 
   componentDidMount = async () => {
-
-    console.log("Get cast list: " + getCast[0] + this.props.id + getCast[1])
     const getMovies = await fetch(getCast[0] + this.props.id + getCast[1])
     const json = await getMovies.json()
-
     const fullList = []
     for (let i = 0; i < json.cast.length; i++) {
       if (json.cast[i].profile_path != null){
@@ -46,6 +42,7 @@ export default class CastListScroll extends React.Component {
       }
     }
 
+    if (fullList.length == 0) this.props.isEmpty(); 
 
     this.setState({
       list: this.state.list.cloneWithRows( fullList),

@@ -31,11 +31,12 @@ export const removeMovie = async (movie) => {
 
 
 export const getMovieToWatchList = async () => {
-  const list = await AsyncStorage.getItem('watchList')
+  var list = await AsyncStorage.getItem('watchList')
 
   if(!list) {
     console.log("async list empty, make empty object \"movieList: []\"")
     AsyncStorage.setItem('watchList', JSON.stringify({"movieList": []}))
+    list = []
   }
 
   return list

@@ -71,7 +71,7 @@ export default class MovieListVerticalScroll extends React.Component {
     else if (this.props.id == "upComing") urlToFetch = getUpComing + "1"
     else if (this.props.id == "topRated") urlToFetch = getTopRated + "1"
     else if (this.props.id == "genreSearch") urlToFetch = GenreMovie[0] + this.props.searchQuery + GenreMovie[1] + this.state.pageCount
-    else if (this.props.id == "popular") urlToFetch = getPopular + this.state.pageCount
+    else if (this.props.id == "popular") { urlToFetch = getPopular + this.state.pageCount }
     else if (this.props.id == "search") {
       if (this.props.searchQuery == "") return
       urlToFetch = SearchMovie[0] + this.props.searchQuery + SearchMovie[1] + "1"
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     // alignSelf:"center",
     // alignItems:"center"
     // marginLeft: "10.5%"
-    marginLeft:"12.3%"
+    marginLeft: "12.3%"
   },
   img: {
     borderRadius: 10,

@@ -1,13 +1,13 @@
 import { StyleSheet, View, BackHandler } from 'react-native';
 import React, { useState, useEffect } from 'react';
 
-import WatchList from '../components/scrollView/watchList';
+import WatchList from '../components/scrollView/WatchList';
 import { FontText } from "../components/fontText"
 import { TopBar } from '../components/topBar';
 import Colors from '../src/style';
 
 
-const watchList = ({ navigation }) => {
+const WatchListView = ({ navigation }) => {
 
   const [reload, setReload] = useState();
 
@@ -26,8 +26,8 @@ const watchList = ({ navigation }) => {
 
 
 
-      <View style={{ marginBottom: "4%", marginLeft:"4%", marginTop: "5%" }}>
-      <FontText fontSize={22} font={"Roboto-Bold"}>Your Watchlist</FontText>
+      <View style={{ marginBottom: "4%", marginLeft: "4%", marginTop: "5%" }}>
+        <FontText fontSize={22} font={"Roboto-Bold"}>Your Watchlist</FontText>
 
       </View>
 
@@ -36,7 +36,7 @@ const watchList = ({ navigation }) => {
   );
 }
 
-export { watchList }
+export { WatchListView }
 
 const styles = StyleSheet.create({
   container: {

@@ -14,10 +14,10 @@ const prefix = Linking.makeUrl("/");
 const NowPlaying = ({ navigation }) => {
   return (
     <View>
-      <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 10 }}>
+      <View style={{ marginLeft: "4%", marginTop: 10, marginBottom: 10 }}>
         <FontText fontSize={20} font={"Roboto-Bold"}>Now playing</FontText>
       </View>
-      <View style={{ height: 200 }}>
+      <View style={{ height: 220 }}>
         <MovieListScroll id={"nowPlaying"} navigation={navigation} />
       </View>
     </View>
@@ -27,10 +27,10 @@ const NowPlaying = ({ navigation }) => {
 const UpComing = ({ navigation }) => {
   return (
     <View>
-      <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 10 }}>
+      <View style={{ marginLeft: "4%", marginTop: 10, marginBottom: 10 }}>
         <FontText fontSize={20} font={"Roboto-Bold"}>Up coming</FontText>
       </View>
-      <View style={{ height: 200 }}>
+      <View style={{ height: 220 }}>
         <MovieListScroll id={"upComing"} navigation={navigation} />
       </View>
     </View>
@@ -40,10 +40,10 @@ const UpComing = ({ navigation }) => {
 const TopRated = ({ navigation }) => {
   return (
     <View>
-      <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 10 }}>
+      <View style={{ marginLeft: "4%", marginTop: 10, marginBottom: 10 }}>
         <FontText fontSize={20} font={"Roboto-Bold"}>Top rated</FontText>
       </View>
-      <View style={{ height: 200 }}>
+      <View style={{ height: 220 }}>
         <MovieListScroll id={"topRated"} navigation={navigation} />
       </View>
     </View>

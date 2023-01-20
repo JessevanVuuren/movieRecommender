@@ -28,6 +28,8 @@ export default class WatchList extends React.Component {
 
   componentDidMount = async () => {
 
+    this.forceUpdate()
+
     const watchList = await getAllMovies()
 
     for (let i = 0; i < watchList.length; i++) {
@@ -84,12 +86,15 @@ export default class WatchList extends React.Component {
   render() {
     return (
       <View style={styles.container} >
-        <RecyclerListView
-          style={{ flex: 1 }}
-          rowRenderer={this.rowRenderer}
-          dataProvider={this.state.list}
-          layoutProvider={this.layoutProvider}
-          renderFooter={() => { return (<Text onLayout={this.props.footerPos} style={{ color: Colors.textColor, textAlign: "center" }}></Text>) }} />
+        {(this.state.list && this.state.list["_data"].length > 0) &&
+          <RecyclerListView
+            style={{ flex: 1 }}
+            rowRenderer={this.rowRenderer}
+            dataProvider={this.state.list}
+            layoutProvider={this.layoutProvider}
+            renderFooter={() => { return (<Text onLayout={this.props.footerPos} style={{ color: Colors.textColor, textAlign: "center" }}></Text>) }} />
+        }
+
       </View>
     );
   }

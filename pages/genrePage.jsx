@@ -8,7 +8,7 @@ import { FontText } from '../components/fontText'
 
 
 
-const genrePage = ({ route, navigation }) => {
+const GenrePage = ({ route, navigation }) => {
 
   const [genre] = useState(route.params.genre)
 
@@ -24,7 +24,7 @@ const genrePage = ({ route, navigation }) => {
   );
 }
 
-export { genrePage }
+export { GenrePage }
 
 const styles = StyleSheet.create({
   container: {
