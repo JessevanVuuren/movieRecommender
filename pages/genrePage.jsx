@@ -1,10 +1,11 @@
-import { StyleSheet, View } from 'react-native'
-import React, { useState} from 'react'
-
 import MovieListVerticalScroll from '../components/scrollView/MovieListVerticalScroll'
+import MovieOrSeries from '../components/MovieOrSeries'
+import { useGlobalState } from '../global/state'
+import { StyleSheet, View } from 'react-native'
 import { TopBar } from '../components/topBar'
+import React, { useState} from 'react'
 import Colors from '../src/style'
-import { FontText } from '../components/fontText'
+
 
 
 
@@ -12,14 +13,10 @@ const GenrePage = ({ route, navigation }) => {
 
   const [genre] = useState(route.params.genre)
 
-
-
-
-
   return (
     <View style={styles.container}>
       <TopBar navigation={navigation} hambAction={"openD"} />
-      <MovieListVerticalScroll id={"genreSearch"} navigation={navigation} component={[]} searchQuery={genre} />
+      <MovieListVerticalScroll id={"genreSearch"} navigation={navigation} component={[]} searchQuery={genre} showType={route.params.showType} />
     </View>
   );
 }

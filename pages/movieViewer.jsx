@@ -43,7 +43,6 @@ const Movie = ({ route, navigation }) => {
   }, []);
 
   const getStreamProviders = async () => {
-    console.log("Get provider: " + whereToWatch[0] + object.id + whereToWatch[1]);
     const data = await fetch(whereToWatch[0] + object.id + whereToWatch[1]);
     const json = await data.json();
     if (json.results.US) {
@@ -113,7 +112,7 @@ const Movie = ({ route, navigation }) => {
           </AutoSizeText>
           <View style={styles.scrollContainer}>
             <View style={styles.addButton}>
-              <Text style={styles.releaseDate}>{getDate(object)}</Text>
+              <Text style={styles.releaseDate}>{getDate(object.release_date)}</Text>
 
               <View style={styles.movieRatingRow}>
                 <Image source={require("../assets/star-symbol.png")} style={[styles.topStar, { height: 15.5, width: 16 }]} />

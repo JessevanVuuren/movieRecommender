@@ -1,70 +1,87 @@
-import { StyleSheet, View, TextInput, TouchableOpacity, Animated, ScrollView, Easing } from 'react-native';
+import { StyleSheet, View, TextInput, TouchableOpacity, Animated, ScrollView } from "react-native";
+import MovieListVerticalScroll from "../components/scrollView/MovieListVerticalScroll";
 
-import MovieListVerticalScroll from '../components/scrollView/MovieListVerticalScroll';
+import { FontText } from "../components/fontText";
+import { FontAwesome } from "@expo/vector-icons";
+import { TopBar } from "../components/topBar";
 
-import { FontAwesome, Feather } from '@expo/vector-icons';
-import { FontText } from '../components/fontText';
-import { TopBar } from '../components/topBar';
-
-import { genreList } from "../src/helper";
-import React, { useState, useRef } from 'react';
-import Colors from '../src/style';
-
-const TopRated = ({ navigation }) => {
-
-}
+import React, { useState, useRef, useEffect } from "react";
+import { genreList, genreListMovie, genreListTv } from "../src/helper";
+import Colors from "../src/style";
+import MovieOrSeries from "../components/MovieOrSeries";
+import { useGlobalState } from "../global/state";
 
 const SearchPage = ({ navigation }) => {
+  const hideGenreRef = useRef(new Animated.Value(1)).current; // Initial value for opacity: 0
+  const showVideoRef = useRef(new Animated.Value(0.01)).current; // Initial value for opacity: 0
 
-  const hideGenreRef = useRef(new Animated.Value(1)).current  // Initial value for opacity: 0
-  const showVideoRef = useRef(new Animated.Value(0.01)).current  // Initial value for opacity: 0
+  const [loadingMovies, setLoadingMovies] = useState(false);
+  const [searchTimer, setSearchTimer] = useState(null);
+  const [searchText, setSearchText] = useState("");
 
-  const [loadingMovies, setLoadingMovies] = useState(false)
-  const [searchTimer, setSearchTimer] = useState(null)
-  const [searchText, setSearchText] = useState("")
+  const [showType] = useGlobalState("showType");
 
-  const hideGenreAnim = () => { Animated.timing(hideGenreRef, { toValue: 0.01, duration: 500, useNativeDriver: true }).start() }
-  const showGenreAnim = () => { Animated.timing(hideGenreRef, { toValue: 1, duration: 500, useNativeDriver: true }).start() }
-  const showVideoAmin = () => { Animated.timing(showVideoRef, { toValue: 1, useNativeDriver: true }).start() }
-  const hideVideoAmin = () => { Animated.timing(showVideoRef, { toValue: 0.01, useNativeDriver: true }).start() }
+  const [genreList, setGenreList] = useState([]);
+
+  const hideGenreAnim = () => {
+    Animated.timing(hideGenreRef, { toValue: 0.01, duration: 500, useNativeDriver: true }).start();
+  };
+  const showGenreAnim = () => {
+    Animated.timing(hideGenreRef, { toValue: 1, duration: 500, useNativeDriver: true }).start();
+  };
+  const showVideoAmin = () => {
+    Animated.timing(showVideoRef, { toValue: 1, useNativeDriver: true }).start();
+  };
+  const hideVideoAmin = () => {
+    Animated.timing(showVideoRef, { toValue: 0.01, useNativeDriver: true }).start();
+  };
 
   const userSearching = (text) => {
-    if (text.length > 0) hideGenreAnim()
-    else hideVideoAmin()
+    if (text.length > 0) hideGenreAnim();
+    else hideVideoAmin();
 
-    setLoadingMovies(true)
-    clearTimeout(searchTimer)
-    setSearchTimer(setTimeout(() => {
-      setSearchText(text)
-      if (text.length < 1) showGenreAnim()
-      else showVideoAmin()
-    }, 950))
-  }
+    setLoadingMovies(true);
+    clearTimeout(searchTimer);
+    setSearchTimer(
+      setTimeout(() => {
+        setSearchText(text);
+        if (text.length < 1) showGenreAnim();
+        else showVideoAmin();
+      }, 700)
+    );
+  };
+
+  useEffect(() => {
+    console.log("update")
+    if (showType === "movie") {
+      setGenreList(genreListMovie);
+    } else {
+      setGenreList(genreListTv);
+    }
+  }, [showType]);
 
   const goToGenre = (genre) => {
-    navigation.push("GenrePage", { genre: genre })
-  }
+    navigation.push("GenrePage", { genre: genre, showType: showType });
+  };
 
   return (
     <View style={styles.container}>
       <TopBar navigation={navigation} extra="hideSearchBar" hambAction="goBack" />
 
       <View style={styles.innerView}>
-        <FontText fontSize={25} font={"Roboto-Bold"}>Search</FontText>
-        <TouchableOpacity style={styles.menuSearch}  >
+        <FontText fontSize={25} font={"Roboto-Bold"}>
+          Search
+        </FontText>
+        <TouchableOpacity style={styles.menuSearch}>
           <FontAwesome style={styles.SearchIcon} name="search" size={18} color="black" />
-          <TextInput
-            style={styles.userInput}
-            onChangeText={text => userSearching(text)}
-            placeholder="Search for a movie"
-            placeholderTextColor={Colors.textColor} />
+          <TextInput style={styles.userInput} onChangeText={(text) => userSearching(text)} placeholder="Search for a movie" placeholderTextColor={Colors.textColor} />
         </TouchableOpacity>
       </View>
 
+      <MovieOrSeries />
 
       {searchText == "" ? (
         <Animated.View style={{ opacity: hideGenreRef }}>
-
           <ScrollView style={styles.scrollGenre}>
             <View style={{ flexDirection: "row" }}>
               <View style={{ flex: 1 }}>
@@ -72,9 +89,11 @@ const SearchPage = ({ navigation }) => {
                   if (index % 2 == 0) {
                     return (
                       <TouchableOpacity onPress={() => goToGenre(genre[1])} key={index} style={[styles.genreElement, { marginLeft: "25%", marginRight: "7%" }]}>
-                        <FontText fontSize={15} font={"Roboto-Bold"}>{genre[0]}</FontText>
+                        <FontText fontSize={15} font={"Roboto-Bold"}>
+                          {genre[0]}
+                        </FontText>
                       </TouchableOpacity>
-                    )
+                    );
                   }
                 })}
               </View>
@@ -83,34 +102,40 @@ const SearchPage = ({ navigation }) => {
                   if (index % 2 == 1) {
                     return (
                       <TouchableOpacity onPress={() => goToGenre(genre[1])} key={index} style={[styles.genreElement, { marginRight: "25%", marginLeft: "7%" }]}>
-                        <FontText fontSize={15} font={"Roboto-Bold"}>{genre[0]}</FontText>
+                        <FontText fontSize={15} font={"Roboto-Bold"}>
+                          {genre[0]}
+                        </FontText>
                       </TouchableOpacity>
-                    )
+                    );
                   }
                 })}
               </View>
+            </View>
+
+            <View style={{height:100}}>
+
             </View>
           </ScrollView>
         </Animated.View>
       ) : (
         <Animated.View style={{ flex: 1, opacity: showVideoRef }}>
-          <MovieListVerticalScroll id={"search"} navigation={navigation} component={[]} searchQuery={searchText} key={searchText} />
+          <MovieListVerticalScroll id={"search"} navigation={navigation} component={[]} searchQuery={searchText} key={searchText + showType} showType={showType} />
         </Animated.View>
       )}
     </View>
   );
-}
+};
 
-export { SearchPage }
+export { SearchPage };
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.background,
-    flex: 1
+    flex: 1,
   },
   innerView: {
-    
-    marginLeft: "4%"
+    marginBottom: 10,
+    marginLeft: "4%",
   },
   menuSearch: {
     marginTop: "5%",
@@ -122,7 +147,7 @@ const styles = StyleSheet.create({
     height: 44,
     backgroundColor: Colors.darkLight,
     fontSize: 15,
-    color: Colors.textColor
+    color: Colors.textColor,
   },
   SearchIcon: {
     color: Colors.textColor,
@@ -138,12 +163,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginVertical: "8%",
-    borderRadius: 17
+    borderRadius: 17,
   },
   scrollGenre: {
-    marginTop: "5%"
-  }
+    marginTop: "5%",
+  },
 });
-
-
-

@@ -1,5 +1,5 @@
-import * as Font from "expo-font"
 import { EXPO_API_URL } from '@env'
+import { useGlobalState } from '../global/state'
 
 // base url for img // w500 is for quality 
 export const baseUrl500 = "https://image.tmdb.org/t/p/w500"
@@ -25,24 +25,24 @@ export const getActorInfo = ["https://api.themoviedb.org/3/person/", "?api_key="
 
 
 // get popular 
-export const getPopular = ["https://api.themoviedb.org/3/movie/popular?api_key=" + EXPO_API_URL + "&language=en-US&page="]
+export const getPopular = ["https://api.themoviedb.org/3/{type}/popular?api_key=" + EXPO_API_URL + "&language=en-US&page="]
 
 //get Upcoming 
-export const getUpComing = ["https://api.themoviedb.org/3/movie/upcoming?api_key=" + EXPO_API_URL + "&language=en-US&page="]
+export const getUpComing = ["https://api.themoviedb.org/3/{type}/{whenComing}?api_key=" + EXPO_API_URL + "&language=en-US&page="]
 
 //get Top Rated
-export const getTopRated = ["https://api.themoviedb.org/3/movie/top_rated?api_key=" + EXPO_API_URL + "&language=en-US&page="]
+export const getTopRated = ["https://api.themoviedb.org/3/{type}/top_rated?api_key=" + EXPO_API_URL + "&language=en-US&page="]
 
 // get Now Playing
-export const getNowPlaying = ["https://api.themoviedb.org/3/movie/now_playing?api_key=" + EXPO_API_URL + "&language=en-US&page="]
+export const getNowPlaying = ["https://api.themoviedb.org/3/{type}/{whenPlaying}?api_key=" + EXPO_API_URL + "&language=en-US&page="]
 
 // movies based on a movie
 export const MatchingMovies = ["https://api.themoviedb.org/3/movie/", "/recommendations?api_key=" + EXPO_API_URL + "&language=en-US&page="]
 
 // user input for specific movie
-export const SearchMovie = ["https://api.themoviedb.org/3/search/movie?api_key=" + EXPO_API_URL + "&language=en-US&query=", "&include_adult=false&page="]
+export const SearchMovie = ["https://api.themoviedb.org/3/search/{type}?api_key=" + EXPO_API_URL + "&language=en-US&query=", "&include_adult=false&page="]
 
-export const GenreMovie = ["https://api.themoviedb.org/3/discover/movie?api_key=" + EXPO_API_URL + "&language=en-US&sort_by=popularity.desc&include_adult=false&with_genres=", "&with_watch_monetization_types=flatrate&page="]
+export const GenreMovie = ["https://api.themoviedb.org/3/discover/{type}?api_key=" + EXPO_API_URL + "&language=en-US&sort_by=popularity.desc&include_adult=false&with_genres=", "&with_watch_monetization_types=flatrate&page="]
 
 
 
@@ -56,28 +56,48 @@ export const ActorList = ["https://api.themoviedb.org/3/discover/movie?api_key="
 
 
 // genre List + id
-export const genreList = [
-        ["Action", 28],
-        ["Adventure", 12],
-        ["Animation", 16],
-        ["Comedy", 35],
-        ["Crime", 80],
-        ["Documentary", 99],
-        ["Drama", 18],
-        ["Family", 10751],
-        ["Fantasy", 14],
-        ["History", 36],
-        ["Horror", 27],
-        ["Music", 10402],
-        ["Mystery", 9648],
-        ["Romance", 10749],
-        ["Science Fiction", 878],
-        ["TV Movie", 10770],
-        ["Thriller", 53],
-        ["War", 10752],
-        ["Western", 37]
-    ]
-    // the cooler list + id
+export const genreListMovie = [
+    ["Action", 28, 10759],
+    ["Adventure", 12, 10759],
+    ["Animation", 16],
+    ["Comedy", 35],
+    ["Crime", 80],
+    ["Documentary", 99],
+    ["Drama", 18],
+    ["Family", 10751],
+    ["Fantasy", 14, 10765],
+    ["History", 36],
+    ["Horror", 27],
+    ["Music", 10402],
+    ["Mystery", 9648],
+    ["Romance", 10749],
+    ["Science Fiction", 878],
+    ["TV Movie", 10770],
+    ["Thriller", 53],
+    ["War", 10752, 10768],
+    ["Western", 37]
+]
+
+// genre List + id
+export const genreListTv = [
+    ["Action & Adventure", 10759],
+    ["Animation", 16],
+    ["Comedy", 35],
+    ["Crime", 80],
+    ["Documentary", 99],
+    ["Drama", 18],
+    ["Family", 10751],
+    ["Kids", 10762],
+    ["Mystery", 9648],
+    ["News", 10763],
+    ["Reality", 10764],
+    ["Sci-Fi & Fantasy", 10765],
+    ["Soap", 10766],
+    ["Talk", 10767],
+    ["War & Politics", 10768],
+    ["Western", 37]
+]
+// the cooler list + id
 export const genreDict = { 28: "Action", 12: "Adventure", 16: "Animation", 35: "Comedy", 80: "Crime", 99: "Documentary", 18: "Drama", 10751: "Family", 14: "Fantasy", 36: "History", 27: "Horror", 10402: "Music", 9648: "Mystery", 10749: "Romance", 878: "Science Fiction", 10770: "TV Movie", 53: "Thriller", 10752: "War", 37: "Western", }
 
 
@@ -85,16 +105,16 @@ export const genreDict = { 28: "Action", 12: "Adventure", 16: "Animation", 35: "
 
 
 export const round = (num) => {
-    num = Math.round(num + "e" + 1);
-    return Number(num + "e" + -1);
+    num = Math.round(num + "e" + 1)
+    return Number(num + "e" + -1)
 }
 
 
 // get date 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-export const getDate = (object) => {
-    if (object.release_date == undefined) return ""
-    const date = new Date(object.release_date)
+export const getDate = (raw_date) => {
+    if (raw_date == undefined) return ""
+    const date = new Date(raw_date)
     return monthNames[date.getMonth()] + " " + date.getFullYear()
 }
 
@@ -123,6 +143,48 @@ export const descriptionFix = (object, toggleDisc, short = 180) => {
 }
 
 
+export const makeURL = (props, page) => {
+    const type = props.showType
+    let url = ""
+
+    switch (props.id) {
+        case 'nowPlaying':
+            url = getNowPlaying + "1"
+            url = url.replace("{whenPlaying}", type === "movie" ? "now_playing" : "airing_today")
+            break
+        case 'upComing':
+            url = getUpComing + "1"
+            if (type === "movie") {
+                url = url.replace("{whenComing}", "upcoming")
+            } else {
+                url = url.replace("{whenComing}", "on_the_air")
+            }
+            break
+        case 'topRated':
+            url = getTopRated + "1"
+            break
+        case 'genreSearch':
+            url = GenreMovie[0] + props.searchQuery + GenreMovie[1] + page
+            break
+        case 'popular':
+            url = getPopular + page
+            break
+        case 'search':
+            if (props.searchQuery == "") return
+            url = SearchMovie[0] + props.searchQuery + SearchMovie[1] + "1"
+            break
+        case 'actorMovieList':
+            url = ActorList[0] + this.props.actorID + ActorList[1] + this.state.pageCount
+            break
+        default:
+            MatchingMovies[0] + props.id + MatchingMovies[1] + "1"
+    }
+    return url.replace("{type}", type)
+}
+
+
+
+// https://developers.themoviedb.org/3/tv/get-tv-details
 
 
 
@@ -139,6 +201,20 @@ export const descriptionFix = (object, toggleDisc, short = 180) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+// documentation
+//https://www.themoviedb.org/documentation/api
 
 
 

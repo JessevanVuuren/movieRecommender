@@ -31,7 +31,6 @@ export default class VideoPlayerScroll extends React.Component {
   }
 
   componentDidMount = async () => {
-    console.log("Get videos: " + getVideos[0] + this.props.id + getVideos[1]);
     const getMovies = await fetch(getVideos[0] + this.props.id + getVideos[1]);
     const json = await getMovies.json();
 
