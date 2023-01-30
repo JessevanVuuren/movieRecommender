@@ -78,7 +78,7 @@ export default class MovieListVerticalScroll extends React.Component {
     }
 
     for (let i = 0; i < json.results.length; i++) {
-      if (json.results[i].poster_path != null || json.results[i].backdrop_path != null) {
+      if (json.results[i].poster_path != null && json.results[i].backdrop_path != null) {
         fullList.push({
           type: "NORMAL",
           item: json.results[i],
@@ -109,10 +109,11 @@ export default class MovieListVerticalScroll extends React.Component {
   }
 
   movieToShow = async (show) => {
-    console.log(show.title + ", " + show.id);
     if (this.props.showType === "movie") {
+      console.log(show.title + ", " + show.id);
       this.props.navigation.push("MovieScreen", { jsonObject: show });
     } else {
+      console.log(show.name + ", " + show.id);
       this.props.navigation.push("TvScreen", { jsonObject: show });
     }
   };

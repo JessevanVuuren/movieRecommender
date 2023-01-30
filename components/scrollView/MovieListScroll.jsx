@@ -38,9 +38,15 @@ export default class MovieListScroll extends React.Component {
   }
 
   loadMovies = async () => {
-    const url = makeURL(this.props, this.state.pageCount);
-    const getMovies = await fetch(url);
-    const json = await getMovies.json();
+    var json = ""
+
+    if (this.props.master_data) {
+      json = this.props.master_data;
+    } else {
+      const url = makeURL(this.props, this.state.pageCount);
+      const getMovies = await fetch(url);
+      json = await getMovies.json();
+    }
 
     const fullList = [];
     for (let i = 0; i < json.results.length; i++) {
@@ -96,7 +102,6 @@ export default class MovieListScroll extends React.Component {
   };
 
   render() {
-    this.props.listLength?.(this.state.megaList.length);
     if (!this.state.doneLoading) {
       const skeletons = [];
       for (let i = 0; i < 10; i++) {

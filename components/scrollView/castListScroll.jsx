@@ -3,7 +3,7 @@ import { StyleSheet, View, Dimensions, Image, TouchableOpacity } from 'react-nat
 import { RecyclerListView, DataProvider, LayoutProvider } from 'recyclerlistview';
 import React from 'react';
 
-import { getCast, baseUrl342 } from "../../src/helper"
+import { getCast, baseUrl342, makeURL } from "../../src/helper"
 import { FontText } from '../fontText';
 
 
@@ -30,8 +30,16 @@ export default class CastListScroll extends React.Component {
   }
 
   componentDidMount = async () => {
-    const getMovies = await fetch(getCast[0] + this.props.id + getCast[1])
-    const json = await getMovies.json()
+    var json = ""
+
+    if (this.props.master_data) {
+      json = this.props.master_data;
+    } else {
+      const url = makeURL(this.props, this.state.pageCount);
+      const getMovies = await fetch(url);
+      json = await getMovies.json();
+    }
+    
     const fullList = []
     for (let i = 0; i < json.cast.length; i++) {
       if (json.cast[i].profile_path != null){
@@ -41,8 +49,6 @@ export default class CastListScroll extends React.Component {
         })
       }
     }
-
-    if (fullList.length == 0) this.props.isEmpty(); 
 
     this.setState({
       list: this.state.list.cloneWithRows( fullList),

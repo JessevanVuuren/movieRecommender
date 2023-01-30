@@ -3,7 +3,7 @@ import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview
 import * as Linking from "expo-linking";
 import React from "react";
 
-import { getVideos } from "../../src/helper";
+import { getVideos, makeURL } from "../../src/helper";
 import Colors from "../../src/style";
 
 export default class VideoPlayerScroll extends React.Component {
@@ -31,8 +31,15 @@ export default class VideoPlayerScroll extends React.Component {
   }
 
   componentDidMount = async () => {
-    const getMovies = await fetch(getVideos[0] + this.props.id + getVideos[1]);
-    const json = await getMovies.json();
+    var json = "";
+
+    if (this.props.master_data) {
+      json = this.props.master_data;
+    } else {
+      const url = makeURL(this.props, this.state.pageCount);
+      const getMovies = await fetch(url);
+      json = await getMovies.json();
+    }
 
     const fullList = [];
     for (let i = 0; i < json.results.length; i++) {
@@ -41,8 +48,6 @@ export default class VideoPlayerScroll extends React.Component {
         item: json.results[i],
       });
     }
-
-    if (fullList.length == 0) this.props.isEmpty();
 
     this.setState({
       list: this.state.list.cloneWithRows(fullList),

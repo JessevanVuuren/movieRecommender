@@ -73,7 +73,6 @@ const ActorPage = ({ route, navigation }) => {
 
   useEffect(() => {
     const getActorInfoAsync = async () => {
-      console.log("get Actor Info: " + getActorInfo[0] + object.id + getActorInfo[1])
       const getMovies = await fetch(getActorInfo[0] + object.id + getActorInfo[1])
       const json = await getMovies.json()
       setExtraInfo(json)
@@ -140,7 +139,7 @@ const ActorPage = ({ route, navigation }) => {
             <FontText fontSize={20} font={"Roboto-Bold"}>Filmography</FontText>
           </View>
           <View style={{ flex: 1, height: 250 }}>
-            <MovieListScroll id={"actorMovieList"} navigation={navigation} actorID={object.id} />
+            <MovieListScroll showType={"movie"} id={"actorMovieList"} navigation={navigation} actorID={object.id} />
           </View>
 
         </View>

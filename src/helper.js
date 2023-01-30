@@ -1,22 +1,25 @@
 import { EXPO_API_URL } from '@env'
-import { useGlobalState } from '../global/state'
 
 // base url for img // w500 is for quality 
 export const baseUrl500 = "https://image.tmdb.org/t/p/w500"
 export const baseUrl342 = "https://image.tmdb.org/t/p/w342"
 export const baseUrlOri = "https://image.tmdb.org/t/p/original"
 
+
+
+const masterInfoUrl = "https://api.themoviedb.org/3/{type}/{id}?api_key=" + EXPO_API_URL + "&append_to_response=videos,credits,images,recommendations"
+
 // url for info from a movie 
-export const infoUrl = ["https://api.themoviedb.org/3/movie/", "?api_key=" + EXPO_API_URL + "&language=en-US"]
+const infoUrl = "https://api.themoviedb.org/3/{type}/{id}?api_key=" + EXPO_API_URL + "&language=en-US"
 
 // stream provider 
-export const whereToWatch = ["https://api.themoviedb.org/3/movie/", "/watch/providers?api_key=" + EXPO_API_URL + "&language=en-US"]
+export const whereToWatch = ["https://api.themoviedb.org/3/{type}/", "/watch/providers?api_key=" + EXPO_API_URL + "&language=en-US"]
 
 // get cast list
-export const getCast = ["https://api.themoviedb.org/3/movie/", "/credits?api_key=" + EXPO_API_URL + "&language=en-US"]
+export const getCast = "https://api.themoviedb.org/3/{type}/{id}/credits?api_key=" + EXPO_API_URL + "&language=en-US"
 
 // get videos from movie
-export const getVideos = ["https://api.themoviedb.org/3/movie/", "/videos?api_key=" + EXPO_API_URL + "&language=en-US"]
+const getVideos = "https://api.themoviedb.org/3/{type}/{id}/videos?api_key=" + EXPO_API_URL + "&language=en-US"
 
 
 // get more info over actor
@@ -37,7 +40,7 @@ export const getTopRated = ["https://api.themoviedb.org/3/{type}/top_rated?api_k
 export const getNowPlaying = ["https://api.themoviedb.org/3/{type}/{whenPlaying}?api_key=" + EXPO_API_URL + "&language=en-US&page="]
 
 // movies based on a movie
-export const MatchingMovies = ["https://api.themoviedb.org/3/movie/", "/recommendations?api_key=" + EXPO_API_URL + "&language=en-US&page="]
+const MatchingMovies = "https://api.themoviedb.org/3/{type}/{id}/recommendations?api_key=" + EXPO_API_URL + "&language=en-US&page="
 
 // user input for specific movie
 export const SearchMovie = ["https://api.themoviedb.org/3/search/{type}?api_key=" + EXPO_API_URL + "&language=en-US&query=", "&include_adult=false&page="]
@@ -50,6 +53,11 @@ export const GenreMovie = ["https://api.themoviedb.org/3/discover/{type}?api_key
 export const ActorImgs = ["https://api.themoviedb.org/3/person/", "/tagged_images?api_key=" + EXPO_API_URL + "&language=en-US&page="]
 // get all movies a actor played in
 export const ActorList = ["https://api.themoviedb.org/3/discover/movie?api_key=" + EXPO_API_URL + "&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&with_people=", "&with_watch_monetization_types=flatrate&page="]
+
+
+
+// get all episodes for tv
+export const tvEpisodes = "https://api.themoviedb.org/3/tv/{tv_id}/season/{season_number}?api_key=" + EXPO_API_URL + "&language=en-US"
 
 
 
@@ -98,9 +106,19 @@ export const genreListTv = [
     ["Western", 37]
 ]
 // the cooler list + id
-export const genreDict = { 28: "Action", 12: "Adventure", 16: "Animation", 35: "Comedy", 80: "Crime", 99: "Documentary", 18: "Drama", 10751: "Family", 14: "Fantasy", 36: "History", 27: "Horror", 10402: "Music", 9648: "Mystery", 10749: "Romance", 878: "Science Fiction", 10770: "TV Movie", 53: "Thriller", 10752: "War", 37: "Western", }
+export const genreMovieDict = { 28: "Action", 12: "Adventure", 16: "Animation", 35: "Comedy", 80: "Crime", 99: "Documentary", 18: "Drama", 10751: "Family", 14: "Fantasy", 36: "History", 27: "Horror", 10402: "Music", 9648: "Mystery", 10749: "Romance", 878: "Science Fiction", 10770: "TV Movie", 53: "Thriller", 10752: "War", 37: "Western" }
+export const genreTVDict = { 10759: "Action & Adventure", 16: "Animation", 35: "Comedy", 80: "Crime", 99: "Documentary", 18: "Drama", 10751: "Family", 10762: "Kids", 9648: "Mystery", 10763: "News", 10764: "Reality", 10765: "Sci-Fi & Fantasy", 10766: "Soap", 10767: "Talk", 10768: "War & Politics", 37: "Western" }
 
 
+
+
+export const getMasterDetails = async (type, id) => {
+    var url = masterInfoUrl
+    url = url.replace("{type}", type)
+    url = url.replace("{id}", id)
+    const data = await fetch(url)
+    return data.json()
+}
 
 
 
@@ -142,6 +160,10 @@ export const descriptionFix = (object, toggleDisc, short = 180) => {
     return { "text": newText, "shortened": shortened }
 }
 
+export const getShowType = (title) => {
+    return title ? "movie" : "tv"
+}
+
 
 export const makeURL = (props, page) => {
     const type = props.showType
@@ -174,20 +196,62 @@ export const makeURL = (props, page) => {
             url = SearchMovie[0] + props.searchQuery + SearchMovie[1] + "1"
             break
         case 'actorMovieList':
-            url = ActorList[0] + this.props.actorID + ActorList[1] + this.state.pageCount
+            url = ActorList[0] + props.actorID + ActorList[1] + page
             break
-        default:
-            MatchingMovies[0] + props.id + MatchingMovies[1] + "1"
+        case "actors":
+            url = getCast.replace("{id}", props.cast_id)
+            break
+        case "video":
+            url = getVideos.replace("{id}", props.video_id)
+            break
+        case "master":
+            url = masterInfoUrl.replace("{id}", props.master_id)
+            break
+        default: // props.id = id of movie
+            url = MatchingMovies.replace("{id}", props.recommend_id)
+            url += page
     }
     return url.replace("{type}", type)
 }
 
 
 
-// https://developers.themoviedb.org/3/tv/get-tv-details
+export const getStreamProviders = async (id, type) => {
+    const data = await fetch(whereToWatch[0].replace("{type}", type) + id + whereToWatch[1]);
+    const json = await data.json();
+    const fullArray = { data: [] };
+    if (json.results && json.results.US) {
+        const pro = json.results.US;
+        const nameAlreadyIn = [];
 
+        if (pro.buy) {
+            for (let i = 0; i < pro.buy.length; i++) {
+                let provider = pro.buy[i];
+                nameAlreadyIn.push(provider.provider_name);
+                fullArray["data"].push(provider);
+            }
+        }
 
-
+        if (pro.rent) {
+            for (let i = 0; i < pro.rent.length; i++) {
+                let provider = pro.rent[i];
+                if (!nameAlreadyIn.includes(provider.provider_name)) {
+                    nameAlreadyIn.push(provider.provider_name);
+                    fullArray["data"].push(provider);
+                }
+            }
+        }
+        if (pro.flatrate) {
+            for (let i = 0; i < pro.flatrate.length; i++) {
+                let provider = pro.flatrate[i];
+                if (!nameAlreadyIn.includes(provider.provider_name)) {
+                    fullArray["data"].push(provider);
+                }
+            }
+        }
+    }
+    return fullArray
+};
 
 
 

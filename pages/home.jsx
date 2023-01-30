@@ -80,7 +80,8 @@ const Home = ({ route, navigation }) => {
     <View style={styles.container}>
       <TopBar navigation={navigation} hambAction={"openD"} />
       <MovieOrSeries />
-      <MovieListVerticalScroll id={"popular"} navigation={navigation} showType={showType} component={[NowPlaying, UpComing, TopRated]} key={showType} />
+      {/* <MovieListVerticalScroll id={"popular"} navigation={navigation} showType={showType} component={[NowPlaying, UpComing, TopRated]} key={showType} /> */}
+      <MovieListVerticalScroll id={"popular"} navigation={navigation} showType={showType} component={[]} key={showType} />
     </View>
   );
 };
