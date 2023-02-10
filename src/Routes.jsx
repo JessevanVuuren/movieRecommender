@@ -15,6 +15,8 @@ import { SearchPage } from "../pages/SearchPage"
 
 import Colors from "./style"
 import TvViewer from "../pages/TvViewer"
+import { SeasonViewer } from "../pages/SeasonViewer"
+import { EpisodeViewer } from "../pages/EpisodeViewer"
 
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
@@ -36,6 +38,8 @@ export const Routes = ({ }) => {
         <Stack.Screen name="MovieScreen" component={Movie} options={{ header: () => null }} />
         <Stack.Screen name="TvScreen" component={TvViewer} options={{ header: () => null }} />
         <Stack.Screen name="SearchScreen" component={SearchPage} options={{ header: () => null }} />
+        <Stack.Screen name="SeasonScreen" component={SeasonViewer} options={{ header: () => null }} />
+        <Stack.Screen name="EpisodeScreen" component={EpisodeViewer} options={{ header: () => null }} />
         <Stack.Screen name="GenrePage" component={GenrePage} options={{ header: () => null }} />
         <Stack.Screen name="ActorPage" component={ActorPage} options={{ header: () => null }} />
       </Stack.Navigator>

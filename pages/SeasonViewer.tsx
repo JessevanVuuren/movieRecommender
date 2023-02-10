@@ -5,30 +5,36 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import Constants from "expo-constants";
 
-import { baseUrl500, reFormatData, descriptionFix, getActorDetails } from "../src/helper";
-import MovieListScroll from "../components/scrollView/MovieListScroll";
+import { baseUrl500, baseUrl780, baseUrlOri, descriptionFix, getSeasonDetails, reFormatData } from "../src/helper";
 import { FontText } from "../components/fontText";
 import Colors from "../src/style";
-import ViewerWrapper from "../components/ViewerWrapper";
+import EpisodeScroll from "../components/scrollView/EpisodeScroll";
 
-const HEADER_MAX_HEIGHT = 450;
+//https://api.themoviedb.org/3/tv/60625/season/1?api_key=648d096ec16e3f691572593e44644d30&language=en-US
+
+const HEADER_MAX_HEIGHT = 500;
 const HEADER_MIN_HEIGHT = 0;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
-const ActorPage = ({ route, navigation }) => {
-  const [data, setData] = useState(null);
+interface SeasonViewerProps {
+  navigation: any;
+  route: any;
+}
 
+const SeasonViewer: React.FC<SeasonViewerProps> = ({ navigation, route }) => {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const [toggleDisc, setToggleDisc] = useState(false);
-  const [biography, setBiography] = useState("");
-  const descriptionText = descriptionFix(biography, toggleDisc);
+  const [description, setDescription] = useState("");
+  const descriptionText = descriptionFix(description, toggleDisc);
+
+  const [data, setData] = useState(null);
 
   useEffect(() => {
     (async () => {
-      const json = await getActorDetails(route.params.ActorObject.id);
-      setData(json);
-      setBiography(json.biography);
+      const data = await getSeasonDetails(route.params.tv_id, route.params.data.season_number);
+      setData(data);
+      setDescription(data.overview);
     })();
   }, []);
 
@@ -45,8 +51,7 @@ const ActorPage = ({ route, navigation }) => {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Ionicons style={styles.backArrow} name="arrow-back" size={24} color="white" />
       </TouchableOpacity>
-
-      <Animated.Image style={[styles.mainImg, { transform: [{ translateY: imageTranslateY }] }]} source={{ uri: baseUrl500 + data.profile_path }} />
+      <Animated.Image style={[styles.mainImg, { transform: [{ translateY: imageTranslateY }] }]} source={{ uri: baseUrlOri + data.poster_path }} />
 
       <Animated.ScrollView
         scrollEventThrottle={16}
@@ -65,48 +70,41 @@ const ActorPage = ({ route, navigation }) => {
             {data.name}
           </AutoSizeText>
           <View style={styles.scrollContainer}>
-            <View style={styles.addButton}>
-              <Text style={styles.releaseDate}>
-                {reFormatData(data.birthday)}
-                {data.deathday && " - " + reFormatData(data.deathday)}
-              </Text>
-
-              <View style={{ alignItems: "flex-end", flex: 1 }}>
-                <View style={{ flexDirection: "row" }}></View>
+            {description && (
+              <View>
+                <View style={{ marginTop: 29 }}>
+                  <FontText font={"Roboto-Bold"} fontSize={20}>
+                    Description
+                  </FontText>
+                </View>
+                <FontText font={"Roboto-Regular"} fontSize={14}>
+                  {descriptionText.text}
+                  {descriptionText.shortened && (
+                    <Text onPress={() => setToggleDisc(!toggleDisc)} style={{ color: Colors.mainColor }}>
+                      {!toggleDisc ? " More" : " Less"}
+                    </Text>
+                  )}
+                </FontText>
               </View>
-            </View>
+            )}
+          </View>
 
-            <View style={{ marginTop: 29 }}>
-              <FontText font={"Roboto-Bold"} fontSize={20}>
-                Biography
+          <View>
+            <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
+              <FontText fontSize={20} font={"Roboto-Bold"}>
+                Episodes
               </FontText>
             </View>
-            <FontText font={"Roboto-Regular"} fontSize={14}>
-              {descriptionText.text}{" "}
-              {descriptionText.shortened && (
-                <Text onPress={() => setToggleDisc(!toggleDisc)} style={{ color: Colors.mainColor }}>
-                  {!toggleDisc ? " More" : " Less"}
-                </Text>
-              )}
-            </FontText>
+            <View style={{ flex: 1, marginLeft: "4%" }}>
+              <EpisodeScroll
+                episodes={data.episodes}
+                navigation={navigation}
+                fall_back={route.params.fall_back}
+                tv_id={route.params.tv_id}
+                season_number={route.params.data.season_number}
+              />
+            </View>
           </View>
-
-          <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
-            <FontText fontSize={20} font={"Roboto-Bold"}>
-              Filmography
-            </FontText>
-          </View>
-          <View style={{ flex: 1, height: 250 }}>
-            <MovieListScroll showType={"movie"} id={"actorMovieList"} navigation={navigation} actorID={data.id} />
-          </View>
-
-
-{/* 
-              <ViewerWrapper >
-                <Text style={{color:"white"}}>woowing</Text>
-              </ViewerWrapper> */}
-
-
         </View>
       </Animated.ScrollView>
     </View>
@@ -159,37 +157,9 @@ const styles = StyleSheet.create({
   movieRatingRow: {
     flexDirection: "row",
   },
-
-  voteAverage: {
-    color: Colors.textColor,
-    fontSize: 16,
-    marginTop: 5,
-  },
-  topStar: {
-    marginTop: 8,
-    marginRight: 5,
-    marginLeft: "20%",
-  },
-
-  addButton: {
-    flexDirection: "row",
-  },
-  topButtons: {
-    marginTop: 8,
-    marginHorizontal: 10,
-  },
-
   description: {
     marginTop: 29,
   },
-  genresView: {
-    backgroundColor: Colors.darkLight,
-    marginRight: 14,
-    marginVertical: 5,
-    paddingHorizontal: 20,
-    paddingVertical: 4,
-    borderRadius: 25,
-  },
 });
 
-export { ActorPage };
+export { SeasonViewer };

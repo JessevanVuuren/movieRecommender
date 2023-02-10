@@ -3,64 +3,63 @@ import { EXPO_API_URL } from '@env'
 // base url for img // w500 is for quality 
 export const baseUrl500 = "https://image.tmdb.org/t/p/w500"
 export const baseUrl342 = "https://image.tmdb.org/t/p/w342"
+export const baseUrl780 = "https://image.tmdb.org/t/p/w780"
 export const baseUrlOri = "https://image.tmdb.org/t/p/original"
 
 
 
+const trending = "https://api.themoviedb.org/3/trending/{type}/day?api_key=" + EXPO_API_URL
+
 const masterInfoUrl = "https://api.themoviedb.org/3/{type}/{id}?api_key=" + EXPO_API_URL + "&append_to_response=videos,credits,images,recommendations"
 
-// url for info from a movie 
-const infoUrl = "https://api.themoviedb.org/3/{type}/{id}?api_key=" + EXPO_API_URL + "&language=en-US"
-
 // stream provider 
-export const whereToWatch = ["https://api.themoviedb.org/3/{type}/", "/watch/providers?api_key=" + EXPO_API_URL + "&language=en-US"]
+const whereToWatch = ["https://api.themoviedb.org/3/{type}/", "/watch/providers?api_key=" + EXPO_API_URL + "&language=en-US"]
 
 // get cast list
-export const getCast = "https://api.themoviedb.org/3/{type}/{id}/credits?api_key=" + EXPO_API_URL + "&language=en-US"
+const getCast = "https://api.themoviedb.org/3/{type}/{id}/credits?api_key=" + EXPO_API_URL + "&language=en-US"
 
 // get videos from movie
 const getVideos = "https://api.themoviedb.org/3/{type}/{id}/videos?api_key=" + EXPO_API_URL + "&language=en-US"
 
 
 // get more info over actor
-export const getActorInfo = ["https://api.themoviedb.org/3/person/", "?api_key=" + EXPO_API_URL + "&language=en-US"]
+// export const getActorInfo = ["https://api.themoviedb.org/3/person/", "?api_key=" + EXPO_API_URL + "&language=en-US"]
+const getActorInfo = "https://api.themoviedb.org/3/person/{person_id}?api_key=" + EXPO_API_URL + "&language=en-US&append_to_response=images"
 
 
 
 // get popular 
-export const getPopular = ["https://api.themoviedb.org/3/{type}/popular?api_key=" + EXPO_API_URL + "&language=en-US&page="]
+const getPopular = ["https://api.themoviedb.org/3/{type}/popular?api_key=" + EXPO_API_URL + "&language=en-US&region=US&page="]
 
 //get Upcoming 
-export const getUpComing = ["https://api.themoviedb.org/3/{type}/{whenComing}?api_key=" + EXPO_API_URL + "&language=en-US&page="]
+const getUpComing = ["https://api.themoviedb.org/3/{type}/{whenComing}?api_key=" + EXPO_API_URL + "&language=en-US&region=US&page="]
 
 //get Top Rated
-export const getTopRated = ["https://api.themoviedb.org/3/{type}/top_rated?api_key=" + EXPO_API_URL + "&language=en-US&page="]
+const getTopRated = ["https://api.themoviedb.org/3/{type}/top_rated?api_key=" + EXPO_API_URL + "&language=en-US&region=US&page="]
 
 // get Now Playing
-export const getNowPlaying = ["https://api.themoviedb.org/3/{type}/{whenPlaying}?api_key=" + EXPO_API_URL + "&language=en-US&page="]
+const getNowPlaying = ["https://api.themoviedb.org/3/{type}/{whenPlaying}?api_key=" + EXPO_API_URL + "&language=en-US&region=US&page="]
 
 // movies based on a movie
-const MatchingMovies = "https://api.themoviedb.org/3/{type}/{id}/recommendations?api_key=" + EXPO_API_URL + "&language=en-US&page="
+const MatchingMovies = "https://api.themoviedb.org/3/{type}/{id}/recommendations?api_key=" + EXPO_API_URL + "&language=en-US&region=US&page="
 
 // user input for specific movie
-export const SearchMovie = ["https://api.themoviedb.org/3/search/{type}?api_key=" + EXPO_API_URL + "&language=en-US&query=", "&include_adult=false&page="]
+const SearchMovie = ["https://api.themoviedb.org/3/search/{type}?api_key=" + EXPO_API_URL + "&language=en-US&query=", "&include_adult=false&page="]
 
-export const GenreMovie = ["https://api.themoviedb.org/3/discover/{type}?api_key=" + EXPO_API_URL + "&language=en-US&sort_by=popularity.desc&include_adult=false&with_genres=", "&with_watch_monetization_types=flatrate&page="]
+const GenreMovie = ["https://api.themoviedb.org/3/discover/{type}?api_key=" + EXPO_API_URL + "&language=en-US&sort_by=popularity.desc&include_adult=false&with_genres=", "&with_watch_monetization_types=flatrate&page="]
 
 
 
 // get all images actor tagged in
-export const ActorImgs = ["https://api.themoviedb.org/3/person/", "/tagged_images?api_key=" + EXPO_API_URL + "&language=en-US&page="]
+const ActorImgs = ["https://api.themoviedb.org/3/person/", "/tagged_images?api_key=" + EXPO_API_URL + "&language=en-US&page="]
 // get all movies a actor played in
-export const ActorList = ["https://api.themoviedb.org/3/discover/movie?api_key=" + EXPO_API_URL + "&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&with_people=", "&with_watch_monetization_types=flatrate&page="]
+const ActorList = ["https://api.themoviedb.org/3/discover/movie?api_key=" + EXPO_API_URL + "&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&with_people=", "&with_watch_monetization_types=flatrate&page="]
 
 
 
 // get all episodes for tv
-export const tvEpisodes = "https://api.themoviedb.org/3/tv/{tv_id}/season/{season_number}?api_key=" + EXPO_API_URL + "&language=en-US"
-
-
-
+const tvEpisodes = "https://api.themoviedb.org/3/tv/{id}/season/{season_number}?api_key=" + EXPO_API_URL + "&language=en-US&append_to_response=videos,images"
+const tvEpisodeInfo = "https://api.themoviedb.org/3/tv/{id}/season/{season_number}/episode/{episode_number}?api_key=" + EXPO_API_URL + "&language=en-US&append_to_response=videos,images,credits"
 
 
 // genre List + id
@@ -113,20 +112,46 @@ export const genreTVDict = { 10759: "Action & Adventure", 16: "Animation", 35: "
 
 
 export const getMasterDetails = async (type, id) => {
-    var url = masterInfoUrl
+    let url = masterInfoUrl
     url = url.replace("{type}", type)
     url = url.replace("{id}", id)
     const data = await fetch(url)
+    // console.log(url)
+    return data.json()
+}
+
+export const getSeasonDetails = async (id, season) => {
+    var url = tvEpisodes
+    url = url.replace("{id}", id)
+    url = url.replace("{season_number}", season)
+    const data = await fetch(url)
+    console.log(url)
     return data.json()
 }
 
 
+export const getEpisodeDetails = async (id, season, episode) => {
+    var url = tvEpisodeInfo
+    url = url.replace("{id}", id)
+    url = url.replace("{season_number}", season)
+    url = url.replace("{episode_number}", episode)
+    const data = await fetch(url)
+    console.log(url)
+    return data.json()
+}
+
+export const getActorDetails = async (id) => {
+    var url = getActorInfo
+    url = url.replace("{person_id}", id)
+    const data = await fetch(url)
+    console.log(url)
+    return data.json()
+}
 
 export const round = (num) => {
     num = Math.round(num + "e" + 1)
     return Number(num + "e" + -1)
 }
-
 
 // get date 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -136,7 +161,7 @@ export const getDate = (raw_date) => {
     return monthNames[date.getMonth()] + " " + date.getFullYear()
 }
 
-export const getActorDate = (object) => {
+export const reFormatData = (object) => {
     if (object == undefined) return ""
     const date = new Date(object)
     return object.split("-")[2] + " " + monthNames[date.getMonth()] + " " + date.getFullYear()
@@ -151,7 +176,7 @@ export const descriptionFix = (object, toggleDisc, short = 180) => {
     if (lengthText > short && !toggleDisc) {
 
         newText = newText.padEnd(short).substring(0, short)
-        if (newText.slice(newText.length - 1) == " ")
+        if (newText.slice(newText.length - 1) === " ")
             newText = newText.slice(0, newText.length - 2) + "..."
         else
             newText += "..."
@@ -163,7 +188,6 @@ export const descriptionFix = (object, toggleDisc, short = 180) => {
 export const getShowType = (title) => {
     return title ? "movie" : "tv"
 }
-
 
 export const makeURL = (props, page) => {
     const type = props.showType
@@ -207,14 +231,20 @@ export const makeURL = (props, page) => {
         case "master":
             url = masterInfoUrl.replace("{id}", props.master_id)
             break
+        case "episodes":
+            url = tvEpisodes.replace("{id}", props.master_id)
+            url = url.replace("{season_number}", props.seasons_number)
+            break
+        case "trending":
+            url = trending
+            break
         default: // props.id = id of movie
             url = MatchingMovies.replace("{id}", props.recommend_id)
             url += page
     }
+    // console.log(url.replace("{type}", type))
     return url.replace("{type}", type)
 }
-
-
 
 export const getStreamProviders = async (id, type) => {
     const data = await fetch(whereToWatch[0].replace("{type}", type) + id + whereToWatch[1]);

@@ -21,13 +21,13 @@ const MovieOrSeries = ({}) => {
     <View style={styles.container}>
       <TouchableOpacity style={[styles.button, activeType === "movie" && styles.active]} onPress={() => selectedType("movie")}>
         <FontText fontSize={15} font={"Roboto-Regular"}>
-          Films
+          Movie
         </FontText>
       </TouchableOpacity>
 
       <TouchableOpacity style={[styles.button, activeType === "tv" && styles.active]} onPress={() => selectedType("tv")}>
         <FontText fontSize={15} font={"Roboto-Regular"}>
-          Series
+          TV show
         </FontText>
       </TouchableOpacity>
     </View>
@@ -39,7 +39,7 @@ export default MovieOrSeries;
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    marginHorizontal: 10,
+    marginHorizontal: "4%",
     justifyContent: "space-between",
     marginVertical: 5,
   },

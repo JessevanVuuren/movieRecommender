@@ -1,18 +1,17 @@
-import React, { useEffect, useRef } from "react";
-import { StyleSheet, View } from "react-native";
-import * as Linking from "expo-linking";
+import React, { useEffect, useRef, useState } from "react";
+import { StyleSheet, View, Animated } from "react-native";
 
 import MovieListVerticalScroll from "../components/scrollView/MovieListVerticalScroll";
 import MovieListScroll from "../components/scrollView/MovieListScroll";
+import CarouselBanner from "../components/scrollView/CarouselBanner";
 import MovieOrSeries from "../components/MovieOrSeries";
 import { FontText } from "../components/fontText";
 import { useGlobalState } from "../global/state";
-import Skeleton from "../components/Skeleton";
 import { TopBar } from "../components/topBar";
-import { infoUrl } from "../src/helper";
 import Colors from "../src/style";
 
-const NowPlaying = ({ navigation, showType }) => {
+const NowPlaying = ({ navigation }) => {
+  const [showType] = useGlobalState("showType");
   return (
     <View>
       <View style={{ marginLeft: "4%", marginTop: 10, marginBottom: 10 }}>
@@ -21,13 +20,14 @@ const NowPlaying = ({ navigation, showType }) => {
         </FontText>
       </View>
       <View style={{ height: 220 }}>
-        <MovieListScroll id={"nowPlaying"} showType={showType} navigation={navigation} />
+        <MovieListScroll id={"nowPlaying"} showType={showType} navigation={navigation} key={showType} />
       </View>
     </View>
   );
 };
 
-const UpComing = ({ navigation, showType }) => {
+const UpComing = ({ navigation }) => {
+  const [showType] = useGlobalState("showType");
   return (
     <View>
       <View style={{ marginLeft: "4%", marginTop: 10, marginBottom: 10 }}>
@@ -36,13 +36,14 @@ const UpComing = ({ navigation, showType }) => {
         </FontText>
       </View>
       <View style={{ height: 220 }}>
-        <MovieListScroll id={"upComing"} showType={showType} navigation={navigation} />
+        <MovieListScroll id={"upComing"} showType={showType} navigation={navigation} key={showType}/>
       </View>
     </View>
   );
 };
 
-const TopRated = ({ navigation, showType }) => {
+const TopRated = ({ navigation }) => {
+  const [showType] = useGlobalState("showType");
   return (
     <View>
       <View style={{ marginLeft: "4%", marginTop: 10, marginBottom: 10 }}>
@@ -51,37 +52,42 @@ const TopRated = ({ navigation, showType }) => {
         </FontText>
       </View>
       <View style={{ height: 220 }}>
-        <MovieListScroll id={"topRated"} showType={showType} navigation={navigation} />
+        <MovieListScroll id={"topRated"} showType={showType} navigation={navigation} key={showType} />
       </View>
     </View>
   );
 };
 
 const Home = ({ route, navigation }) => {
-  const [showType] = useGlobalState("showType");
-  const isScreenMounted = useRef(true);
-  const URL = Linking.useURL() || "noUrl";
+  const [showType] = useGlobalState("showType")
 
-  useEffect(() => {
-    if (!isScreenMounted.current) return;
-    const getMovieData = async () => {
-      let cleanURL = Linking.parse(URL);
-      if (cleanURL.queryParams.id !== undefined) {
-        const getMovies = await fetch(infoUrl[0] + cleanURL.queryParams.id + infoUrl[1]);
-        const json = await getMovies.json();
-        json["genre_ids"] = json["genres"].map((genre) => genre.id);
-        navigation.push("MovieScreen", { jsonObject: json });
-      }
-    };
-    getMovieData(URL);
-  }, [URL]);
+
+  // const isScreenMounted = useRef(true);
+  // const URL = Linking.useURL() || "noUrl";
+
+  // useEffect(() => {
+  //   if (!isScreenMounted.current) return;
+  //   const getMovieData = async () => {
+  //     let cleanURL = Linking.parse(URL);
+  //     if (cleanURL.queryParams.id !== undefined) {
+  //       const getMovies = await fetch(infoUrl[0] + cleanURL.queryParams.id + infoUrl[1]);
+  //       const json = await getMovies.json();
+  //       json["genre_ids"] = json["genres"].map((genre) => genre.id);
+  //       navigation.push("MovieScreen", { jsonObject: json });
+  //     }
+  //   };
+  //   getMovieData(URL);
+  // }, [URL]);
+
+
 
   return (
     <View style={styles.container}>
       <TopBar navigation={navigation} hambAction={"openD"} />
       <MovieOrSeries />
-      {/* <MovieListVerticalScroll id={"popular"} navigation={navigation} showType={showType} component={[NowPlaying, UpComing, TopRated]} key={showType} /> */}
-      <MovieListVerticalScroll id={"popular"} navigation={navigation} showType={showType} component={[]} key={showType} />
+
+      <MovieListVerticalScroll id={"popular"} navigation={navigation} showType={showType} component={[CarouselBanner, NowPlaying, UpComing, TopRated]}/>
+      {/* <MovieListVerticalScroll id={"popular"} navigation={navigation} component={[NowPlaying]} showType={showType} key={showType} /> */}
     </View>
   );
 };
@@ -94,3 +100,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+
+

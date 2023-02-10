@@ -1,30 +1,73 @@
-import { StyleSheet, View, Dimensions, Text, Image } from "react-native";
 import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
+import { StyleSheet, View, Dimensions, Text, Image, Pressable, Alert, ToastAndroid } from "react-native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { baseUrl342, tvEpisodes } from "../../src/helper";
+import { baseUrl780, reFormatData, round } from "../../src/helper";
 import { FontText } from "../fontText";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import Colors from "../../src/style";
+
+const HEIGHT = 260;
+const WIDTH = Dimensions.get("window").width;
 
 interface EpisodeScrollProps {
-
+  episodes: any;
+  fall_back: string;
+  navigation: any;
+  tv_id:number
+  season_number:number
 }
 
-const EpisodeScroll: React.FC<EpisodeScrollProps> = ({  }) => {
+const EpisodeScroll: React.FC<EpisodeScrollProps> = ({ episodes, fall_back, navigation, tv_id, season_number }) => {
   const [data, setData] = useState([]);
-
   const _layoutProvider = useRef(layoutMaker()).current;
   const dataProvider = useMemo(() => dataProviderMaker(data), [data]);
 
-  const rowRenderer = (type, data) => {
-    if (data.item.episode_count == 0) return;
+  const toGoEpisode = async (episode) => {
+    if (!episode.still_path) {
+      ToastAndroid.show('No information available yet', ToastAndroid.SHORT);
+      return
+    }
+    console.log(episode.name + ", " + episode.id);
+    navigation.push("EpisodeScreen", { data: episode, tv_id: tv_id, season_number: season_number });
+  };
+
+  const rowRenderer = (type: string, data: any) => {
     return (
-      <View style={styles.holder}>
-        <TouchableOpacity onPress={() => console.log("TO => " + data.item.name)}>
-          <Image style={styles.img} source={{ uri: baseUrl342 + (data.item.poster_path ? data.item.poster_path : fall_back) }} />
-        </TouchableOpacity>
-        <FontText fontSize={18} font={"Roboto-Bold"}>
-          {data.item.name}
-        </FontText>
+      <View style={styles.container}>
+        <View>
+          <Pressable onPress={() => toGoEpisode(data.item)}>
+            <Image
+              style={styles.img}
+              source={{ uri: data.item.still_path ? baseUrl780 + data.item.still_path : baseUrl780 + fall_back }}
+              resizeMode="contain"
+            />
+            <View style={styles.title}>
+              <FontText fontSize={15} font={"Roboto-Bold"}>
+                {data.item.name}
+              </FontText>
+              {data.item.vote_average > 0 && (
+                <View style={styles.vote}>
+                  <Image source={require("../../assets/star-symbol.png")} style={[styles.topStar, { height: 12, width: 12 }]} />
+
+                  <FontText fontSize={13} font={"Roboto-Bold"}>
+                    {round(data.item.vote_average)}
+                  </FontText>
+                </View>
+              )}
+            </View>
+
+            <View style={styles.subTitle}>
+              <FontText fontSize={13} font={"Roboto-Bold"} color={Colors.mainColor}>
+                {reFormatData(data.item.air_date)}
+              </FontText>
+
+              {data.item.still_path && data.item.runtime && (
+                <FontText fontSize={13} font={"Roboto-Bold"} color={"gray"}>
+                  {data.item.runtime} min
+                </FontText>
+              )}
+            </View>
+          </Pressable>
+        </View>
       </View>
     );
   };
@@ -32,38 +75,50 @@ const EpisodeScroll: React.FC<EpisodeScrollProps> = ({  }) => {
   useEffect(() => {
     (async () => {
       const fullList = [];
-      for (let i = 0; i < seasons.length; i++) {
+      for (let i = 0; i < episodes.length; i++) {
         fullList.push({
           type: "NORMAL",
-          item: seasons[i],
+          item: episodes[i],
         });
       }
       setData(fullList);
     })();
   }, []);
 
-  if (!data.length) return null;
-
   return (
-    <View style={{ flex: 1 }}>
-      <RecyclerListView isHorizontal={true} layoutProvider={_layoutProvider} dataProvider={dataProvider} rowRenderer={rowRenderer} />
+    <View style={{ width: "100%", height: data.length * HEIGHT }}>
+      <RecyclerListView style={{ flex: 1 }} layoutProvider={_layoutProvider} dataProvider={dataProvider} rowRenderer={rowRenderer} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: HEIGHT,
+    width: WIDTH,
   },
-  holder: {
-    height: 270,
-    width: 170,
-    paddingLeft: Dimensions.get("window").width * 0.04,
+  topStar: {
+    marginTop: 4,
+    marginRight: 5,
   },
   img: {
-    height: 230,
-    width: 153,
     borderRadius: 10,
+    marginBottom: 3,
+    height: ((WIDTH - (WIDTH / 100) * 8) / 780) * 439,
+    width: WIDTH - (WIDTH / 100) * 8,
+  },
+  title: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: WIDTH - (WIDTH / 100) * 8,
+  },
+  vote: {
+    flexDirection: "row",
+  },
+  subTitle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: WIDTH - (WIDTH / 100) * 8,
   },
 });
 
@@ -77,8 +132,8 @@ const layoutMaker = () =>
     (type, dim) => {
       switch (type) {
         case "NORMAL":
-          dim.width = 170
-          dim.height = 270;
+          dim.width = WIDTH;
+          dim.height = HEIGHT;
           break;
       }
     }

@@ -5,12 +5,12 @@ import { useRef } from "react";
 interface SkeletonProps {
   width: number;
   height: number;
-  borderRadius: 0;
-  backGround: string;
-  opacityMin: number;
-  opacityMax: number;
-  speedUp: number;
-  speedDown: number;
+  borderRadius: number;
+  backGround?: string;
+  opacityMin?: number;
+  opacityMax?: number;
+  speedUp?: number;
+  speedDown?: number;
 }
 
 const Skeleton: React.FC<SkeletonProps> = ({ width, height, borderRadius, backGround, opacityMax, opacityMin, speedDown, speedUp }) => {

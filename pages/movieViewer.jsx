@@ -60,7 +60,7 @@ const Movie = ({ route, navigation }) => {
 
       <Animated.Image
         style={[styles.mainImg, { transform: [{ translateY: imageTranslateY }] }]}
-        source={{ uri: baseUrl500 + object.backdrop_path }}
+        source={{ uri: baseUrlOri + object.backdrop_path }}
       />
 
       <Animated.ScrollView

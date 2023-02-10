@@ -19,6 +19,7 @@ export default class MovieListVerticalScroll extends React.Component {
       pageCount: 1,
       megaList: [],
       currentPageCount: 0,
+      showType: this.props.showType,
     };
 
     this.layoutProvider = new LayoutProvider(
@@ -102,6 +103,24 @@ export default class MovieListVerticalScroll extends React.Component {
     this.getMovieList(true);
   }
 
+  componentDidUpdate() {
+    if (this.state.showType !== this.props.showType) {
+      this.setState(
+        {
+          doneLoading: false,
+          showType: this.props.showType,
+          list: this.state.list.cloneWithRows([]),
+          megaList: [],
+          pageCount: 1,
+          currentPageCount: 0,
+        },
+        () => {
+          this.getMovieList(true);
+        }
+      );
+    }
+  }
+
   checkIfEnd() {
     if (this.state.currentPageCount > this.state.pageCount) {
       this.getMovieList(false);
@@ -130,7 +149,7 @@ export default class MovieListVerticalScroll extends React.Component {
         );
       case "TITLE":
         return (
-          <View style={{ marginLeft: "4%" }}>
+          <View style={{ marginLeft: "4%", marginTop: -40 }}>
             <FontText fontSize={30} font={"Roboto-Bold"}>
               Popular
             </FontText>
@@ -147,7 +166,10 @@ export default class MovieListVerticalScroll extends React.Component {
                 this.movieToShow(data.item);
               }}
             >
-              <Image style={[styles.img, { width: this.state.imageSize.width, height: this.state.imageSize.height }]} source={{ uri: baseUrl342 + poster_path }} />
+              <Image
+                style={[styles.img, { width: this.state.imageSize.width, height: this.state.imageSize.height }]}
+                source={{ uri: baseUrl342 + poster_path }}
+              />
               <View style={{ position: "absolute", zIndex: -1 }}>
                 <Skeleton width={this.calcImgSize().width} height={this.calcImgSize().height} borderRadius={10} />
               </View>
@@ -175,17 +197,12 @@ export default class MovieListVerticalScroll extends React.Component {
           </View>
         );
       }
-      return (
-        <View>
-          {skeletons}
-        </View>
-      );
+      return <View>{skeletons}</View>;
     }
 
     return (
       <View style={styles.container}>
         <RecyclerListView
-          style={{ flex: 1 }}
           rowRenderer={this.rowRenderer}
           dataProvider={this.state.list}
           layoutProvider={this.layoutProvider}
@@ -208,6 +225,7 @@ const styles = StyleSheet.create({
     // alignSelf:"center",
     // alignItems:"center"
     // marginLeft: "10.5%"
+    marginTop: -40,
     marginLeft: "12.3%",
   },
   img: {

@@ -1,4 +1,4 @@
-import { baseUrl500, descriptionFix, getDate, genreTVDict, baseUrlOri, getStreamProviders, getMasterDetails } from "../src/helper";
+import { baseUrl500, descriptionFix, getDate, genreTVDict, baseUrlOri, getStreamProviders, getMasterDetails, baseUrl780 } from "../src/helper";
 import { StyleSheet, View, TouchableOpacity, Text, Animated, Image, ScrollView } from "react-native";
 import { saveMovieToWatchList, ifMovieAdded, removeMovie } from "../src/saveLoadWatchList";
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
@@ -63,7 +63,7 @@ const TvViewer = ({ route, navigation }) => {
 
       <Animated.Image
         style={[styles.mainImg, { transform: [{ translateY: imageTranslateY }] }]}
-        source={{ uri: baseUrl500 + object.backdrop_path }}
+        source={{ uri: baseUrlOri + object.backdrop_path }}
       />
 
       <Animated.ScrollView
@@ -120,7 +120,7 @@ const TvViewer = ({ route, navigation }) => {
               </FontText>
             </View>
 
-            {masterData && masterData.genres && (
+            {masterData && masterData.genres && masterData.genres.length > 0 && (
               <View>
                 <View style={{ marginTop: 29 }}>
                   <FontText fontSize={20} font={"Roboto-Bold"}>
@@ -141,7 +141,7 @@ const TvViewer = ({ route, navigation }) => {
               </View>
             )}
 
-            {providers && providers.data && (
+            {providers && providers.data && providers.data.length > 0 && (
               <View>
                 <View style={{ marginTop: 29, marginBottom: 5 }}>
                   <FontText fontSize={20} font={"Roboto-Bold"}>
@@ -165,7 +165,7 @@ const TvViewer = ({ route, navigation }) => {
             )}
           </View>
 
-          {masterData && masterData.seasons && (
+          {masterData && masterData.seasons && masterData.seasons.length > 0 && (
             <View>
               <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
                 <FontText fontSize={20} font={"Roboto-Bold"}>
@@ -173,12 +173,12 @@ const TvViewer = ({ route, navigation }) => {
                 </FontText>
               </View>
               <View style={{ flex: 1, height: 260 }}>
-                <SeasonScroll seasons={masterData.seasons} fall_back={object.backdrop_path} />
+                <SeasonScroll seasons={masterData.seasons} fall_back={object.backdrop_path} navigation={navigation} tv_id={masterData.id} />
               </View>
             </View>
           )}
 
-          {masterData && masterData.credits && (
+          {masterData && masterData.videos && masterData.videos.results.length > 0 && (
             <View>
               <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
                 <FontText fontSize={20} font={"Roboto-Bold"}>

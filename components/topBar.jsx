@@ -33,7 +33,7 @@ export const TopBar = (props) => {
                 <FontAwesome style={{ color: Colors.textColor }} name="search" size={17} color="black" />
               </View>
               <View style={{ marginLeft: 10 }}>
-                <FontText font={"Roboto-Medium"} fontSize={17}>Search for a movie</FontText>
+                <FontText font={"Roboto-Medium"} fontSize={17}>Search for a show</FontText>
               </View>
             </View>
           </TouchableOpacity> )}

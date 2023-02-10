@@ -50,15 +50,11 @@ const WatchList: React.FC<WatchListProps> = ({ navigation }) => {
                 </View>
               </View>
 
-              <FontText fontSize={12} font={"Roboto-Bold"}>
-                {show.genres && show.genres.length} geld
-              </FontText>
-
-              {/* {showType === "tv" && show.seasons && (
+              {showType === "tv" && show.seasons && (
                 <FontText fontSize={12} font={"Roboto-Bold"}>
                   {show.seasons.length} Seasons
                 </FontText>
-              )} */}
+              )}
             </View>
             <FontText fontSize={12} font={"Roboto-Bold"}>
               {descriptionFix(show.overview, false, 130).text}

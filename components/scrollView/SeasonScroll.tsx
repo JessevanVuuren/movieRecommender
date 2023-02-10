@@ -1,31 +1,38 @@
-import { StyleSheet, View, Dimensions, Text, Image } from "react-native";
 import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
+import { StyleSheet, View, Dimensions, Image, Pressable } from "react-native";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { baseUrl342, tvEpisodes } from "../../src/helper";
+import { baseUrl342, baseUrl500 } from "../../src/helper";
 import { FontText } from "../fontText";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface SeasonScrollProps {
   seasons: any;
   fall_back: string;
+  navigation: any;
+  tv_id: number
 }
 
-const SeasonScroll: React.FC<SeasonScrollProps> = ({ seasons, fall_back }) => {
+const SeasonScroll: React.FC<SeasonScrollProps> = ({ seasons, fall_back, navigation, tv_id }) => {
   const [data, setData] = useState([]);
 
   const _layoutProvider = useRef(layoutMaker()).current;
   const dataProvider = useMemo(() => dataProviderMaker(data), [data]);
 
+  const moveTo = (data) => {
+    navigation.push("SeasonScreen", { data: data, tv_id: tv_id, fall_back:fall_back });
+  };
+
   const rowRenderer = (type, data) => {
     if (data.item.episode_count == 0) return;
     return (
       <View style={styles.holder}>
-        <TouchableOpacity onPress={() => console.log("TO => " + data.item.name)}>
-          <Image style={styles.img} source={{ uri: baseUrl342 + (data.item.poster_path ? data.item.poster_path : fall_back) }} />
-        </TouchableOpacity>
-        <FontText fontSize={18} font={"Roboto-Bold"}>
-          {data.item.name}
-        </FontText>
+        <Pressable onPress={() => moveTo(data.item)}>
+          <Image style={styles.img} source={{ uri: baseUrl500 + (data.item.poster_path ? data.item.poster_path : fall_back) }} />
+        </Pressable>
+        <Pressable onPress={() => moveTo(data.item)}>
+          <FontText fontSize={18} font={"Roboto-Bold"}>
+            {data.item.name}
+          </FontText>
+        </Pressable>
       </View>
     );
   };

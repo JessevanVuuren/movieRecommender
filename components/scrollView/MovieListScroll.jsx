@@ -1,7 +1,7 @@
 import { StyleSheet, View, Dimensions, Image, TouchableOpacity } from "react-native";
 import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
 import { baseUrl342, makeURL } from "../../src/helper";
-import MovieSubtitle from "../deps/MovieSubtitle";
+import MovieSubtitle from "../MovieSubtitle";
 import Colors from "../../src/style";
 import Skeleton from "../Skeleton";
 import React from "react";
