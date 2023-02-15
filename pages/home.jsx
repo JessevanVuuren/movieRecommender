@@ -9,6 +9,8 @@ import { FontText } from "../components/fontText";
 import { useGlobalState } from "../global/state";
 import { TopBar } from "../components/topBar";
 import Colors from "../src/style";
+import Disclaimer from "../components/Disclamer";
+import { getValue, setValue } from "../src/LocalStorage";
 
 const NowPlaying = ({ navigation }) => {
   const [showType] = useGlobalState("showType");
@@ -60,7 +62,7 @@ const TopRated = ({ navigation }) => {
 
 const Home = ({ route, navigation }) => {
   const [showType] = useGlobalState("showType")
-
+  const [showDisclaimer, setShowDisclaimer] = useState(false)
 
   // const isScreenMounted = useRef(true);
   // const URL = Linking.useURL() || "noUrl";
@@ -79,7 +81,19 @@ const Home = ({ route, navigation }) => {
   //   getMovieData(URL);
   // }, [URL]);
 
+  useEffect(() => {
+    (async () => {
+      const disclaimer = await getValue("hide_disclaimer")
+      if (!disclaimer) {
+        setShowDisclaimer(true)
+      }
+    })()
+  }, [])
 
+  const hideDisclaimer = () => {
+    setValue("hide_disclaimer", true)
+    setShowDisclaimer(false)
+  }
 
   return (
     <View style={styles.container}>
@@ -87,7 +101,7 @@ const Home = ({ route, navigation }) => {
       <MovieOrSeries />
 
       <MovieListVerticalScroll id={"popular"} navigation={navigation} showType={showType} component={[CarouselBanner, NowPlaying, UpComing, TopRated]}/>
-      {/* <MovieListVerticalScroll id={"popular"} navigation={navigation} component={[NowPlaying]} showType={showType} key={showType} /> */}
+      {showDisclaimer && <Disclaimer closeDisclaimer={() => hideDisclaimer()} />}
     </View>
   );
 };

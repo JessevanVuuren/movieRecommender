@@ -7,7 +7,7 @@ import { CustomDrawerContent } from "../components/customDrawer"
 import { SettingsPage } from "../pages/settingsPage"
 import { WatchListView } from "../pages/watchListViewer"
 import { ActorPage } from "../pages/ActorPage"
-import { GenrePage } from "../pages/GenrePage"
+import { GenrePage } from "../pages/genrePage"
 import { Movie } from "../pages/movieViewer"
 import { Home } from '../pages/home'
 

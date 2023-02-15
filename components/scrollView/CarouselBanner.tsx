@@ -73,7 +73,6 @@ const CarouselBanner: React.FC<CarouselBannerProps> = (props) => {
 
   useEffect(() => {
     (async () => {
-      console.log(props.navigation)
       const url = makeURL({ id: "trending", showType: "all" }, 0);
       const json = await fetch(url);
       const list = await json.json();

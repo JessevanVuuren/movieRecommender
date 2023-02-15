@@ -3,7 +3,7 @@
     "scheme": "movierecommender",
     "name": "Movie App",
     "slug": "MovieRecommender",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -23,7 +23,7 @@
       ],
       "supportsTablet": true,
       "bundleIdentifier": "com.jesse.movieRecommender",
-      "buildNumber": "16"
+      "buildNumber": "17"
     },
     "android": {
       "intentFilters": [
@@ -59,7 +59,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.jesse.movieRecommender",
-      "versionCode": 18,
+      "versionCode": 19,
       "permissions": []
     },
     "web": {

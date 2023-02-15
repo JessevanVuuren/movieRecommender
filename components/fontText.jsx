@@ -18,6 +18,13 @@ const FontText = (props) => {
     "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
   });
 
+  const fontTree = () => {
+    if (props.font === "bold") return "Roboto-Bold" 
+    if (props.font === "regular") return "Roboto-Bold" 
+    if (props.font === "medium") return "Roboto-Bold" 
+    return "Roboto-Bold"
+  }
+
   const onLayoutRootView = useCallback(async () => {
     if (fontLoad) {
       await SplashScreen.hideAsync();
@@ -31,8 +38,9 @@ const FontText = (props) => {
       <Text
         numberOfLines={props.numberOfLines}
         style={{
+          lineHeight:props.lineHeight,
           color: props.color,
-          fontFamily: props.font,
+          fontFamily: fontTree(),
           fontSize: props.fontSize,
         }}
       >
