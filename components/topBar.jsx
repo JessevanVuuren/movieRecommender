@@ -1,20 +1,20 @@
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
-import { FontAwesome, Feather, Ionicons } from '@expo/vector-icons';
-import React, { useState } from "react"
-import Colors from '../src/style'
-import Constants from 'expo-constants';
-import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { FontAwesome, Feather, Ionicons } from "@expo/vector-icons";
+import Colors from "../src/style";
+import Constants from "expo-constants";
+import { StatusBar } from "expo-status-bar";
 
-import { FontText } from "../components/fontText"
-
+import { FontText } from "../components/fontText";
 
 export const TopBar = (props) => {
-
   const hamburger = () => {
-    if (props.hambAction == "openD")
-      props.navigation.openDrawer()
-    if (props.hambAction == "goBack")
-      props.navigation.goBack()
+    if (props.hambAction == "openD") props.navigation.openDrawer();
+    if (props.hambAction == "goBack") props.navigation.goBack();
+  };
+
+  const goToRoom = () => {
+    console.log("nice")
+    props.navigation.navigate("RoomPage");
   }
 
   return (
@@ -27,23 +27,27 @@ export const TopBar = (props) => {
         </TouchableOpacity>
 
         {props.extra != "hideSearchBar" && (
-          <TouchableOpacity style={styles.searchBar} onPress={() => props.navigation.navigate('SearchScreen')}>
+          <TouchableOpacity style={styles.searchBar} onPress={() => props.navigation.navigate("SearchScreen")}>
             <View style={styles.menuSearch}>
               <View style={{ justifyContent: "center" }}>
                 <FontAwesome style={{ color: Colors.textColor }} name="search" size={17} color="black" />
               </View>
               <View style={{ marginLeft: 10 }}>
-                <FontText font={"Roboto-Medium"} fontSize={17}>Search for a show</FontText>
+                <FontText font={"Roboto-Medium"} fontSize={17}>
+                  Search for a show
+                </FontText>
               </View>
             </View>
-          </TouchableOpacity> )}
+          </TouchableOpacity>
+        )}
 
+        <TouchableOpacity style={styles.menuRoom} onPress={goToRoom}>
+          <Ionicons name="people" size={30} color="white" />
+        </TouchableOpacity>
       </View>
-
-
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   mainMenu: {
@@ -56,6 +60,9 @@ const styles = StyleSheet.create({
   menuHamburger: {
     marginLeft: "5%",
   },
+  menuRoom:{
+    marginRight: "5%",
+  },  
   menuSearch: {
     marginLeft: 10,
     flexDirection: "row",
@@ -64,8 +71,7 @@ const styles = StyleSheet.create({
     height: 40,
     width: "60%",
     borderRadius: 25,
-    marginRight: "20%",
     justifyContent: "center",
-    backgroundColor: Colors.darkLight
-  }
-})
+    backgroundColor: Colors.darkLight,
+  },
+});

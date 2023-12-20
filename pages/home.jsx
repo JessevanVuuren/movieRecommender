@@ -64,6 +64,7 @@ const Home = ({ route, navigation }) => {
   const [showType] = useGlobalState("showType")
   const [showDisclaimer, setShowDisclaimer] = useState(false)
 
+  // deep linking
   // const isScreenMounted = useRef(true);
   // const URL = Linking.useURL() || "noUrl";
 

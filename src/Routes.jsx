@@ -4,19 +4,20 @@ import { createStackNavigator } from "@react-navigation/stack"
 
 import { CustomDrawerContent } from "../components/customDrawer"
 
-import { SettingsPage } from "../pages/settingsPage"
 import { WatchListView } from "../pages/watchListViewer"
+import { EpisodeViewer } from "../pages/EpisodeViewer"
+import { SettingsPage } from "../pages/settingsPage"
+import { SeasonViewer } from "../pages/SeasonViewer"
+import { SearchPage } from "../pages/SearchPage"
 import { ActorPage } from "../pages/ActorPage"
-import { GenrePage } from "../pages/genrePage"
+import { GenrePage } from "../pages/GenrePage"
+import { RoomPage } from "../pages/RoomPage"
 import { Movie } from "../pages/movieViewer"
 import { Home } from '../pages/home'
 
-import { SearchPage } from "../pages/SearchPage"
 
-import Colors from "./style"
 import TvViewer from "../pages/TvViewer"
-import { SeasonViewer } from "../pages/SeasonViewer"
-import { EpisodeViewer } from "../pages/EpisodeViewer"
+import Colors from "./style"
 
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
@@ -42,6 +43,7 @@ export const Routes = ({ }) => {
         <Stack.Screen name="EpisodeScreen" component={EpisodeViewer} options={{ header: () => null }} />
         <Stack.Screen name="GenrePage" component={GenrePage} options={{ header: () => null }} />
         <Stack.Screen name="ActorPage" component={ActorPage} options={{ header: () => null }} />
+        <Stack.Screen name="RoomPage" component={RoomPage} options={{ header: () => null }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
