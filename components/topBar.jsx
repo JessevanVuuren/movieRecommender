@@ -13,7 +13,6 @@ export const TopBar = (props) => {
   };
 
   const goToRoom = () => {
-    console.log("nice")
     props.navigation.navigate("RoomPage");
   }
 
