@@ -1,13 +1,12 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { FontText } from "../components/fontText";
-import Constants from "expo-constants";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useRef, useState } from "react"
-import Colors from "../src/style";
+import { FontText } from "../components/fontText";
 import { ROOM, SEND } from "../models/room";
-import { MaterialIcons, FontAwesome5, Ionicons } from '@expo/vector-icons';
+import Constants from "expo-constants";
+import Colors from "../src/style";
 
-
-
+import { EXPO_API_WSS } from '@env'
 
 
 interface RoomPageProps {
@@ -16,7 +15,7 @@ interface RoomPageProps {
 }
 
 const RoomPage: React.FC<RoomPageProps> = props => {
-  var ws = useRef(new WebSocket("ws://192.168.100.63:8000/ws")).current;
+  var ws = useRef(new WebSocket(EXPO_API_WSS)).current;
   const [connected, setConnected] = useState(false)
 
   const [room, setRoom] = useState<ROOM>(null)
