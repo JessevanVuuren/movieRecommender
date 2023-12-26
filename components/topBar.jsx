@@ -5,8 +5,21 @@ import Constants from "expo-constants";
 import { StatusBar } from "expo-status-bar";
 
 import { FontText } from "../components/fontText";
+import { useEffect, useState } from "react";
 
 export const TopBar = (props) => {
+  const [roomServerIsOnline, setRoomServerIsOnline] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const getServer = await fetch("http://" + process.env.EXPO_ROOM_API + "/is-online");
+      if (getServer.ok) {
+        const isOnline = await getServer.json();
+        setRoomServerIsOnline(isOnline["status"])
+      }
+    })();
+  }, []);
+
   const hamburger = () => {
     if (props.hambAction == "openD") props.navigation.openDrawer();
     if (props.hambAction == "goBack") props.navigation.goBack();
@@ -14,7 +27,7 @@ export const TopBar = (props) => {
 
   const goToRoom = () => {
     props.navigation.navigate("RoomPage");
-  }
+  };
 
   return (
     <View>
@@ -39,9 +52,8 @@ export const TopBar = (props) => {
             </View>
           </TouchableOpacity>
         )}
-
         <TouchableOpacity style={styles.menuRoom} onPress={goToRoom}>
-          <Ionicons name="people" size={30} color="white" />
+          {roomServerIsOnline && <Ionicons name="people" size={30} color="white" />}
         </TouchableOpacity>
       </View>
     </View>
@@ -59,9 +71,9 @@ const styles = StyleSheet.create({
   menuHamburger: {
     marginLeft: "5%",
   },
-  menuRoom:{
+  menuRoom: {
     marginRight: "5%",
-  },  
+  },
   menuSearch: {
     marginLeft: 10,
     flexDirection: "row",

@@ -1,4 +1,6 @@
-import { EXPO_API_URL } from '@env'
+// import { EXPO_API_URL } from '@env'
+
+const EXPO_API_URL = process.env.EXPO_API_URL
 
 // base url for img // w500 is for quality 
 export const baseUrl500 = "https://image.tmdb.org/t/p/w500"
