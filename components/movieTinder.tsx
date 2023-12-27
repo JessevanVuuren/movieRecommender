@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { FontText } from "../components/fontText"
 
 const WIDTH = Dimensions.get("window").width
+const ANIM_DURATION = 500
 
 interface MovieTinderProps {
 
@@ -13,22 +14,28 @@ interface MovieTinderProps {
 interface PosCord { x: number, y: number, radiant: number }
 
 const Card = (props: any) => {
+  const animPos = useRef(new Animated.Value(0)).current;
+  const animRot = useRef(new Animated.Value(0)).current;
 
-  const widthAnim = useRef(new Animated.Value(0)).current;
+  const animOpacityGreen = useRef(new Animated.Value(0)).current;
+  const animOpacityRed = useRef(new Animated.Value(0)).current;
 
   const [startPos, setStartPos] = useState<PosCord>(null)
-  const [cardPosition, setCardPosition] = useState<PosCord>({ x: 0, y: 0, radiant: 0 })
   const [likeMovie, setLikeMovie] = useState<string>("")
+
+  const rotateImg = animRot.interpolate({ inputRange: [0, 360], outputRange: ['0deg', '360deg'] })
 
   const touchMove = (event: GestureResponderEvent) => {
     const x = event.nativeEvent.locationX
-    const y = event.nativeEvent.locationY
 
     const disX = x - startPos.x
-    const angle = Math.asin(cardPosition.x / 500)
-    setCardPosition({ x: disX, y: 0, radiant: angle })
-    widthAnim.setValue(disX)
+    const angle = Math.asin((x - startPos.x) / 500)
 
+    animPos.setValue(disX)
+    animRot.setValue(angle * (180 / Math.PI))
+
+    if (angle > 0) animOpacityGreen.setValue(angle)
+    else animOpacityRed.setValue(Math.abs(angle))
 
     if (startPos.x + 100 < x) {
       // console.log("right")
@@ -46,33 +53,19 @@ const Card = (props: any) => {
   }
 
   const touchEnd = (event: GestureResponderEvent) => {
-    // setCardPosition({ x: 0, y: 0, radiant: 0 })
-    Animated.timing(widthAnim, {
-      toValue: 0,
-      duration: 1000,
-      useNativeDriver:false
-    }).start();
+    Animated.timing(animPos, { toValue: 0, duration: ANIM_DURATION, useNativeDriver: false }).start();
+    Animated.timing(animRot, { toValue: 0, duration: ANIM_DURATION, useNativeDriver: false }).start();
+    Animated.timing(animOpacityGreen, { toValue: 0, duration: ANIM_DURATION, useNativeDriver: false }).start();
+    Animated.timing(animOpacityRed, { toValue: 0, duration: 500, useNativeDriver: false }).start();
   }
-
 
   return (
     <View style={styles.card}>
-      {/* <Animated.View style={{ transform: [{ translateX: cardPosition.x }, { translateY: cardPosition.y }, { rotate: cardPosition.radiant + "rad" }], }}> */}
-      <Animated.View style={{ transform: [{ translateX: widthAnim }, { rotate: cardPosition.radiant + "rad" }], }}>
+      <Animated.View style={{ transform: [{ translateX: animPos }, { rotate: rotateImg }], }}>
 
         <Image style={styles.cardImg} source={{ uri: baseUrl500 + props.movie.poster_path }} />
-        <LinearGradient
-          colors={["rgba(255,255,255,0)", "rgba(0, 255, 0,1)"]}
-          start={{ x: 0, y: 1 }}
-          end={{ x: 1, y: 1 }}
-          style={{ position: "absolute", height: "100%", width: "88%", right: 0, borderBottomRightRadius: 25, borderTopRightRadius: 25, opacity: cardPosition.radiant }}
-        />
-        <LinearGradient
-          colors={["rgba(255,255,255,0)", "rgba(255, 0, 0,1)"]}
-          start={{ x: 1, y: 1 }}
-          end={{ x: 0, y: 1 }}
-          style={{ position: "absolute", height: "100%", width: "88%", borderTopLeftRadius: 25, borderBottomLeftRadius: 25, opacity: cardPosition.radiant < 0 ? Math.abs(cardPosition.radiant) : 0 }}
-        />
+        <Animated.View style={{ position: "absolute", height: "100%", width: "90%", backgroundColor: "#00D68F", borderRadius: 25, opacity: animOpacityGreen }} />
+        <Animated.View style={{ position: "absolute", height: "100%", width: "90%", backgroundColor: "#d93b3b", borderRadius: 25, opacity: animOpacityRed }} />
 
       </Animated.View>
       <View onTouchMove={touchMove} onTouchStart={touchStart} onTouchEnd={touchEnd} style={styles.moveCard}></View>
