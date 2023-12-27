@@ -9,7 +9,6 @@ import { baseUrl500, reFormatData, descriptionFix, getActorDetails } from "../sr
 import MovieListScroll from "../components/scrollView/MovieListScroll";
 import { FontText } from "../components/fontText";
 import Colors from "../src/style";
-import ViewerWrapper from "../components/ViewerWrapper";
 
 const HEADER_MAX_HEIGHT = 450;
 const HEADER_MIN_HEIGHT = 0;

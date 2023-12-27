@@ -1,12 +1,11 @@
-import { StyleSheet, TouchableOpacity, View, Keyboard } from "react-native";
-import { FontAwesome5, Ionicons } from '@expo/vector-icons';
-import React, { createRef, useEffect, useRef, useState } from "react"
-import { FontText } from "../components/fontText";
-import { ROOM, SEND } from "../models/room";
-import Constants from "expo-constants";
-import Colors from "../src/style";
-import { TextInput } from "react-native-gesture-handler";
-import { JumpingTransition } from "react-native-reanimated";
+import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { FontAwesome5, Ionicons } from '@expo/vector-icons'
+import MovieTinder from "../components/movieTinder"
+import React, { useEffect, useState } from "react"
+import { FontText } from "../components/fontText"
+import { ROOM, SEND } from "../models/room"
+import Constants from "expo-constants"
+import Colors from "../src/style"
 
 interface RoomPageProps {
   navigation: any;
@@ -87,12 +86,12 @@ const RoomPage: React.FC<RoomPageProps> = props => {
     else props.navigation.goBack()
   }
 
-  const addKey = (key:number) => {
+  const addKey = (key: number) => {
     if (roomKey.length < 5) setRoomKey(roomKey + key)
   }
 
   const remKey = () => {
-    setRoomKey(roomKey.slice(0,-1))
+    setRoomKey(roomKey.slice(0, -1))
   }
 
   const keyJSX = (key: number) => {
@@ -131,6 +130,7 @@ const RoomPage: React.FC<RoomPageProps> = props => {
 
       {connected ?
         <View>
+          <MovieTinder />
         </View> :
         <View style={styles.notConnectedContainer}>
           {joinRoom ?
@@ -251,13 +251,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   joinRoomNumber: {
-    backgroundColor:Colors.darkLight,
-    borderRadius:5,
-    height:50,
-    width:40,
-    margin:10,
-    justifyContent:"center",
-    alignItems:"center"
+    backgroundColor: Colors.darkLight,
+    borderRadius: 5,
+    height: 50,
+    width: 40,
+    margin: 10,
+    justifyContent: "center",
+    alignItems: "center"
   },
   keyboardPad: {
     marginBottom: 100,

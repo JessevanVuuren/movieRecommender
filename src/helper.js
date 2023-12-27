@@ -192,17 +192,16 @@ export const getShowType = (title) => {
 }
 
 export const makeURL = (props, page) => {
-    const type = props.showType
     let url = ""
 
     switch (props.id) {
         case 'nowPlaying':
             url = getNowPlaying + "1"
-            url = url.replace("{whenPlaying}", type === "movie" ? "now_playing" : "airing_today")
+            url = url.replace("{whenPlaying}", props.showType === "movie" ? "now_playing" : "airing_today")
             break
         case 'upComing':
             url = getUpComing + "1"
-            if (type === "movie") {
+            if (props.showType === "movie") {
                 url = url.replace("{whenComing}", "upcoming")
             } else {
                 url = url.replace("{whenComing}", "on_the_air")
@@ -244,8 +243,8 @@ export const makeURL = (props, page) => {
             url = MatchingMovies.replace("{id}", props.recommend_id)
             url += page
     }
-    // console.log(url.replace("{type}", type))
-    return url.replace("{type}", type)
+    // console.log(url.replace("{type}", props.showType))
+    return url.replace("{type}", props.showType)
 }
 
 export const getStreamProviders = async (id, type) => {

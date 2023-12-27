@@ -10,5 +10,8 @@ export default Colors = {
     mainColor: "#E85D04",
     mainDark: "#6A040F",
     textColor: "#FFFFFF",
-    darkLight: "#1C2035"
+    darkLight: "#1C2035",
+    goodGreen: "#00D68F",
+    fineYellow: "#FFAA00",
+    dangerRed: "#d93b3b",
 }
