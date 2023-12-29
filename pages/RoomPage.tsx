@@ -23,7 +23,7 @@ const RoomPage: React.FC<RoomPageProps> = props => {
   const [room, setRoom] = useState<ROOM>(null)
 
   useEffect(() => {
-    const ws = new WebSocket("ws://" + process.env.EXPO_ROOM_API + "/ws");
+    const ws = new WebSocket(process.env.EXPO_ROOM_WSS + "/ws");
     setWS(ws)
 
     ws.onerror = (e) => {

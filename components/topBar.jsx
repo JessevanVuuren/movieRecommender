@@ -12,7 +12,8 @@ export const TopBar = (props) => {
 
   useEffect(() => {
     (async () => {
-      const getServer = await fetch("http://" + process.env.EXPO_ROOM_API + "/is-online");
+      console.log(process.env.EXPO_ROOM_API + "/is-online")
+      const getServer = await fetch(process.env.EXPO_ROOM_API + "/is-online");
       if (getServer.ok) {
         const isOnline = await getServer.json();
         setRoomServerIsOnline(isOnline["status"])

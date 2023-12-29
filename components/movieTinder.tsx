@@ -1,11 +1,12 @@
-import { StyleSheet, Text, View, Image, Dimensions, GestureResponderEvent, Animated } from "react-native";
-import { baseUrl342, baseUrl500, makeURL } from "../src/helper";
-import { LinearGradient } from "expo-linear-gradient";
+import { StyleSheet, View, Image, Dimensions, GestureResponderEvent, Animated } from "react-native";
 import React, { useEffect, useRef, useState } from "react"
+import { baseUrl500, makeURL } from "../src/helper";
 import { FontText } from "../components/fontText"
+import Colors from "../src/style"
 
 const WIDTH = Dimensions.get("window").width
 const ANIM_DURATION = 500
+const CARD_STACK = 30
 
 interface MovieTinderProps {
 
@@ -21,7 +22,7 @@ const Card = (props: any) => {
   const animOpacityRed = useRef(new Animated.Value(0)).current;
 
   const [startPos, setStartPos] = useState<PosCord>(null)
-  const [likeMovie, setLikeMovie] = useState<string>("")
+  const [likeMovie, setLikeMovie] = useState<string>(null)
 
   const rotateImg = animRot.interpolate({ inputRange: [0, 360], outputRange: ['0deg', '360deg'] })
 
@@ -37,26 +38,43 @@ const Card = (props: any) => {
     if (angle > 0) animOpacityGreen.setValue(angle)
     else animOpacityRed.setValue(Math.abs(angle))
 
-    if (startPos.x + 100 < x) {
-      // console.log("right")
-      setLikeMovie("right")
-    }
-
-    if (startPos.x - 100 > x) {
-      // console.log("left")
-      setLikeMovie("left")
-    }
+    if (startPos.x + 100 < x) setLikeMovie("right")
+    if (startPos.x - 100 > x) setLikeMovie("left")
+    if (Math.abs(angle) < 0.28) setLikeMovie(null)
   }
 
   const touchStart = (event: GestureResponderEvent) => {
     setStartPos({ x: event.nativeEvent.locationX, y: event.nativeEvent.locationY, radiant: 0 })
   }
 
+  const startAnim = (pos: number, rot: number, opacity: number, callback = () => { }) => {
+    Animated.parallel([
+      Animated.timing(animPos, { toValue: pos, duration: ANIM_DURATION, useNativeDriver: false }),
+      Animated.timing(animRot, { toValue: rot, duration: ANIM_DURATION, useNativeDriver: false }),
+      Animated.timing(animOpacityGreen, { toValue: opacity, duration: ANIM_DURATION, useNativeDriver: false }),
+      Animated.timing(animOpacityRed, { toValue: opacity, duration: ANIM_DURATION, useNativeDriver: false }),
+    ], { stopTogether: true }).start(() => callback())
+  }
+
+  const resetCard = () => {
+    props.updateIndex()
+    setLikeMovie(null)
+    animPos.setValue(0)
+    animRot.setValue(0)
+  }
+
   const touchEnd = (event: GestureResponderEvent) => {
-    Animated.timing(animPos, { toValue: 0, duration: ANIM_DURATION, useNativeDriver: false }).start();
-    Animated.timing(animRot, { toValue: 0, duration: ANIM_DURATION, useNativeDriver: false }).start();
-    Animated.timing(animOpacityGreen, { toValue: 0, duration: ANIM_DURATION, useNativeDriver: false }).start();
-    Animated.timing(animOpacityRed, { toValue: 0, duration: 500, useNativeDriver: false }).start();
+    if (likeMovie) {
+      props.getNextCard()
+      if (likeMovie == "right") {
+        startAnim(600, 90, 0, resetCard)
+      }
+      if (likeMovie == "left") {
+        startAnim(-600, -90, 0, resetCard)
+      } 
+    } else {
+      startAnim(0, 0, 0)
+    }
   }
 
   return (
@@ -73,25 +91,98 @@ const Card = (props: any) => {
   )
 }
 
+const getMovies = async (page: number) => {
+  const popularURL = makeURL({ id: "popular", showType: "movie" }, page)
+  console.log(popularURL)
+  const request = await fetch(popularURL)
+  return await request.json();
+}
+
 const MovieTinder: React.FC<MovieTinderProps> = props => {
-  const [movieList, setMovieList] = useState<any>(undefined)
+  const [movieList, setMovieList] = useState<any>([])
+  const [pageNumber, setPageNumber] = useState<number>(1)
+  const [nextCard, setNextCard] = useState<number>(0)
+
+  const animPosition1 = useRef(new Animated.Value(CARD_STACK * 1)).current;
+  const animPosition2 = useRef(new Animated.Value(CARD_STACK * 2)).current;
+  const animPosition3 = useRef(new Animated.Value(CARD_STACK * 3)).current;
+  const animOpacity1 = useRef(new Animated.Value(.7)).current;
+  const animOpacity2 = useRef(new Animated.Value(.5)).current;
+  const animOpacity3 = useRef(new Animated.Value(0)).current;
+  const animWidth1 = useRef(new Animated.Value(WIDTH * .9)).current;
+  const animWidth2 = useRef(new Animated.Value(WIDTH * .8)).current;
+  const animWidth3 = useRef(new Animated.Value(WIDTH * .7)).current;
 
   useEffect(() => {
-    (async () => {
-      const popularURL = makeURL({ id: "popular", showType: "movie" }, 1)
-      const request = await fetch(popularURL)
-      setMovieList(await request.json())
-    })()
-  }, [])
+    (async () => setMovieList([movieList, ...(await getMovies(pageNumber)).results]))()
+  }, [pageNumber])
 
-  if (movieList == undefined) {
+  const updateIndex = (i: number) => {
+    if (nextCard + 4 < movieList.length) {
+      setNextCard(nextCard + 1)
+    } else {
+      setPageNumber(pageNumber + 1)
+      // setNextCard(0)
+    }
+  }
+
+  const startAnim = (callback = () => { }) => {
+    Animated.parallel([
+      Animated.timing(animPosition1, { toValue: CARD_STACK * 0, duration: ANIM_DURATION, useNativeDriver: false }),
+      Animated.timing(animOpacity1, { toValue: 1, duration: ANIM_DURATION, useNativeDriver: false }),
+
+      Animated.timing(animPosition2, { toValue: CARD_STACK * 1, duration: ANIM_DURATION, useNativeDriver: false }),
+      Animated.timing(animOpacity2, { toValue: .7, duration: ANIM_DURATION, useNativeDriver: false }),
+
+      Animated.timing(animPosition3, { toValue: CARD_STACK * 2, duration: ANIM_DURATION, useNativeDriver: false }),
+      Animated.timing(animOpacity3, { toValue: .5, duration: ANIM_DURATION, useNativeDriver: false })
+    ], { stopTogether: true }).start(() => callback())
+
+  }
+
+  const flowNextCard = () => {
+    console.log("start next card")
+    startAnim(() => {
+      animOpacity1.setValue(.7)
+      animOpacity2.setValue(.5)
+      animOpacity3.setValue(0)
+      animPosition1.setValue(CARD_STACK * 1)
+      animPosition2.setValue(CARD_STACK * 2)
+      animPosition3.setValue(CARD_STACK * 3)
+      animWidth1.setValue(WIDTH * .9)
+      animWidth2.setValue(WIDTH * .8)
+      animWidth3.setValue(WIDTH * .7)
+    })
+  }
+
+  if (movieList.length == 0) {
     return <FontText fontSize={23} font={"Roboto-Bold"}>loading</FontText>
   }
 
   return (
     <View>
-      <Card movie={movieList.results[0]} />
-      {/* {movieList.results.map((movie: any) => Card(movie))} */}
+      <Animated.View style={{ marginTop: animPosition3, position: "absolute", alignSelf: "center", width: animWidth3 }}>
+        <View style={[styles.card]}>
+          <View style={[styles.cardImg, styles.blackBack]} />
+          <Animated.Image style={[styles.cardImg, { opacity: animOpacity3 }]} source={{ uri: baseUrl500 + movieList[nextCard + 3].poster_path }} />
+        </View>
+      </Animated.View>
+
+      <Animated.View style={{ marginTop: animPosition2, position: "absolute", alignSelf: "center", width: animWidth2 }}>
+        <View style={[styles.card]}>
+          <View style={[styles.cardImg, styles.blackBack]} />
+          <Animated.Image style={[styles.cardImg, { opacity: animOpacity2 }]} source={{ uri: baseUrl500 + movieList[nextCard + 2].poster_path }} />
+        </View>
+      </Animated.View>
+
+      <Animated.View style={{ marginTop: animPosition1, position: "absolute", alignSelf: "center", width: animWidth1 }}>
+        <View style={[styles.card]}>
+          <View style={[styles.cardImg, styles.blackBack]} />
+          <Animated.Image style={[styles.cardImg, { opacity: animOpacity1 }]} source={{ uri: baseUrl500 + movieList[nextCard + 1].poster_path }} />
+        </View>
+      </Animated.View>
+
+      <Card movie={movieList[nextCard]} updateIndex={updateIndex} getNextCard={flowNextCard} />
     </View>
   )
 }
@@ -115,7 +206,10 @@ const styles = StyleSheet.create({
   moveCard: {
     height: 1170 * (WIDTH * .9 / 780),
     width: WIDTH,
-    // backgroundColor: "#00000099",
     position: "absolute"
+  },
+  blackBack: {
+    position: "absolute",
+    backgroundColor: Colors.background
   }
 })
