@@ -1,4 +1,4 @@
-import { baseUrl500, descriptionFix, getDate, genreMovieDict, getStreamProviders, baseUrlOri, getMasterDetails } from "../src/helper";
+import { descriptionFix, getDate, genreMovieDict, getStreamProviders, baseUrlOri, getMasterDetails } from "../src/helper";
 import { StyleSheet, View, TouchableOpacity, Text, Animated, Image, Share, ScrollView } from "react-native";
 import { saveMovieToWatchList, ifMovieAdded, removeMovie } from "../src/saveLoadWatchList";
 import VideoPlayerScroll from "../components/scrollView/videoPlayerScroll";
@@ -17,8 +17,8 @@ const HEADER_MAX_HEIGHT = 240;
 const HEADER_MIN_HEIGHT = 0;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
-const Movie = ({ route, navigation }) => {
-  const [object] = useState(route.params.jsonObject);
+const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
+  const [object] = useState(ModelMode ? movie : route.params.jsonObject);
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const [toggleDisc, setToggleDisc] = useState(false);
@@ -54,26 +54,14 @@ const Movie = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+      <TouchableOpacity style={styles.backButton} onPress={() => ModelMode ? callback() : navigation.goBack()}>
         <Ionicons style={styles.backArrow} name="arrow-back" size={24} color="white" />
       </TouchableOpacity>
 
-      <Animated.Image
-        style={[styles.mainImg, { transform: [{ translateY: imageTranslateY }] }]}
-        source={{ uri: baseUrlOri + object.backdrop_path }}
-      />
+      <Animated.Image style={[styles.mainImg, { transform: [{ translateY: imageTranslateY }] }]} source={{ uri: baseUrlOri + object.backdrop_path }} />
 
-      <Animated.ScrollView
-        scrollEventThrottle={16}
-        contentContainerStyle={{ paddingTop: HEADER_MAX_HEIGHT }}
-        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
-      >
-        <LinearGradient
-          colors={["rgba(255,255,255,0)", "rgba(3, 7, 30,1)"]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={{ flex: 1, height: 80, width: "100%", marginTop: -80 }}
-        />
+      <Animated.ScrollView scrollEventThrottle={16} contentContainerStyle={{ paddingTop: HEADER_MAX_HEIGHT }} onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}>
+        <LinearGradient colors={["rgba(255,255,255,0)", "rgba(3, 7, 30,1)"]} start={{ x: 1, y: 0 }} end={{ x: 1, y: 1 }} style={{ flex: 1, height: 80, width: "100%", marginTop: -80 }} />
         <View style={{ backgroundColor: Colors.background }}>
           <AutoSizeText fontSize={43} numberOfLines={1} style={styles.titleText} mode={ResizeTextMode.max_lines}>
             {object.title}
@@ -84,18 +72,12 @@ const Movie = ({ route, navigation }) => {
 
               <View style={styles.movieRatingRow}>
                 <Image source={require("../assets/star-symbol.png")} style={[styles.topStar, { height: 15.5, width: 16 }]} />
-                <Text style={styles.voteAverage}>{object.vote_average}</Text>
+                <Text style={styles.voteAverage}>{Math.round(movie.vote_average * 100) / 100}</Text>
               </View>
 
               <View style={{ alignItems: "flex-end", flex: 1 }}>
                 <View style={{ flexDirection: "row" }}>
-                  <TouchableOpacity onPress={() => addRemoveMovie(masterData)}>
-                    {!InWatchList ? (
-                      <MaterialIcons name="playlist-add" size={27} color="white" />
-                    ) : (
-                      <MaterialIcons name="playlist-add" size={27} color={Colors.mainColor} />
-                    )}
-                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => addRemoveMovie(masterData)}>{!InWatchList ? <MaterialIcons name="playlist-add" size={27} color="white" /> : <MaterialIcons name="playlist-add" size={27} color={Colors.mainColor} />}</TouchableOpacity>
 
                   {/* <TouchableOpacity onPress={share}>
                     <Image source={require("../assets/share.png")} style={[styles.topButtons, { height: 20, width: 24 }]} />
@@ -152,13 +134,7 @@ const Movie = ({ route, navigation }) => {
                   <View style={{ flexDirection: "row" }}>
                     <ScrollView horizontal={true}>
                       {providers.data.map((provider) => {
-                        return (
-                          <Image
-                            key={provider.provider_id}
-                            style={{ height: 40, width: 40, marginRight: 10, borderRadius: 9 }}
-                            source={{ uri: baseUrlOri + provider.logo_path }}
-                          />
-                        );
+                        return <Image key={provider.provider_id} style={{ height: 40, width: 40, marginRight: 10, borderRadius: 9 }} source={{ uri: baseUrlOri + provider.logo_path }} />;
                       })}
                     </ScrollView>
                   </View>
@@ -193,7 +169,7 @@ const Movie = ({ route, navigation }) => {
             </View>
           )}
 
-          {masterData && masterData.recommendations && (
+          {masterData && masterData.recommendations.results.length > 0 && (
             <View>
               <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
                 <FontText fontSize={20} font={"Roboto-Bold"}>

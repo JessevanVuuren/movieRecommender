@@ -118,7 +118,7 @@ export const getMasterDetails = async (type, id) => {
     url = url.replace("{type}", type)
     url = url.replace("{id}", id)
     const data = await fetch(url)
-    // console.log(url)
+    console.log(url)
     return data.json()
 }
 

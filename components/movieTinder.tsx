@@ -1,10 +1,17 @@
 import { StyleSheet, View, Image, Dimensions, GestureResponderEvent, Animated, Text } from "react-native";
 import React, { useEffect, useRef, useState } from "react"
 import { baseUrl500, getDate, makeURL } from "../src/helper";
+import Constants from "expo-constants";
+
+import Modal from "react-native-modal";
+
+import { Ionicons } from "@expo/vector-icons";
 
 import { FontText } from "../components/fontText"
 import Colors from "../src/style"
-import { Movie } from "../models/movie";
+import { MovieModel } from "../models/movie";
+import { Movie } from "../pages/movieViewer";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const WIDTH = Dimensions.get("window").width
 const ANIM_DURATION = 500
@@ -18,7 +25,8 @@ const animValues = [
 ]
 
 interface MovieTinderProps {
-
+  navigation: any;
+  route: any;
 }
 
 interface PosCord { x: number, y: number, radiant: number }
@@ -33,6 +41,8 @@ const Card = (props: any) => {
   const [startPos, setStartPos] = useState<PosCord>(null)
   const [likeMovie, setLikeMovie] = useState<string>(null)
 
+  const [currentAngle, setCurrentAngle] = useState(0)
+
   const rotateImg = animRot.interpolate({ inputRange: [0, 360], outputRange: ['0deg', '360deg'] })
 
   const touchMove = (event: GestureResponderEvent) => {
@@ -40,6 +50,7 @@ const Card = (props: any) => {
 
     const disX = x - startPos.x
     const angle = Math.asin((x - startPos.x) / 500)
+    setCurrentAngle(angle)
 
     animPos.setValue(disX)
     animRot.setValue(angle * (180 / Math.PI))
@@ -70,6 +81,7 @@ const Card = (props: any) => {
     setLikeMovie(null)
     animPos.setValue(0)
     animRot.setValue(0)
+    setCurrentAngle(0)
   }
 
   const touchEnd = (event: GestureResponderEvent) => {
@@ -82,14 +94,16 @@ const Card = (props: any) => {
         startAnim(-600, -90, 0, resetCard)
       }
     } else {
-      startAnim(0, 0, 0)
+      startAnim(0, 0, 0, () => setCurrentAngle(0))
     }
   }
 
   return (
     <View style={styles.card}>
       <Animated.View style={{ transform: [{ translateX: animPos }, { rotate: rotateImg }], }}>
-        <Image style={styles.cardImg} source={{ uri: baseUrl500 + props.movie.poster_path }} />
+        <TouchableOpacity onPressOut={() => { if (currentAngle == 0) props.showMovie() }} activeOpacity={1}>
+          <Image style={styles.cardImg} source={{ uri: baseUrl500 + props.movie.poster_path }} />
+        </TouchableOpacity>
         <Animated.View style={{ position: "absolute", height: "100%", width: "90%", backgroundColor: "#00D68F", borderRadius: 25, opacity: animOpacityGreen }} />
         <Animated.View style={{ position: "absolute", height: "100%", width: "90%", backgroundColor: "#d93b3b", borderRadius: 25, opacity: animOpacityRed }} />
 
@@ -100,12 +114,11 @@ const Card = (props: any) => {
 }
 
 const ExtraInfo = (props: any) => {
-  const movie: Movie = props.movie
+  const movie: MovieModel = props.movie
 
 
   return (
     <View style={styles.extraInfoContainer}>
-
       <View style={styles.infoHolder}>
         <View style={styles.infoRow}>
           <View style={styles.info}>
@@ -131,8 +144,9 @@ const getMovies = async (page: number) => {
 }
 
 const MovieTinder: React.FC<MovieTinderProps> = props => {
-  const [movieList, setMovieList] = useState<any>([])
+  const [showModel, setShowModel] = useState<boolean>(false)
   const [pageNumber, setPageNumber] = useState<number>(1)
+  const [movieList, setMovieList] = useState<any>([])
   const [nextCard, setNextCard] = useState<number>(0)
 
   const animArray = []
@@ -191,7 +205,8 @@ const MovieTinder: React.FC<MovieTinderProps> = props => {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
+      
       {animArray.map((anim, index) =>
         <Animated.View key={index}
           style={{ marginTop: animArray[animArray.length - index - 1].position, position: "absolute", alignSelf: "center" }}>
@@ -204,9 +219,13 @@ const MovieTinder: React.FC<MovieTinderProps> = props => {
         </Animated.View>
       )}
 
-      <Card movie={movieList[nextCard]} updateIndex={updateIndex} getNextCard={flowNextCard} />
+      <Card movie={movieList[nextCard]} updateIndex={updateIndex} getNextCard={flowNextCard} showMovie={() => setShowModel(true)} />
 
       <ExtraInfo movie={movieList[nextCard]} />
+
+      <Modal isVisible={showModel} onBackButtonPress={() => setShowModel(false)} onBackdropPress={() => setShowModel(false)} >
+        <Movie navigation={props.navigation} route={props.route} movie={movieList[nextCard]} ModelMode callback={() => setShowModel(false)}/>
+      </Modal>
     </View>
   )
 }
@@ -216,10 +235,9 @@ export default MovieTinder
 
 const styles = StyleSheet.create({
   container: {
-
   },
   card: {
-    marginTop: 30,
+    paddingTop: 30,
     alignItems: "center",
   },
   cardImg: {
@@ -239,21 +257,21 @@ const styles = StyleSheet.create({
   extraInfoContainer: {
     marginTop: 40,
     width: WIDTH * .9,
-    alignSelf:"center",
+    alignSelf: "center",
   },
   infoHolder: {
-    
+
   },
   infoRow: {
-    justifyContent:"space-between",
+    justifyContent: "space-between",
     flexDirection: "row"
   },
   info: {
-    justifyContent:"center",
-    alignItems:"center",
+    justifyContent: "center",
+    alignItems: "center",
     width: WIDTH / 2 * .8,
     height: 40,
-    borderRadius:10,
+    borderRadius: 10,
     backgroundColor: Colors.darkLight
   },
   movieRating: {
@@ -262,7 +280,7 @@ const styles = StyleSheet.create({
   voteAverage: {
     color: Colors.textColor,
     fontSize: 20,
-    fontWeight:"bold"
+    fontWeight: "bold"
   },
   topStar: {
     marginTop: 3,

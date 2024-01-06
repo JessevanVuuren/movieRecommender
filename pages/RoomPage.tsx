@@ -130,7 +130,7 @@ const RoomPage: React.FC<RoomPageProps> = props => {
 
       {connected ?
         <View>
-          <MovieTinder />
+          <MovieTinder navigation={props.navigation} route={props.route} />
         </View> :
         <View style={styles.notConnectedContainer}>
           {joinRoom ?
