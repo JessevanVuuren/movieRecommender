@@ -2,7 +2,15 @@ export interface SEND {
   type:   string;
   method: string;
   key:    string;
+  id:     string;
 }
+
+export interface CONNECTION {
+  type:   string;
+  method: string;
+  key:    string;
+}
+
 
 interface payload {
   amount_of_users: number;

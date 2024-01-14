@@ -1,11 +1,10 @@
 import { StyleSheet, View, Image, Dimensions, GestureResponderEvent, Animated, Text } from "react-native";
 import React, { useEffect, useRef, useState } from "react"
 import { baseUrl500, getDate, makeURL } from "../src/helper";
-import Constants from "expo-constants";
+
 
 import Modal from "react-native-modal";
 
-import { Ionicons } from "@expo/vector-icons";
 
 import { FontText } from "../components/fontText"
 import Colors from "../src/style"
@@ -17,16 +16,19 @@ const WIDTH = Dimensions.get("window").width
 const ANIM_DURATION = 500
 
 const animValues = [
-  { position: 10, opacity: .9, width: 1 },
-  { position: 20, opacity: .7, width: .9 },
-  { position: 30, opacity: .5, width: .8 },
-  { position: 40, opacity: .3, width: .7 },
-  { position: 50, opacity: .0, width: .6 }
+  { position: 0, opacity: .6, width: 1 },
+  { position: 0, opacity: 0, width: 1 },
+  // { position: 20, opacity: .6, width: 1 },
+  // { position: 30, opacity: 0, width: 1 },
+  // { position: 30, opacity: .5, width: .8 },
+  // { position: 40, opacity: .3, width: .7 },
+  // { position: 50, opacity: .0, width: .6 }
 ]
 
 interface MovieTinderProps {
   navigation: any;
   route: any;
+  send_preference: (movie:MovieModel, preference:string) => void;
 }
 
 interface PosCord { x: number, y: number, radiant: number }
@@ -77,7 +79,7 @@ const Card = (props: any) => {
   }
 
   const resetCard = () => {
-    props.updateIndex()
+    props.updateMovie(likeMovie)
     setLikeMovie(null)
     animPos.setValue(0)
     animRot.setValue(0)
@@ -146,7 +148,7 @@ const getMovies = async (page: number) => {
 const MovieTinder: React.FC<MovieTinderProps> = props => {
   const [showModel, setShowModel] = useState<boolean>(false)
   const [pageNumber, setPageNumber] = useState<number>(1)
-  const [movieList, setMovieList] = useState<any>([])
+  const [movieList, setMovieList] = useState<MovieModel[]>([])
   const [nextCard, setNextCard] = useState<number>(0)
 
   const animArray = []
@@ -164,7 +166,8 @@ const MovieTinder: React.FC<MovieTinderProps> = props => {
     (async () => setMovieList([...movieList, ...(await getMovies(pageNumber)).results]))()
   }, [pageNumber])
 
-  const updateIndex = (i: number) => {
+  const updateMovie = (preference: string) => {
+    props.send_preference(movieList[nextCard], preference)
     setNextCard(nextCard + 1)
     if (nextCard + animArray.length + 3 > movieList.length) {
       setPageNumber(pageNumber + 1)
@@ -219,7 +222,7 @@ const MovieTinder: React.FC<MovieTinderProps> = props => {
         </Animated.View>
       )}
 
-      <Card movie={movieList[nextCard]} updateIndex={updateIndex} getNextCard={flowNextCard} showMovie={() => setShowModel(true)} />
+      <Card movie={movieList[nextCard]} updateMovie={updateMovie} getNextCard={flowNextCard} showMovie={() => setShowModel(true)} />
 
       <ExtraInfo movie={movieList[nextCard]} />
 

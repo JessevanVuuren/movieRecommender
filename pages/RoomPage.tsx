@@ -1,11 +1,15 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { StyleSheet, TouchableOpacity, View, Image, Dimensions } from "react-native"
 import { FontAwesome5, Ionicons } from '@expo/vector-icons'
 import MovieTinder from "../components/movieTinder"
 import React, { useEffect, useState } from "react"
 import { FontText } from "../components/fontText"
-import { ROOM, SEND } from "../models/room"
+import { CONNECTION, ROOM, SEND } from "../models/room"
 import Constants from "expo-constants"
 import Colors from "../src/style"
+import { baseUrl500 } from "../src/helper"
+import { MovieModel } from "../models/movie"
+
+const WIDTH = Dimensions.get("window").width
 
 interface RoomPageProps {
   navigation: any;
@@ -14,8 +18,11 @@ interface RoomPageProps {
 
 const RoomPage: React.FC<RoomPageProps> = props => {
   const [ws, setWS] = useState<WebSocket>(null)
-
   const [connected, setConnected] = useState(false)
+
+  const [finalMovie, setFinalMovie] = useState<MovieModel>(null)
+  const [finalMovieID, setFinalMovieID] = useState<string>(null)
+  const [likedMovieList, setLikedMovieList] = useState<MovieModel[]>([])
 
   const [joinRoom, setJoinRoom] = useState<boolean>(false)
   const [roomKey, setRoomKey] = useState<string>("")
@@ -41,6 +48,8 @@ const RoomPage: React.FC<RoomPageProps> = props => {
         setJoinRoom(false)
         setRoom(response)
         setConnected(true)
+
+        if (response.payload.final_movie) setFinalMovieID(response.payload.final_movie)
       }
     }
 
@@ -58,23 +67,40 @@ const RoomPage: React.FC<RoomPageProps> = props => {
   }, [])
 
   useEffect(() => {
+    for (let i = 0; i < likedMovieList.length; i++) {
+      if (likedMovieList[i].id.toString() === finalMovieID) {
+        setFinalMovie(likedMovieList[i])
+      }
+    }
+  }, [finalMovieID])
+
+  useEffect(() => {
     if (roomKey.length === 5) join()
   }, [roomKey])
 
+  const send_preference = (movie: MovieModel, preference: string) => {
+    setLikedMovieList([...likedMovieList, movie])
+
+    const direction_to_pref = preference === "right" ? "wanted" : "unwanted"
+    const preference_json: SEND = { type: "movie", method: direction_to_pref, key: roomKey, id: movie.id.toString() }
+
+    ws.send(JSON.stringify(preference_json))
+  }
+
   const create_room = async () => {
-    const create: SEND = { type: "room", method: "create", key: null }
+    const create: CONNECTION = { type: "room", method: "create", key: null }
     ws.send(JSON.stringify(create))
   }
 
   const disconnect = async () => {
-    const leave: SEND = { type: "room", method: "leave", key: null }
+    const leave: CONNECTION = { type: "room", method: "leave", key: null }
     ws.send(JSON.stringify(leave))
     setConnected(false)
     setRoomKey("")
   }
 
   const join = async () => {
-    const leave: SEND = { type: "room", method: "join", key: roomKey }
+    const leave: CONNECTION = { type: "room", method: "join", key: roomKey }
     ws.send(JSON.stringify(leave))
   }
 
@@ -105,6 +131,7 @@ const RoomPage: React.FC<RoomPageProps> = props => {
   return (
     <View style={styles.container}>
       <View style={{ backgroundColor: Colors.background, height: Constants.statusBarHeight }}></View>
+
       {connected ?
         <View>
           <View style={styles.mainMenu}>
@@ -130,7 +157,7 @@ const RoomPage: React.FC<RoomPageProps> = props => {
 
       {connected ?
         <View>
-          <MovieTinder navigation={props.navigation} route={props.route} />
+          <MovieTinder navigation={props.navigation} route={props.route} send_preference={send_preference} />
         </View> :
         <View style={styles.notConnectedContainer}>
           {joinRoom ?
@@ -173,7 +200,9 @@ const RoomPage: React.FC<RoomPageProps> = props => {
         </View>
       }
 
-
+      {finalMovie !== null ? <View style={styles.finalMovie}>
+        <Image style={styles.cardImg} source={{ uri: baseUrl500 + finalMovie.poster_path }} />
+      </View> : <View></View>}
     </View>
   )
 }
@@ -277,5 +306,18 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: Colors.darkLight,
     width: "25%",
+  },
+  cardImg: {
+    borderRadius: 25,
+    width: WIDTH * .9,
+    height: 1170 * (WIDTH * .9 / 780),
+  },
+  finalMovie: {
+    height:"100%",
+    width:"100%",
+    justifyContent:"center",
+    alignItems:"center",
+    backgroundColor:Colors.background + "cc",
+    position: "absolute"
   }
 })
