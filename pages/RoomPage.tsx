@@ -47,6 +47,7 @@ const RoomPage: React.FC<RoomPageProps> = props => {
       if (response.success) {
         setJoinRoom(false)
         setRoom(response)
+        setRoomKey(response.payload.key)
         setConnected(true)
 
         if (response.payload.final_movie) setFinalMovieID(response.payload.final_movie)
@@ -126,6 +127,17 @@ const RoomPage: React.FC<RoomPageProps> = props => {
         <FontText fontSize={23} font={"Roboto-Bold"}>{key}</FontText>
       </TouchableOpacity>
     )
+  }
+
+  const newMoviePreference = (id:string, type:string) => {
+    console.log("TINDER: New movie: " + id + " type: " + type)
+    console.log(roomKey)
+    ws.send(JSON.stringify({
+      type: "movie",
+      method: type,
+      key: roomKey,
+      id: id,
+    }))
   }
 
   return (

@@ -72,7 +72,7 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
 
               <View style={styles.movieRatingRow}>
                 <Image source={require("../assets/star-symbol.png")} style={[styles.topStar, { height: 15.5, width: 16 }]} />
-                <Text style={styles.voteAverage}>{Math.round(movie.vote_average * 100) / 100}</Text>
+                <Text style={styles.voteAverage}>{Math.round(object.vote_average * 100) / 100}</Text>
               </View>
 
               <View style={{ alignItems: "flex-end", flex: 1 }}>

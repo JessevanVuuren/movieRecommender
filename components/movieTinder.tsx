@@ -60,8 +60,8 @@ const Card = (props: any) => {
     if (angle > 0) animOpacityGreen.setValue(angle)
     else animOpacityRed.setValue(Math.abs(angle))
 
-    if (startPos.x + 100 < x) setLikeMovie("right")
-    if (startPos.x - 100 > x) setLikeMovie("left")
+    if (startPos.x + 100 < x) setLikeMovie("wanted")
+    if (startPos.x - 100 > x) setLikeMovie("unwanted")
     if (Math.abs(angle) < 0.28) setLikeMovie(null)
   }
 
@@ -89,10 +89,11 @@ const Card = (props: any) => {
   const touchEnd = (event: GestureResponderEvent) => {
     if (likeMovie) {
       props.getNextCard()
-      if (likeMovie == "right") {
+      props.newMoviePreference(props.movie.id, likeMovie)
+      if (likeMovie == "wanted") {
         startAnim(600, 90, 0, resetCard)
       }
-      if (likeMovie == "left") {
+      if (likeMovie == "unwanted") {
         startAnim(-600, -90, 0, resetCard)
       }
     } else {
