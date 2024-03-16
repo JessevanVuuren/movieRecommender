@@ -62,7 +62,8 @@ export default {
     },
     package: IS_DEV ? "com.jesse.movieRecommender.dev" : "com.jesse.movieRecommender",
     versionCode: 19,
-    permissions: []
+    permissions: [],
+    AsyncStorage_db_size_in_MB: 10
   },
   web: {
     favicon: "./assets/favicon.png"

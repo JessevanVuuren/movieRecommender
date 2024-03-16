@@ -1,1 +1,0 @@
-setx /M REACT_NATIVE_PACKAGER_HOSTNAME 'host name'

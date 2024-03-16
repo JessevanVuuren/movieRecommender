@@ -1,4 +1,3 @@
-// import { EXPO_API_URL } from '@env'
 
 const EXPO_API_URL = process.env.EXPO_API_URL
 

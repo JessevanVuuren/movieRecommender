@@ -26,8 +26,9 @@ export const removeMovie = async (movie) => {
 
 
 export const getMovieToWatchList = async () => {
+  AsyncStorage.multiGet(["hide_disclaimer", "watchList"])
   var list = await AsyncStorage.getItem('watchList')
-
+  
   if (!list) {
     console.log("async list empty, make empty object \"movieList: []\"")
     AsyncStorage.setItem('watchList', JSON.stringify({ "movieList": [] }))

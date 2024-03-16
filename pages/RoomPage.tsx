@@ -22,6 +22,8 @@ const RoomPage: React.FC<RoomPageProps> = props => {
 
   const [room, setRoom] = useState<ROOM>(null)
 
+  const [finalMovie, setFinalMovie] = useState()
+
   useEffect(() => {
     const ws = new WebSocket(process.env.EXPO_ROOM_WSS + "/ws");
     setWS(ws)
@@ -40,6 +42,7 @@ const RoomPage: React.FC<RoomPageProps> = props => {
       if (response.success) {
         setJoinRoom(false)
         setRoom(response)
+        setRoomKey(response.payload.key)
         setConnected(true)
       }
     }
@@ -102,6 +105,17 @@ const RoomPage: React.FC<RoomPageProps> = props => {
     )
   }
 
+  const newMoviePreference = (id:string, type:string) => {
+    console.log("TINDER: New movie: " + id + " type: " + type)
+    console.log(roomKey)
+    ws.send(JSON.stringify({
+      type: "movie",
+      method: type,
+      key: roomKey,
+      id: id,
+    }))
+  }
+
   return (
     <View style={styles.container}>
       <View style={{ backgroundColor: Colors.background, height: Constants.statusBarHeight }}></View>
@@ -130,7 +144,7 @@ const RoomPage: React.FC<RoomPageProps> = props => {
 
       {connected ?
         <View>
-          <MovieTinder navigation={props.navigation} route={props.route} />
+          <MovieTinder navigation={props.navigation} route={props.route} newMoviePreference={newMoviePreference}/>
         </View> :
         <View style={styles.notConnectedContainer}>
           {joinRoom ?
