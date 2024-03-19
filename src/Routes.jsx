@@ -10,7 +10,7 @@ import { SettingsPage } from "../pages/settingsPage"
 import { SeasonViewer } from "../pages/SeasonViewer"
 import { SearchPage } from "../pages/SearchPage"
 import { ActorPage } from "../pages/ActorPage"
-import { GenrePage } from "../pages/genrePage"
+import { GenrePage } from "../pages/GenrePage"
 import { RoomPage } from "../pages/RoomPage"
 import { Movie } from "../pages/movieViewer"
 import { Home } from '../pages/home'

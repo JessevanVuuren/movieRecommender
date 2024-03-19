@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, Animated } from "react-native";
 
+import { StyleSheet, View, Animated } from "react-native";
 import MovieListVerticalScroll from "../components/scrollView/MovieListVerticalScroll";
 import MovieListScroll from "../components/scrollView/MovieListScroll";
 import CarouselBanner from "../components/scrollView/CarouselBanner";
