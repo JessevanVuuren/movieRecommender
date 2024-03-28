@@ -10,7 +10,7 @@ import { SettingsPage } from "../pages/settingsPage"
 import { SeasonViewer } from "../pages/SeasonViewer"
 import { SearchPage } from "../pages/SearchPage"
 import { ActorPage } from "../pages/ActorPage"
-import { GenrePage } from "../pages/GenrePage"
+import { GenrePage } from "../pages/genrePage"
 import { RoomPage } from "../pages/RoomPage"
 import { Movie } from "../pages/movieViewer"
 import { Home } from '../pages/home'
@@ -18,6 +18,7 @@ import { Home } from '../pages/home'
 
 import TvViewer from "../pages/TvViewer"
 import Colors from "./style"
+import WatchListMovie from "../pages/WatchListMovie"
 
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
@@ -44,6 +45,7 @@ export const Routes = ({ }) => {
         <Stack.Screen name="GenrePage" component={GenrePage} options={{ header: () => null }} />
         <Stack.Screen name="ActorPage" component={ActorPage} options={{ header: () => null }} />
         <Stack.Screen name="RoomPage" component={RoomPage} options={{ header: () => null }} />
+        <Stack.Screen name="WatchListMovie" component={WatchListMovie} options={{ header: () => null }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

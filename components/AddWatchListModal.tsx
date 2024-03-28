@@ -23,7 +23,7 @@ const AddWatchListModal: React.FC<AddWatchListModalProps> = props => {
 				</TouchableOpacity>))}
 			</View>
 			<View style={styles.buttons}>
-				<TouchableOpacity style={styles.button} onPress={props.cancel}>
+				<TouchableOpacity style={styles.button} onPress={() => props.cancel()}>
 					<FontText fontSize={20} font={"Roboto-Bold"}>Cancel</FontText>
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.button} onPress={() => props.create(text, colorB)}>
