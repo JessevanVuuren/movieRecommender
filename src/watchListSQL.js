@@ -50,11 +50,20 @@ export const store_watchList = async (name, color) => {
 }
 
 export const fetch_watchList = async () => {
-  return new Promise((resolve, reject) => {
+  const data = await new Promise((resolve, reject) => {
     database.transaction((tx) => {
-      tx.executeSql(`SELECT ML.*, COUNT(M.id) AS "amount" FROM watchList AS ML LEFT OUTER JOIN movie AS M ON ML.id = M.watch_list GROUP BY M.watch_list;`, [], (_, result) => resolve(result), (_, error) => reject(error));
+      tx.executeSql(`SELECT ML.*, COUNT(M.id) AS "amount" FROM watchList AS ML LEFT JOIN movie AS M ON ML.id = M.watch_list GROUP BY ML.id;`, [], (_, result) => resolve(result), (_, error) => reject(error));
     });
   });
+
+  const list = []
+  data.rows._array.map(element => list.push({
+    id: element.id,
+    name: element.list_name,
+    color: element.list_color,
+    amount: element.amount
+  }));
+  return list
 }
 
 export const update_watchList = async () => {

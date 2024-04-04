@@ -25,24 +25,20 @@ const WatchListView = ({ navigation, route }) => {
     const initDB = async () => {
       await DB.initDatabase();
       getWatchList();
-      // DB.drop_all()
-      // DB.store_movie(1, "497698")
     };
     initDB();
   }, []);
 
   const getWatchList = async () => {
-    const data = await DB.fetch_watchList();
-    if (data.rows._array == 0) return;
-    const final_list: WatchListModel[] = [];
-    data.rows._array.map((list: any) => final_list.push({ id: list.id, name: list.list_name, color: list.list_color, amount: list.amount }));
-    setWatchListList(final_list);
+    const data:WatchListModel[] = await DB.fetch_watchList();
+    setWatchListList(data);
   };
 
   const createWatchList = async (name: string, color: string) => {
     setWatchListModal(false);
     if (name == "") return;
-    await DB.store_watchList(name, color);
+    
+    console.log(await DB.store_watchList(name, color));
     getWatchList();
   };
 
@@ -61,9 +57,11 @@ const WatchListView = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
 
-      {watchListList.map((list, index) => (
-        <WatchListItem item={list} key={index} navigation={navigation} route={route} />
-      ))}
+      {/* {watchListList.map((list, index) => {
+        // console.log(list)
+        
+        return <WatchListItem item={list} key={index} navigation={navigation} route={route} />
+      })} */}
 
       <Modal
         isVisible={watchListModal}
