@@ -14,7 +14,7 @@ import { AntDesign } from "@expo/vector-icons";
 import AddWatchListModal from "../components/AddWatchListModal";
 import WatchListItem from "../components/WatchListItem";
 
-const COLORS = [Colors.background, "#ff0000", "#00ff00", "#0000ff", "#ff00ff", "#ffff00", "#00ffff", "#ffffff"];
+const COLORS = [Colors.darkLight, "#ff0000", "#00ff00", "#0000ff", "#ff00ff", "#ffff00", "#00ffff", "#ffffff"];
 
 const WatchListView = ({ navigation, route }) => {
   const [watchListModal, setWatchListModal] = useState(false);
@@ -57,11 +57,12 @@ const WatchListView = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
 
-      {/* {watchListList.map((list, index) => {
-        // console.log(list)
-        
-        return <WatchListItem item={list} key={index} navigation={navigation} route={route} />
-      })} */}
+      <View style={styles.listContainer}>
+
+      {watchListList.map((list, index) =>         
+         <WatchListItem item={list} key={index} navigation={navigation} route={route} />
+        )}
+        </View>
 
       <Modal
         isVisible={watchListModal}
@@ -90,6 +91,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     height: 50,
+  },
+  listContainer: {
+    width: "90%",
+    flex:1,
+    alignSelf:"center"
   },
   menuHamburger: {
     margin: 10,
