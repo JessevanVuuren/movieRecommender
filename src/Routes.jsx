@@ -1,9 +1,7 @@
 import { createDrawerNavigator } from "@react-navigation/drawer"
 import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
-
 import { CustomDrawerContent } from "../components/customDrawer"
-
 import { WatchListView } from "../pages/watchListViewer"
 import { EpisodeViewer } from "../pages/EpisodeViewer"
 import { SettingsPage } from "../pages/settingsPage"
@@ -16,9 +14,9 @@ import { Movie } from "../pages/movieViewer"
 import { Home } from '../pages/home'
 
 
+import WatchListMovie from "../pages/WatchListMovie"
 import TvViewer from "../pages/TvViewer"
 import Colors from "./style"
-import WatchListMovie from "../pages/WatchListMovie"
 
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
@@ -32,7 +30,7 @@ const HomeStackScreen = ({ route, navigator }) => (
   </Drawer.Navigator>
 );
 
-export const Routes = ({ }) => {
+export const Routes = ({ route, navigator}) => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="HomeScreen">

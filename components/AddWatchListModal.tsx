@@ -1,25 +1,39 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Colors from '../src/style';
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { FontText } from "./fontText";
+import { WatchListModel } from "../models/watchList";
+
+const COLORS = ["#ff0000", "#00ff00", "#0000ff", "#ff00ff", "#ffff00", "#00ffff", "#ffffff"];
+
 
 interface AddWatchListModalProps {
-	colors: string[],
 	cancel: () => {},
+	edit: WatchListModel,
 	create: (name: string, color: string) => {}
 }
 
 const AddWatchListModal: React.FC<AddWatchListModalProps> = props => {
 	const [text, setText] = useState("")
-	const [colorB, setColorB] = useState(props.colors[0])
+	const [colorB, setColorB] = useState(COLORS[0])
+
+	useEffect(() => {
+		if (props.edit) {
+			setColorB(COLORS.find(e => e == props.edit.color))
+			setText(props.edit.name)
+		}
+	}, [])
 
 	return (
 		<View style={styles.container}>
-			<TextInput placeholder="Watchlist name..." style={styles.inputName} placeholderTextColor={"#999999"} onChangeText={(t) => setText(t)} />
+			<View style={styles.title}>
+				<FontText fontSize={20} font={"Roboto-Bold"}>Make Watchlist</FontText>
+			</View>
+			<TextInput placeholder="name" style={styles.inputName} placeholderTextColor={"#999999"} onChangeText={(t) => setText(t)} value={text} />
 
 			<View style={styles.colors}>
-				{props.colors.map(((colorID, index) => <TouchableOpacity onPress={() => setColorB(colorID)} key={index}>
-					<View  style={[styles.color, { backgroundColor: colorID, borderColor: colorID == colorB ? Colors.mainColor : Colors.darkLight }]}></View>
+				{COLORS.map(((colorID, index) => <TouchableOpacity onPress={() => setColorB(colorID)} key={index}>
+					<View style={[styles.color, { backgroundColor: colorID, borderColor: colorID == colorB ? Colors.mainColor : Colors.darkLight }]}></View>
 				</TouchableOpacity>))}
 			</View>
 			<View style={styles.buttons}>
@@ -27,7 +41,7 @@ const AddWatchListModal: React.FC<AddWatchListModalProps> = props => {
 					<FontText fontSize={20} font={"Roboto-Bold"}>Cancel</FontText>
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.button} onPress={() => props.create(text, colorB)}>
-					<FontText fontSize={20} font={"Roboto-Bold"}>Create</FontText>
+					<FontText fontSize={20} font={"Roboto-Bold"}>{props.edit ? "Update" : "Create"}</FontText>
 				</TouchableOpacity>
 			</View>
 
@@ -56,13 +70,21 @@ const styles = StyleSheet.create({
 		borderColor: "#999999"
 
 	},
+	title: {
+		padding: 10,
+		alignItems: "center",
+		backgroundColor: Colors.darkLight,
+		borderTopRightRadius: 10,
+		borderTopLeftRadius: 10,
+		marginBottom: 10,
+	},
 	colors: {
 		margin: 10,
 		justifyContent: "space-between",
 		flexDirection: "row"
 	},
 	color: {
-		borderWidth:2,
+		borderWidth: 2,
 		borderRadius: 4,
 		height: 30,
 		width: 30

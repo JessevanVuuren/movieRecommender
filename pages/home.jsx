@@ -11,6 +11,9 @@ import { TopBar } from "../components/topBar";
 import Colors from "../src/style";
 import Disclaimer from "../components/Disclamer";
 import { getValue, setValue } from "../src/LocalStorage";
+import { migrateDatabase } from "../src/saveLoadWatchList";
+
+import * as DB from "../src/watchListSQL";
 
 const NowPlaying = ({ navigation }) => {
   const [showType] = useGlobalState("showType");
@@ -84,6 +87,8 @@ const Home = ({ route, navigation }) => {
 
   useEffect(() => {
     (async () => {
+      migrateDatabase()
+      DB.initDatabase()
       const disclaimer = await getValue("hide_disclaimer")
       if (!disclaimer) {
         setShowDisclaimer(true)

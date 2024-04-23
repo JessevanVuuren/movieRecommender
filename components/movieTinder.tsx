@@ -89,7 +89,6 @@ const Card = (props: any) => {
   const touchEnd = (event: GestureResponderEvent) => {
     if (likeMovie) {
       props.getNextCard()
-      props.newMoviePreference(props.movie.id, likeMovie)
       if (likeMovie == "wanted") {
         startAnim(600, 90, 0, resetCard)
       }

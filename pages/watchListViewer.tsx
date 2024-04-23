@@ -5,7 +5,6 @@ import Modal from "react-native-modal";
 
 import { WatchListModel } from "../models/watchList";
 
-import WatchList from "../components/scrollView/WatchList";
 import { FontText } from "../components/fontText";
 import { TopBar } from "../components/topBar";
 import Colors from "../src/style";
@@ -14,33 +13,37 @@ import { AntDesign } from "@expo/vector-icons";
 import AddWatchListModal from "../components/AddWatchListModal";
 import WatchListItem from "../components/WatchListItem";
 
-const COLORS = [Colors.darkLight, "#ff0000", "#00ff00", "#0000ff", "#ff00ff", "#ffff00", "#00ffff", "#ffffff"];
 
 const WatchListView = ({ navigation, route }) => {
-  const [watchListModal, setWatchListModal] = useState(false);
-  const [watchListSettings, setWatchListSettings] = useState({});
+
   const [watchListList, setWatchListList] = useState<WatchListModel[]>([]);
+  const [watchListModal, setWatchListModal] = useState(false);
+  const [reload, setReload] = useState<number>(Math.random());
+
 
   useEffect(() => {
-    const initDB = async () => {
-      await DB.initDatabase();
-      getWatchList();
-    };
-    initDB();
+    navigation.addListener('focus', () => setReload(Math.random()));
+    BackHandler.addEventListener("hardwareBackPress", (): any => setReload(Math.random()));
   }, []);
 
+  useEffect(() => {
+    getWatchList();
+  }, [reload])
+
+
   const getWatchList = async () => {
-    const data:WatchListModel[] = await DB.fetch_watchList();
+    const data: WatchListModel[] = await DB.fetch_watchList();
     setWatchListList(data);
   };
 
   const createWatchList = async (name: string, color: string) => {
     setWatchListModal(false);
     if (name == "") return;
-    
-    console.log(await DB.store_watchList(name, color));
+
+    await DB.store_watchList(name, color);
     getWatchList();
   };
+
 
   return (
     <View style={styles.container}>
@@ -57,21 +60,15 @@ const WatchListView = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.listContainer}>
+      <View style={styles.listContainer} >
 
-      {watchListList.map((list, index) =>         
-         <WatchListItem item={list} key={index} navigation={navigation} route={route} />
+        {watchListList.map((list, index) =>
+          <WatchListItem item={list} key={index} navigation={navigation} route={route} update_list={getWatchList} />
         )}
-        </View>
+      </View>
 
-      <Modal
-        isVisible={watchListModal}
-        onBackButtonPress={() => setWatchListModal(false)}
-        onBackdropPress={() => {
-          setWatchListModal(false);
-        }}
-      >
-        <AddWatchListModal colors={COLORS} cancel={async () => setWatchListModal(false)} create={createWatchList} />
+      <Modal isVisible={watchListModal} onBackButtonPress={() => setWatchListModal(false)} onBackdropPress={() => { setWatchListModal(false); }}>
+        <AddWatchListModal cancel={async () => setWatchListModal(false)} create={createWatchList} edit={null} />
       </Modal>
     </View>
   );
@@ -94,8 +91,8 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     width: "90%",
-    flex:1,
-    alignSelf:"center"
+    flex: 1,
+    alignSelf: "center"
   },
   menuHamburger: {
     margin: 10,

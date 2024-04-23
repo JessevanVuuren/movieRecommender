@@ -2,6 +2,7 @@ import { Image, StyleSheet, View, Text} from "react-native";
 import { round } from "../src/helper";
 import { FontText } from "./fontText";
 import Colors from "../src/style";
+import React from "react";
 
 const MovieSubtitle = ({ movie, props }) => {
   const { title, release_date, vote_average, first_air_date, name } = movie;

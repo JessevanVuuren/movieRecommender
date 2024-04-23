@@ -3,13 +3,13 @@ import { FontAwesome, Feather, Ionicons } from "@expo/vector-icons";
 import Colors from "../src/style";
 import Constants from "expo-constants";
 import { StatusBar } from "expo-status-bar";
+import { useNavigation } from '@react-navigation/native';
 
 import { FontText } from "../components/fontText";
 import { useEffect, useState } from "react";
 
 export const TopBar = (props) => {
   const [roomServerIsOnline, setRoomServerIsOnline] = useState(false);
-
   useEffect(() => {
     (async () => {
       console.log(process.env.EXPO_ROOM_API + "/is-online")

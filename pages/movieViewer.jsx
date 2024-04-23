@@ -1,17 +1,19 @@
 import { descriptionFix, getDate, genreMovieDict, getStreamProviders, baseUrlOri, getMasterDetails } from "../src/helper";
 import { StyleSheet, View, TouchableOpacity, Text, Animated, Image, Share, ScrollView } from "react-native";
-import { saveMovieToWatchList, ifMovieAdded, removeMovie } from "../src/saveLoadWatchList";
 import VideoPlayerScroll from "../components/scrollView/videoPlayerScroll";
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
 import MovieListScroll from "../components/scrollView/MovieListScroll";
 import CastListScroll from "../components/scrollView/castListScroll";
+import AddMovieToListModal from "../components/AddMovieToListModal"
 import React, { useState, useRef, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontText } from "../components/fontText";
 import { Ionicons } from "@expo/vector-icons";
+import Modal from "react-native-modal";
 import Constants from "expo-constants";
 import Colors from "../src/style";
+
 
 const HEADER_MAX_HEIGHT = 240;
 const HEADER_MIN_HEIGHT = 0;
@@ -24,9 +26,10 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
   const [toggleDisc, setToggleDisc] = useState(false);
   const descriptionText = descriptionFix(object.overview, toggleDisc);
 
-  const [InWatchList, setInWatchList] = useState(false);
   const [masterData, setMasterData] = useState(null);
   const [providers, setProviders] = useState({});
+
+  const [watchListModal, setWatchListModal] = useState(false)
 
   const imageTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_SCROLL_DISTANCE],
@@ -35,22 +38,11 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
   });
 
   useEffect(() => {
-    checkMovie();
     (async () => {
       setMasterData(await getMasterDetails("movie", object.id));
       setProviders(await getStreamProviders(object.id, "movie"));
     })();
   }, []);
-
-  const addRemoveMovie = async (movie) => {
-    if (!InWatchList) await saveMovieToWatchList(movie);
-    else await removeMovie(movie);
-    checkMovie();
-  };
-
-  const checkMovie = async () => {
-    setInWatchList(await ifMovieAdded(object.id));
-  };
 
   return (
     <View style={styles.container}>
@@ -77,7 +69,7 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
 
               <View style={{ alignItems: "flex-end", flex: 1 }}>
                 <View style={{ flexDirection: "row" }}>
-                  <TouchableOpacity onPress={() => addRemoveMovie(masterData)}>{!InWatchList ? <MaterialIcons name="playlist-add" size={27} color="white" /> : <MaterialIcons name="playlist-add" size={27} color={Colors.mainColor} />}</TouchableOpacity>
+                  <TouchableOpacity onPress={() => setWatchListModal(true)}>{<MaterialIcons name="playlist-add" size={27} color="white" />}</TouchableOpacity>
 
                   {/* <TouchableOpacity onPress={share}>
                     <Image source={require("../assets/share.png")} style={[styles.topButtons, { height: 20, width: 24 }]} />
@@ -183,6 +175,18 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
           )}
         </View>
       </Animated.ScrollView>
+
+      <Modal
+        isVisible={watchListModal}
+        onBackButtonPress={() => setWatchListModal(false)}
+        onBackdropPress={() => {
+          setWatchListModal(false);
+        }}
+      >
+        <AddMovieToListModal movie_key={object.id} done={async () => {setWatchListModal(false)}} />
+      </Modal>
+
+
     </View>
   );
 };

@@ -49,7 +49,7 @@ const RoomPage: React.FC<RoomPageProps> = props => {
         setRoom(response)
         setRoomKey(response.payload.key)
         setConnected(true)
-
+        
         if (response.payload.final_movie) setFinalMovieID(response.payload.final_movie)
       }
     }
@@ -80,6 +80,7 @@ const RoomPage: React.FC<RoomPageProps> = props => {
   }, [roomKey])
 
   const send_preference = (movie: MovieModel, preference: string) => {
+    console.log(preference)
     setLikedMovieList([...likedMovieList, movie])
 
     const direction_to_pref = preference === "right" ? "wanted" : "unwanted"

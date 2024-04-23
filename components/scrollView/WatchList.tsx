@@ -1,24 +1,26 @@
 import { StyleSheet, View, Dimensions, Image, TouchableOpacity } from "react-native";
 import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { baseUrl342, descriptionFix, getShowType, round } from "../../src/helper";
+import { baseUrl342, descriptionFix, getMasterDetails, getShowType, round } from "../../src/helper";
 import { FontText } from "../fontText";
 import Colors from "../../src/style";
-import { getAllMovies } from "../../src/saveLoadWatchList";
+import { MovieModel } from "../../models/watchList";
 
 interface WatchListProps {
   navigation: any;
+  movies:MovieModel[]
 }
 
-const WatchList: React.FC<WatchListProps> = ({ navigation }) => {
+const WatchList: React.FC<WatchListProps> = ({ navigation, movies }) => {
   const [data, setData] = useState([]);
 
   const _layoutProvider = useRef(layoutMaker()).current;
   const dataProvider = useMemo(() => dataProviderMaker(data), [data]);
 
   const rowRenderer = (type, data) => {
-    const show = data.item.movieData;
+    const show = data.item;
     const showType = getShowType(show.title)
+  
     return (
       <TouchableOpacity
         onPress={() => {
@@ -77,10 +79,10 @@ const WatchList: React.FC<WatchListProps> = ({ navigation }) => {
 
   useEffect(() => {
     (async () => {
-      const list = await getAllMovies();
       const fullList = [];
-      for (let i = 0; i < list.length; i++) {
-        fullList.push({ type: "NORMAL", item: list[i] });
+      for (let i = 0; i < movies.length; i++) {
+        const data = await getMasterDetails("movie", movies[i].movie_key)
+        fullList.push({ type: "NORMAL", item: data });
       }
       setData(fullList);
     })();
@@ -90,7 +92,7 @@ const WatchList: React.FC<WatchListProps> = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <RecyclerListView layoutProvider={_layoutProvider} dataProvider={dataProvider} rowRenderer={rowRenderer} />
+      <RecyclerListView layoutProvider={_layoutProvider} dataProvider={dataProvider} rowRenderer={rowRenderer}/>
     </View>
   );
 };
