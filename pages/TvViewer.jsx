@@ -1,16 +1,17 @@
-import { baseUrl500, descriptionFix, getDate, genreTVDict, baseUrlOri, getStreamProviders, getMasterDetails, baseUrl780 } from "../src/helper";
+import { descriptionFix, getDate, genreTVDict, baseUrlOri, getStreamProviders, getMasterDetails } from "../src/helper";
 import { StyleSheet, View, TouchableOpacity, Text, Animated, Image, ScrollView } from "react-native";
-import { saveMovieToWatchList, ifMovieAdded, removeMovie } from "../src/saveLoadWatchList";
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
 import VideoPlayerScroll from "../components/scrollView/videoPlayerScroll";
 import MovieListScroll from "../components/scrollView/MovieListScroll";
 import CastListScroll from "../components/scrollView/castListScroll";
+import AddMovieToListModal from "../components/AddMovieToListModal";
 import SeasonScroll from "../components/scrollView/SeasonScroll";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState, useRef, useEffect } from "react";
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { FontText } from "../components/fontText";
 import { Ionicons } from "@expo/vector-icons";
+import Modal from "react-native-modal";
 import Constants from "expo-constants";
 import Colors from "../src/style";
 
@@ -18,6 +19,8 @@ import Colors from "../src/style";
 const HEADER_MAX_HEIGHT = 240;
 const HEADER_MIN_HEIGHT = 0;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
+
+const SHOW_TYPE = "tv"
 
 const TvViewer = ({ route, navigation }) => {
   const [object] = useState(route.params.jsonObject);
@@ -30,6 +33,9 @@ const TvViewer = ({ route, navigation }) => {
 
   const [providers, setProviders] = useState({});
 
+  const [watchListModal, setWatchListModal] = useState(false)
+
+
   const imageTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_SCROLL_DISTANCE],
     outputRange: [0, -100],
@@ -37,23 +43,12 @@ const TvViewer = ({ route, navigation }) => {
   });
 
   useEffect(() => {
-    checkMovie();
     (async () => {
-      setMasterData(await getMasterDetails("tv", object.id));
-      setProviders(await getStreamProviders(object.id, "tv"));
+      setMasterData(await getMasterDetails(SHOW_TYPE, object.id));
+      setProviders(await getStreamProviders(object.id, SHOW_TYPE));
     })();
   }, []);
 
-  const addRemoveMovie = async (movie) => {
-    if (!InWatchList) await saveMovieToWatchList(movie);
-    else await removeMovie(movie);
-    checkMovie();
-  };
-
-  const checkMovie = async () => {
-    setInWatchList(await ifMovieAdded(object.id));
-  };
-  const [InWatchList, setInWatchList] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -93,13 +88,8 @@ const TvViewer = ({ route, navigation }) => {
 
               <View style={{ alignItems: "flex-end", flex: 1, justifyContent: "center" }}>
                 <View style={{ flexDirection: "row" }}>
-                  <TouchableOpacity onPress={() => addRemoveMovie(masterData)}>
-                    {!InWatchList ? (
-                      <MaterialIcons name="playlist-add" size={27} color="white" />
-                    ) : (
-                      <MaterialIcons name="playlist-add" size={27} color={Colors.mainColor} />
-                    )}
-                  </TouchableOpacity>
+                <TouchableOpacity onPress={() => setWatchListModal(true)}>{<MaterialIcons name="playlist-add" size={27} color="white" />}</TouchableOpacity>
+
                 </View>
               </View>
             </View>
@@ -217,6 +207,16 @@ const TvViewer = ({ route, navigation }) => {
           )}
         </View>
       </Animated.ScrollView>
+
+      <Modal
+        isVisible={watchListModal}
+        onBackButtonPress={() => setWatchListModal(false)}
+        onBackdropPress={() => {
+          setWatchListModal(false);
+        }}
+      >
+        <AddMovieToListModal movie_key={object.id} show_type={SHOW_TYPE} done={async () => {setWatchListModal(false)}} />
+      </Modal>
     </View>
   );
 };

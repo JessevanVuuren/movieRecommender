@@ -20,8 +20,8 @@ const FontText = (props) => {
 
   const fontTree = () => {
     if (props.font === "bold") return "Roboto-Bold" 
-    if (props.font === "regular") return "Roboto-Bold" 
-    if (props.font === "medium") return "Roboto-Bold" 
+    if (props.font === "regular") return "Roboto-Regular" 
+    if (props.font === "medium") return "Roboto-Medium" 
     return "Roboto-Bold"
   }
 

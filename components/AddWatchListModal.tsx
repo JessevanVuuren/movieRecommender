@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
 		width: "80%",
 		borderRadius: 10,
 		alignSelf: "center",
-		backgroundColor: Colors.background
+		backgroundColor: Colors.darkLight
 	},
 	inputName: {
 		color: "white",
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
 	title: {
 		padding: 10,
 		alignItems: "center",
-		backgroundColor: Colors.darkLight,
+		backgroundColor: Colors.background_highlight,
 		borderTopRightRadius: 10,
 		borderTopLeftRadius: 10,
 		marginBottom: 10,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
 		margin: 10
 	},
 	button: {
-		backgroundColor: Colors.darkLight,
+		backgroundColor: Colors.background_highlight,
 		borderRadius: 4,
 		paddingHorizontal: 10,
 		paddingVertical: 5

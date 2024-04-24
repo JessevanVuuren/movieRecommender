@@ -1,14 +1,11 @@
+import { TouchableOpacity } from "react-native-gesture-handler";
+import WatchList from "../components/scrollView/WatchList";
 import { BackHandler, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { TopBar } from "../components/topBar";
-import Colors from "../src/style";
 import { FontText } from "../components/fontText";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { TopBar } from "../components/topBar";
 import { Ionicons } from "@expo/vector-icons";
-import { MovieModel } from "../models/watchList";
-import * as DB from "../src/watchListSQL";
-import WatchList from "../components/scrollView/WatchListV2";
-import { useNavigation } from "@react-navigation/native";
+import Colors from "../src/style";
 
 interface WatchListMovieProps {
   navigation: any;
@@ -16,23 +13,6 @@ interface WatchListMovieProps {
 }
 
 const WatchListMovie: React.FC<WatchListMovieProps> = props => {
-  const [movies, setMovies] = useState<MovieModel[]>([])
-  const [reload, setReload] = useState<number>(Math.random());
-
-  useEffect(() => {
-    
-    // getMovies()
-    // const backHandler = BackHandler.addEventListener("hardwareBackPress", (): any => {
-    //   setReload(Math.random())
-    // });
-
-    // return () => backHandler.remove();
-  }, [])
-
-  // const getMovies = async () => {
-  //   const data = await DB.fetch_movie(props.route.params.data.id)
-  //   setMovies(data)
-  // }
 
   return (
     <View style={styles.container}>

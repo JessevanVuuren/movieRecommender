@@ -19,6 +19,8 @@ const HEADER_MAX_HEIGHT = 240;
 const HEADER_MIN_HEIGHT = 0;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
+const SHOW_TYPE = "movie"
+
 const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
   const [object] = useState(ModelMode ? movie : route.params.jsonObject);
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -39,8 +41,8 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
 
   useEffect(() => {
     (async () => {
-      setMasterData(await getMasterDetails("movie", object.id));
-      setProviders(await getStreamProviders(object.id, "movie"));
+      setMasterData(await getMasterDetails(SHOW_TYPE, object.id));
+      setProviders(await getStreamProviders(object.id, SHOW_TYPE));
     })();
   }, []);
 
@@ -183,7 +185,7 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
           setWatchListModal(false);
         }}
       >
-        <AddMovieToListModal movie_key={object.id} done={async () => {setWatchListModal(false)}} />
+        <AddMovieToListModal movie_key={object.id} show_type={SHOW_TYPE} done={async () => {setWatchListModal(false)}} />
       </Modal>
 
 

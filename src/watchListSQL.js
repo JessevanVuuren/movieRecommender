@@ -33,6 +33,7 @@ export const initDatabase = async () => {
         id INTEGER PRIMARY KEY,
         watch_list INT,
         list_order INT,
+        show_type TEXT,
         movie_key TEXT,
         watched BOOLEAN,
         FOREIGN KEY(watch_list) REFERENCES watchList(id) 
@@ -105,6 +106,7 @@ export const fetch_movie = async (id) => {
   const list = []
   data.rows._array.map(element => list.push({
     id: element.id,
+    show_type: element.show_type,
     watch_list: element.watch_list,
     list_order: element.list_order,
     movie_key: parseInt(element.movie_key)
@@ -112,11 +114,11 @@ export const fetch_movie = async (id) => {
   
   return list
 }
-export const store_movie = async (watch_list_id, movie_key) => {
+export const store_movie = async (watch_list_id, movie_key, show_type) => {
   const default_order = (await fetch_movie(watch_list_id)).length;
   return new Promise((resolve, reject) => {
     database.transaction((tx) => {
-      tx.executeSql(`INSERT INTO movie (watch_list, list_order, movie_key, watched) VALUES (?, ?, ?, ?);`, [watch_list_id, default_order, movie_key, false], (_, result) => resolve(result), (_, error) => reject(error));
+      tx.executeSql(`INSERT INTO movie (watch_list, show_type, list_order, movie_key, watched) VALUES (?, ?, ?, ?, ?);`, [watch_list_id, show_type, default_order, movie_key, false], (_, result) => resolve(result), (_, error) => reject(error));
     });
   });
 }

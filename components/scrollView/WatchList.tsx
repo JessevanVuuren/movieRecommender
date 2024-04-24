@@ -1,69 +1,100 @@
-import { StyleSheet, View, Dimensions, Image, TouchableOpacity } from "react-native";
-import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview";
-import React, { useEffect, useMemo, useRef, useState } from "react";
 import { baseUrl342, descriptionFix, getMasterDetails, getShowType, round } from "../../src/helper";
+import { StyleSheet, View, Dimensions, Image, TouchableOpacity, BackHandler } from "react-native";
+import DraggableFlatList, { ScaleDecorator } from "react-native-draggable-flatlist";
+import React, { useEffect, useState } from "react";
+import * as DB from "../../src/watchListSQL";
 import { FontText } from "../fontText";
 import Colors from "../../src/style";
-import { MovieModel } from "../../models/watchList";
 
 interface WatchListProps {
   navigation: any;
-  movies:MovieModel[]
+  list_id:number
 }
 
-const WatchList: React.FC<WatchListProps> = ({ navigation, movies }) => {
+const WatchList: React.FC<WatchListProps> = ({ navigation, list_id }) => {
+  const [reload, setReload] = useState<number>(Math.random());
   const [data, setData] = useState([]);
 
-  const _layoutProvider = useRef(layoutMaker()).current;
-  const dataProvider = useMemo(() => dataProviderMaker(data), [data]);
+  useEffect(() => {
+    let is_sorted = true
+    let index = 0
+    data.map((movie) => {
+      if (index == movie.movie.list_order) index += 1
+      else is_sorted = false
+    })
+    if (!is_sorted) sort_list(data)
+  }, [data])
 
-  const rowRenderer = (type, data) => {
-    const show = data.item;
-    const showType = getShowType(show.title)
-  
+  const sort_list = async (data) => {
+    for (let i = 0; i < data.length; i++) {
+      await DB.update_movie_order(data[i].movie.id, i)
+    }
+  }
+
+  useEffect(() => {
+    navigation.addListener('focus', () => setReload(Math.random()));
+    BackHandler.addEventListener("hardwareBackPress", (): any => setReload(Math.random()));
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const fullList = [];
+      const movies = await DB.fetch_movie(list_id)
+      for (let i = 0; i < movies.length; i++) {
+        const data = await getMasterDetails(movies[i].show_type, movies[i].movie_key)
+        fullList.push({movie:movies[i],  data: data});
+      }
+      fullList.sort((a, b) => a.movie.list_order - b.movie.list_order)
+      setData(fullList);
+    })();
+  }, [reload]);
+
+  const rowRenderer = ({ item, drag, isActive }) => {
+    const show = item.data
+    const showType = item.movie.show_type
+
     return (
-      <TouchableOpacity
-        onPress={() => {
-          moveToMovie(showType, show);
-        }}
-        style={{ height: 150 }}
-      >
-        <View style={styles.listItem}>
-          <View style={{ alignItems: "flex-start", flex: 1 }}>
-            <Image style={styles.img} source={{ uri: baseUrl342 + show.poster_path }} />
-          </View>
-
-          <View style={{ marginLeft: 110 }}>
-            <View style={{ marginBottom: 2 }}>
-              <FontText font={"Roboto-Bold"} fontSize={12} numberOfLines={2}>
-                {showType === "movie" ? show.title : show.name}
-              </FontText>
-            </View>
-            <View style={styles.movieRatingRow}>
-              <FontText color={Colors.mainColor} font={"Roboto-Bold"} fontSize={12}>
-                {showType === "movie" ? show.release_date.split("-")[0] : show.first_air_date.split("-")[0]}
-              </FontText>
-              <View style={{ marginLeft: 10, flex: 1 }}>
-                <View style={{ flexDirection: "row" }}>
-                  <Image source={require("../../assets/star-symbol.png")} style={[styles.topStar, { height: 10, width: 10 }]} />
-                  <FontText color={Colors.textColor} font={"Roboto-Bold"} fontSize={12}>
-                    {round(show.vote_average)}
-                  </FontText>
-                </View>
+      <View style={{marginTop: 10}}>
+        <ScaleDecorator activeScale={1.05}>
+          <TouchableOpacity onLongPress={drag} style={{ height: 150 }} disabled={isActive} onPress={() => { moveToMovie(showType, show); }}>
+            <View style={styles.listItem}>
+              <View style={{ alignItems: "flex-start", flex: 1 }}>
+                <Image style={styles.img} source={{ uri: baseUrl342 + show.poster_path }} />
               </View>
 
-              {showType === "tv" && show.seasons && (
+              <View style={{ marginLeft: 110 }}>
+                <View style={{ marginBottom: 2 }}>
+                  <FontText font={"Roboto-Bold"} fontSize={12} numberOfLines={2}>
+                    {showType === "movie" ? show.title : show.name}
+                  </FontText>
+                </View>
+                <View style={styles.movieRatingRow}>
+                  <FontText color={Colors.mainColor} font={"Roboto-Bold"} fontSize={12}>
+                    {showType === "movie" ? show.release_date.split("-")[0] : show.first_air_date.split("-")[0]}
+                  </FontText>
+                  <View style={{ marginLeft: 10, flex: 1 }}>
+                    <View style={{ flexDirection: "row" }}>
+                      <Image source={require("../../assets/star-symbol.png")} style={[styles.topStar, { height: 10, width: 10 }]} />
+                      <FontText color={Colors.textColor} font={"Roboto-Bold"} fontSize={12}>
+                        {round(show.vote_average)}
+                      </FontText>
+                    </View>
+                  </View>
+
+                  {showType === "tv" && show.seasons && (
+                    <FontText fontSize={12} font={"Roboto-Bold"}>
+                      {show.seasons.length} Seasons
+                    </FontText>
+                  )}
+                </View>
                 <FontText fontSize={12} font={"Roboto-Bold"}>
-                  {show.seasons.length} Seasons
+                  {descriptionFix(show.overview, false, 130).text}
                 </FontText>
-              )}
+              </View>
             </View>
-            <FontText fontSize={12} font={"Roboto-Bold"}>
-              {descriptionFix(show.overview, false, 130).text}
-            </FontText>
-          </View>
-        </View>
-      </TouchableOpacity>
+          </TouchableOpacity>
+        </ScaleDecorator>
+      </View>
     );
   };
 
@@ -77,22 +108,14 @@ const WatchList: React.FC<WatchListProps> = ({ navigation, movies }) => {
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      const fullList = [];
-      for (let i = 0; i < movies.length; i++) {
-        const data = await getMasterDetails("movie", movies[i].movie_key)
-        fullList.push({ type: "NORMAL", item: data });
-      }
-      setData(fullList);
-    })();
-  }, []);
-
-  if (!data.length) return null;
-
   return (
     <View style={{ flex: 1 }}>
-      <RecyclerListView layoutProvider={_layoutProvider} dataProvider={dataProvider} rowRenderer={rowRenderer}/>
+      <DraggableFlatList
+        data={data}
+        renderItem={rowRenderer}
+        keyExtractor={(item) => item.data.id}
+        onDragEnd={({ data }) => setData(data)}
+      />
     </View>
   );
 };
@@ -128,19 +151,5 @@ const styles = StyleSheet.create({
   },
 });
 
-const dataProviderMaker = (data: any) => new DataProvider((r1, r2) => r1 !== r2).cloneWithRows(data);
-
-const layoutMaker = () =>
-  new LayoutProvider(
-    () => "NORMAL",
-    (type, dim) => {
-      switch (type) {
-        case "NORMAL":
-          dim.width = Dimensions.get("window").width;
-          dim.height = 165;
-          break;
-      }
-    }
-  );
 
 export default WatchList;

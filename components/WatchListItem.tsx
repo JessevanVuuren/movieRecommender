@@ -28,7 +28,7 @@ const WatchListItem: React.FC<WatchListItemProps> = ({ navigation, route, item, 
   const [start, setStart] = useState(0)
 
   const goToList = () => {
-    navigation.push("WatchListMovie", {data: item, navigation: navigation});
+    navigation.push("WatchListMovie", {data: item });
   };
 
   translateX.addListener((value) => {

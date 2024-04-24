@@ -10,7 +10,8 @@ import { Fontisto } from '@expo/vector-icons';
 
 interface AddMovieToListModalProps {
   done: () => {},
-  movie_key: string
+  movie_key: string,
+  show_type:string
 }
 
 const AddMovieToListModal: React.FC<AddMovieToListModalProps> = props => {
@@ -33,7 +34,7 @@ const AddMovieToListModal: React.FC<AddMovieToListModalProps> = props => {
 
   const addOrRemove = (list) => {
     if (list.inList) DB.delete_movie(list.id, props.movie_key)
-    else DB.store_movie(list.id, props.movie_key)
+    else DB.store_movie(list.id, props.movie_key, props.show_type)
     
     getWatchList()
   }
@@ -48,10 +49,10 @@ const AddMovieToListModal: React.FC<AddMovieToListModalProps> = props => {
           <TouchableOpacity onPress={() => addOrRemove(list)} style={styles.listRow} key={list.id}>
 
             <View style={styles.checkbox}>
-              {list.inList ? <Fontisto name="checkbox-active" size={15} color={Colors.mainColor} /> : <Fontisto name="checkbox-passive" size={15} color="white" />}
+              {list.inList ? <Fontisto name="checkbox-active" size={13} color={Colors.mainColor} /> : <Fontisto name="checkbox-passive" size={15} color="white" />}
             </View>
 
-            <FontText fontSize={20} font={"Roboto-Bold"}>{list.name}</FontText>
+            <FontText fontSize={17} font={"regular"}>{list.name}</FontText>
           </TouchableOpacity>
         )}
       </View>
@@ -73,12 +74,12 @@ const styles = StyleSheet.create({
     width: "80%",
     borderRadius: 10,
     alignSelf: "center",
-    backgroundColor: Colors.background
+    backgroundColor: Colors.darkLight
   },
   title: {
     padding: 10,
     alignItems: "center",
-    backgroundColor: Colors.darkLight,
+    backgroundColor: Colors.background_highlight,
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     marginBottom: 10,
@@ -88,9 +89,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginLeft: 20,
+    marginTop:10,
   },
   checkbox: {
-    paddingRight: 10
+    paddingRight: 10,
   },
   buttons: {
     flexDirection: "row",
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
     margin: 10
   },
   button: {
-    backgroundColor: Colors.darkLight,
+    backgroundColor: Colors.background_highlight,
     borderRadius: 4,
     paddingHorizontal: 10,
     paddingVertical: 5

@@ -11,6 +11,7 @@ export default Colors = {
     mainDark: "#6A040F",
     textColor: "#FFFFFF",
     darkLight: "#1C2035",
+    background_highlight: "#555e8a",
     goodGreen: "#00D68F",
     fineYellow: "#FFAA00",
     dangerRed: "#d93b3b",
