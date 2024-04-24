@@ -11,11 +11,12 @@ import { Fontisto } from '@expo/vector-icons';
 interface AddMovieToListModalProps {
   done: () => {},
   movie_key: string,
-  show_type:string
+  show_type: string,
+  navigation:any,
+  movie_data:string,
 }
 
 const AddMovieToListModal: React.FC<AddMovieToListModalProps> = props => {
-  const [text, setText] = useState("")
   const [watchList, setWatchList] = useState([])
 
   useEffect(() => {
@@ -34,8 +35,8 @@ const AddMovieToListModal: React.FC<AddMovieToListModalProps> = props => {
 
   const addOrRemove = (list) => {
     if (list.inList) DB.delete_movie(list.id, props.movie_key)
-    else DB.store_movie(list.id, props.movie_key, props.show_type)
-    
+    else DB.store_movie(list.id, props.movie_key, JSON.stringify(props.movie_data), props.show_type)
+
     getWatchList()
   }
   return (
@@ -55,6 +56,15 @@ const AddMovieToListModal: React.FC<AddMovieToListModalProps> = props => {
             <FontText fontSize={17} font={"regular"}>{list.name}</FontText>
           </TouchableOpacity>
         )}
+
+        {watchList.length == 0 && <View style={styles.noList}>
+          <FontText fontSize={17} font={"regular"}>No Watchlist yet,</FontText>
+          <FontText fontSize={17} font={"regular"}>Make your first Watchlist!</FontText>
+          <TouchableOpacity style={styles.noListButton} onPress={() => props.navigation.navigate("watchlist")}>
+            <FontText fontSize={15} font={"Roboto-Bold"}>Watchlist</FontText>
+          </TouchableOpacity>
+        </View>}
+
       </View>
 
       <View style={styles.buttons}>
@@ -76,6 +86,16 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     backgroundColor: Colors.darkLight
   },
+  noList: {
+    alignItems:"center",
+  },
+  noListButton: {
+    backgroundColor: Colors.background_highlight,
+    marginTop:10,
+    borderRadius: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 5
+  },
   title: {
     padding: 10,
     alignItems: "center",
@@ -88,8 +108,9 @@ const styles = StyleSheet.create({
   listRow: {
     flexDirection: "row",
     alignItems: "center",
+    maxWidth:"80%",
     marginLeft: 20,
-    marginTop:10,
+    marginTop: 10,
   },
   checkbox: {
     paddingRight: 10,

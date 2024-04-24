@@ -35,6 +35,7 @@ export const initDatabase = async () => {
         list_order INT,
         show_type TEXT,
         movie_key TEXT,
+        movie_data TEXT,
         watched BOOLEAN,
         FOREIGN KEY(watch_list) REFERENCES watchList(id) 
         );`, [], () => console.log("Table movie created successfully"), error => console.log("Error creating table: " + error.message))
@@ -58,7 +59,7 @@ export const fetch_watchList = async () => {
       tx.executeSql(`SELECT ML.*, COUNT(M.id) AS "amount" FROM watchList AS ML LEFT JOIN movie AS M ON ML.id = M.watch_list GROUP BY ML.id;`, [], (_, result) => resolve(result), (_, error) => reject(error));
     });
   });
-
+  
   const list = []
   data.rows._array.map(element => list.push({
     id: element.id,
@@ -100,25 +101,27 @@ export const delete_watchList = async (id) => {
 export const fetch_movie = async (id) => {
   const data = await new Promise((resolve, reject) => {
     database.transaction((tx) => {
-      tx.executeSql(`SELECT * FROM movie WHERE watch_list = ?;`, [id], (_, result) => resolve(result), (_, error) => reject(error));
+      tx.executeSql(`SELECT * FROM movie WHERE watch_list = ? ORDER BY list_order ASC;`, [id], (_, result) => resolve(result), (_, error) => reject(error));
     });
   });
+
   const list = []
   data.rows._array.map(element => list.push({
     id: element.id,
-    show_type: element.show_type,
+    movie_data: element.movie_data,
     watch_list: element.watch_list,
     list_order: element.list_order,
+    show_type: element.show_type,
     movie_key: parseInt(element.movie_key)
   }))
-  
+
   return list
 }
-export const store_movie = async (watch_list_id, movie_key, show_type) => {
+export const store_movie = async (watch_list_id, movie_key, movie_data, show_type) => {
   const default_order = (await fetch_movie(watch_list_id)).length;
   return new Promise((resolve, reject) => {
     database.transaction((tx) => {
-      tx.executeSql(`INSERT INTO movie (watch_list, show_type, list_order, movie_key, watched) VALUES (?, ?, ?, ?, ?);`, [watch_list_id, show_type, default_order, movie_key, false], (_, result) => resolve(result), (_, error) => reject(error));
+      tx.executeSql(`INSERT INTO movie (watch_list, movie_data, list_order, movie_key, show_type, watched) VALUES (?, ?, ?, ?, ?, ?);`, [watch_list_id, movie_data, default_order, movie_key, show_type, false], (_, result) => resolve(result), (_, error) => reject(error));
     });
   });
 }

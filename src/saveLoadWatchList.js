@@ -1,8 +1,19 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getMasterDetails, getShowType } from './helper';
 import * as DB from "../src/watchListSQL";
 import Colors from "../src/style";
 
+
+export const getMovieToWatchList = async () => {
+  var list = await AsyncStorage.getItem('watchList')
+  
+  if (!list) {
+    console.log("async list empty, make empty object \"movieList: []\"")
+    AsyncStorage.setItem('watchList', JSON.stringify({ "movieList": [] }))
+    list = []
+  }
+
+  return list
+};
 
 export const getAllMovies = async () => {
   const data = JSON.parse(await getMovieToWatchList())["movieList"]
@@ -11,7 +22,7 @@ export const getAllMovies = async () => {
 
 
 export const removeFullList = async () => {
-  await AsyncStorage.setItem('watchList', "[]")
+  await AsyncStorage.setItem('watchList', JSON.stringify({ "movieList": [] }))
 } 
 
 export const migrateDatabase = async () => {

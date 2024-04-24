@@ -7,8 +7,9 @@ export interface WatchListModel {
 
 export interface MovieModel {
   id: number,
-  show_type: string,
+  movie_data: string,
   watch_list: number,
   list_order: number,
+  show_type: number,
   movie_key: string
 }

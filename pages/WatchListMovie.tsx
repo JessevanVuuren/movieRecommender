@@ -18,19 +18,22 @@ const WatchListMovie: React.FC<WatchListMovieProps> = props => {
     <View style={styles.container}>
       <TopBar navigation={props.navigation} hambAction={"goBack"} />
 
-      <View style={{ margin: "5%", flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+      <View style={styles.titleHolder}>
         <TouchableOpacity onPress={() => props.navigation.goBack()}>
           <View style={styles.addWatchList}>
             <Ionicons name="arrow-back" size={24} color="white" />
           </View>
         </TouchableOpacity>
-        <FontText fontSize={22} font={"Roboto-Bold"}>
+        <View style={styles.titleText}>
+
+        <FontText fontSize={22} font={"Roboto-Bold"} >
           {props.route.params.data.name}
         </FontText>
+        </View>
       </View>
 
-      <WatchList navigation={props.navigation} list_id={props.route.params.data.id}  />
-      
+      <WatchList navigation={props.navigation} list_id={props.route.params.data.id} />
+
     </View>
   );
 };
@@ -42,6 +45,16 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
     width: "100%",
     flex: 1,
+  },
+  titleHolder: {
+    margin: "5%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+  titleText: {
+    marginRight:20,
+    marginLeft:10,
   },
   addWatchList: {
     height: 35,

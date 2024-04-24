@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { StyleSheet, View, Animated } from "react-native";
+import { StyleSheet, View } from "react-native";
 import MovieListVerticalScroll from "../components/scrollView/MovieListVerticalScroll";
 import MovieListScroll from "../components/scrollView/MovieListScroll";
 import CarouselBanner from "../components/scrollView/CarouselBanner";
@@ -87,6 +87,7 @@ const Home = ({ route, navigation }) => {
 
   useEffect(() => {
     (async () => {
+      // DB.drop_all()
       migrateDatabase()
       DB.initDatabase()
       const disclaimer = await getValue("hide_disclaimer")

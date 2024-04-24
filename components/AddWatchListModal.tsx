@@ -29,7 +29,7 @@ const AddWatchListModal: React.FC<AddWatchListModalProps> = props => {
 			<View style={styles.title}>
 				<FontText fontSize={20} font={"Roboto-Bold"}>Make Watchlist</FontText>
 			</View>
-			<TextInput placeholder="name" style={styles.inputName} placeholderTextColor={"#999999"} onChangeText={(t) => setText(t)} value={text} />
+			<TextInput placeholder="name" style={styles.inputName} maxLength={30} placeholderTextColor={"#999999"} onChangeText={(t) => setText(t)} value={text} />
 
 			<View style={styles.colors}>
 				{COLORS.map(((colorID, index) => <TouchableOpacity onPress={() => setColorB(colorID)} key={index}>

@@ -185,7 +185,7 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
           setWatchListModal(false);
         }}
       >
-        <AddMovieToListModal movie_key={object.id} show_type={SHOW_TYPE} done={async () => {setWatchListModal(false)}} />
+        <AddMovieToListModal navigation={navigation} show_type={SHOW_TYPE} movie_key={object.id} movie_data={masterData} done={async () => {setWatchListModal(false)}} />
       </Modal>
 
 

@@ -215,7 +215,7 @@ const TvViewer = ({ route, navigation }) => {
           setWatchListModal(false);
         }}
       >
-        <AddMovieToListModal movie_key={object.id} show_type={SHOW_TYPE} done={async () => {setWatchListModal(false)}} />
+        <AddMovieToListModal navigation={navigation} movie_key={object.id} show_type={SHOW_TYPE} done={async () => {setWatchListModal(false)}} />
       </Modal>
     </View>
   );

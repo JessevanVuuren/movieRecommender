@@ -12,6 +12,7 @@ import * as DB from "../src/watchListSQL";
 import { AntDesign } from "@expo/vector-icons";
 import AddWatchListModal from "../components/AddWatchListModal";
 import WatchListItem from "../components/WatchListItem";
+import { fill_with_test } from "../src/debug";
 
 
 const WatchListView = ({ navigation, route }) => {
@@ -27,6 +28,8 @@ const WatchListView = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
+    fill_with_test()
+
     getWatchList();
   }, [reload])
 
