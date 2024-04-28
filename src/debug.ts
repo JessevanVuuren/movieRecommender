@@ -9,17 +9,32 @@ export const fill_with_test = async () => {
   watch.map(async e => {
     if (e.name.includes("debug") && e.amount == 0) {
       const number = parseInt(e.name.split(":")[1])
-      do_movies(e, number)
+      await do_movies(e, number, false)
+    }
+
+    if (e.name.includes("limit") && e.amount == 0) {
+      const number = parseInt(e.name.split(":")[1])
+      await do_movies(e, number, true)
+      console.log("movies: " + number)
     }
   })
 }
 
 
-const do_movies = async (e:any, number:number) => {
-  for (let i = 0; i < number; i++) {
-    if (i >= number) break
-
-    const data = await getMasterDetails("movie", list[i])
-    DB.store_movie(e.id, list[i], JSON.stringify(data), "movie")  
+const do_movies = async (e:any, number:number, repeat:boolean) => {
+  if (repeat) {
+    const data = await getMasterDetails("movie", list[0])
+    for (let i = 0; i < number; i++) {
+      await DB.store_movie(e.id, list[0], JSON.stringify(data), "movie") 
+    }
   }
+  else {
+    for (let i = 0; i < number; i++) {
+      if (i >= number) break
+  
+      const data = await getMasterDetails("movie", list[i])
+      await DB.store_movie(e.id, list[i], JSON.stringify(data), "movie")  
+    }
+  }
+
 }

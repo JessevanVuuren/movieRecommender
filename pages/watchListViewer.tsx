@@ -28,13 +28,14 @@ const WatchListView = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    fill_with_test()
 
     getWatchList();
   }, [reload])
 
 
   const getWatchList = async () => {
+    await fill_with_test()
+
     const data: WatchListModel[] = await DB.fetch_watchList();
     setWatchListList(data);
   };

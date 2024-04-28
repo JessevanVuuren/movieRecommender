@@ -108,7 +108,7 @@ const WatchList: React.FC<WatchListProps> = ({ navigation, list_id }) => {
         data={data}
         renderItem={rowRenderer}
         onEndReachedThreshold={0.5}
-        keyExtractor={(item) => item.movie_data.id}
+        keyExtractor={(item) => item.id}
         onDragEnd={({ data }) => setData(data)}
       />
     </View>
