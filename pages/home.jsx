@@ -87,7 +87,6 @@ const Home = ({ route, navigation }) => {
 
   useEffect(() => {
     (async () => {
-      // DB.drop_all()
       migrateDatabase()
       DB.initDatabase()
       const disclaimer = await getValue("hide_disclaimer")

@@ -35,8 +35,7 @@ const AddMovieToListModal: React.FC<AddMovieToListModalProps> = props => {
 
   const addOrRemove = (list) => {
     if (list.inList) DB.delete_movie(list.id, props.movie_key)
-    else DB.store_movie(list.id, props.movie_key, JSON.stringify(props.movie_data), props.show_type)
-
+    else DB.store_movie(list.id, props.movie_key, props.movie_data, props.show_type)
     getWatchList()
   }
   return (

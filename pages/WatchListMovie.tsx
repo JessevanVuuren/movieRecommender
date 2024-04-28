@@ -1,6 +1,5 @@
 import { TouchableOpacity } from "react-native-gesture-handler";
 import WatchList from "../components/scrollView/WatchListV3";
-// import WatchList from "../components/scrollView/WatchList";
 import { BackHandler, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { FontText } from "../components/fontText";

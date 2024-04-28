@@ -1,6 +1,5 @@
 import * as SQLite from "expo-sqlite"
 
-
 const database = SQLite.openDatabase("watchList.db")
 
 
@@ -59,7 +58,7 @@ export const fetch_watchList = async () => {
       tx.executeSql(`SELECT ML.*, COUNT(M.id) AS "amount" FROM watchList AS ML LEFT JOIN movie AS M ON ML.id = M.watch_list GROUP BY ML.id;`, [], (_, result) => resolve(result), (_, error) => reject(error));
     });
   });
-  
+
   const list = []
   data.rows._array.map(element => list.push({
     id: element.id,
@@ -117,11 +116,31 @@ export const fetch_movie = async (id) => {
 
   return list
 }
+
+const get_amount_of_movies = async (id) => {
+  return await new Promise((resolve, reject) => {
+    database.transaction((tx) => {
+      tx.executeSql(`SELECT COUNT(*) as amount FROM movie WHERE watch_list = ?;`, [id], (_, result) => resolve(result), (_, error) => reject(error));
+    });
+  });
+}
+
 export const store_movie = async (watch_list_id, movie_key, movie_data, show_type) => {
-  const default_order = (await fetch_movie(watch_list_id)).length;
+  const default_order = (await get_amount_of_movies(watch_list_id)).rows._array[0].amount
+  const minify_data = {
+    id: movie_data.id,
+    title: movie_data.title,
+    vote_average: movie_data.vote_average,
+    overview: movie_data.overview,
+    poster_path: movie_data.poster_path,
+    name: movie_data.name,
+    first_air_date: movie_data.first_air_date,
+    release_date: movie_data.release_date 
+  }
+
   return new Promise((resolve, reject) => {
     database.transaction((tx) => {
-      tx.executeSql(`INSERT INTO movie (watch_list, movie_data, list_order, movie_key, show_type, watched) VALUES (?, ?, ?, ?, ?, ?);`, [watch_list_id, movie_data, default_order, movie_key, show_type, false], (_, result) => resolve(result), (_, error) => reject(error));
+      tx.executeSql(`INSERT INTO movie (watch_list, movie_data, list_order, movie_key, show_type, watched) VALUES (?, ?, ?, ?, ?, ?);`, [watch_list_id, JSON.stringify(minify_data), default_order, movie_key, show_type, false], (_, result) => resolve(result), (_, error) => reject(error));
     });
   });
 }

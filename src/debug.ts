@@ -25,7 +25,8 @@ const do_movies = async (e:any, number:number, repeat:boolean) => {
   if (repeat) {
     const data = await getMasterDetails("movie", list[0])
     for (let i = 0; i < number; i++) {
-      await DB.store_movie(e.id, list[0], JSON.stringify(data), "movie") 
+      await DB.store_movie(e.id, list[0], data, "movie") 
+      console.log("adding: " + i)
     }
   }
   else {
