@@ -1,34 +1,28 @@
-import { StyleSheet, View, Image, Dimensions, GestureResponderEvent, Animated, Text } from "react-native";
+import { StyleSheet, View, Image, Dimensions, GestureResponderEvent, Animated, Text } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import { baseUrl500, getDate, getMasterDetails, makeURL } from "../src/helper"
 import React, { useEffect, useRef, useState } from "react"
-import { baseUrl500, getDate, makeURL } from "../src/helper";
-
-
-import Modal from "react-native-modal";
-
-
 import { FontText } from "../components/fontText"
+import { MovieModel } from "../models/movie"
+import { Movie } from "../pages/movieViewer"
+import Modal from "react-native-modal"
 import Colors from "../src/style"
-import { MovieModel } from "../models/movie";
-import { Movie } from "../pages/movieViewer";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ROOM } from "../models/room"
+
 
 const WIDTH = Dimensions.get("window").width
 const ANIM_DURATION = 500
 
 const animValues = [
   { position: 0, opacity: .6, width: 1 },
-  { position: 0, opacity: 0, width: 1 },
-  // { position: 20, opacity: .6, width: 1 },
-  // { position: 30, opacity: 0, width: 1 },
-  // { position: 30, opacity: .5, width: .8 },
-  // { position: 40, opacity: .3, width: .7 },
-  // { position: 50, opacity: .0, width: .6 }
+  { position: 0, opacity: 0, width: 1 }
 ]
 
 interface MovieTinderProps {
   navigation: any;
   route: any;
-  send_preference: (movie:MovieModel, preference:string) => void;
+  room: ROOM;
+  send_preference: (movie: MovieModel, preference: string) => void;
 }
 
 interface PosCord { x: number, y: number, radiant: number }
@@ -146,9 +140,10 @@ const getMovies = async (page: number) => {
 }
 
 const MovieTinder: React.FC<MovieTinderProps> = props => {
+  const [likedMovies, setLikedMovies] = useState<string[]>([])
+  const [movieList, setMovieList] = useState<MovieModel[]>([])
   const [showModel, setShowModel] = useState<boolean>(false)
   const [pageNumber, setPageNumber] = useState<number>(1)
-  const [movieList, setMovieList] = useState<MovieModel[]>([])
   const [nextCard, setNextCard] = useState<number>(0)
 
   const animArray = []
@@ -161,12 +156,12 @@ const MovieTinder: React.FC<MovieTinderProps> = props => {
     })
   }
 
-
   useEffect(() => {
     (async () => setMovieList([...movieList, ...(await getMovies(pageNumber)).results]))()
   }, [pageNumber])
 
   const updateMovie = (preference: string) => {
+    setLikedMovies([...likedMovies, movieList[nextCard].id.toString()])
     props.send_preference(movieList[nextCard], preference)
     setNextCard(nextCard + 1)
     if (nextCard + animArray.length + 3 > movieList.length) {
@@ -193,6 +188,35 @@ const MovieTinder: React.FC<MovieTinderProps> = props => {
 
   }
 
+  useEffect(() => {
+    (async () => {
+
+      const array = props.room.payload.wanted_list.filter((e) => {
+        return likedMovies.indexOf(e) < 0
+      })
+
+
+      for (let i = 0; i < movieList.length; i++) {
+        const movie = movieList[i]
+
+        for (let j = 0; j < props.room.payload.unwanted_list.length; j++) {
+          const unwanted = props.room.payload.unwanted_list[j];
+          if (movie.id.toString() == unwanted) {
+            console.log("remove: ", movie.id.toString())
+            movieList.splice(i, 1)
+          }
+        }
+      }
+
+      for (let i = 0; i < array.length; i++) {
+        const data: MovieModel = await getMasterDetails("movie", array[i])
+        movieList.splice(nextCard + 2 + i, 0, data)
+        setLikedMovies([...likedMovies, array[i]])
+      }
+
+    })()
+  }, [props.room])
+
   const flowNextCard = () => {
     startAnim(() => {
       for (let i = 0; i < animValues.length; i++) {
@@ -209,7 +233,7 @@ const MovieTinder: React.FC<MovieTinderProps> = props => {
 
   return (
     <View style={styles.container}>
-      
+
       {animArray.map((anim, index) =>
         <Animated.View key={index}
           style={{ marginTop: animArray[animArray.length - index - 1].position, position: "absolute", alignSelf: "center" }}>
@@ -227,7 +251,7 @@ const MovieTinder: React.FC<MovieTinderProps> = props => {
       <ExtraInfo movie={movieList[nextCard]} />
 
       <Modal isVisible={showModel} onBackButtonPress={() => setShowModel(false)} onBackdropPress={() => setShowModel(false)} >
-        <Movie navigation={props.navigation} route={props.route} movie={movieList[nextCard]} ModelMode callback={() => setShowModel(false)}/>
+        <Movie navigation={props.navigation} route={props.route} movie={movieList[nextCard]} ModelMode callback={() => setShowModel(false)} />
       </Modal>
     </View>
   )

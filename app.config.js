@@ -1,9 +1,27 @@
-const IS_DEV = process.env.APP_VARIANT === 'development';
+
+let app_name
+let build_name
+
+switch (process.env.APP_VARIANT) {
+  case "development":
+    app_name = "Movie App (Dev)"
+    build_name = "com.jesse.movieRecommender.dev"
+    break
+  case "preview":
+    app_name = "Movie App (Preview)"
+    build_name = "com.jesse.movieRecommender.preview"
+    break
+  default:
+    app_name = "Movie App"
+    build_name = "com.jesse.movieRecommender"
+    break
+}
+
 
 
 export default {
   scheme: "movierecommender",
-  name: IS_DEV ? "Movie App (Dev)" : "Movie App",
+  name: app_name,
   slug: "MovieRecommender",
   version: "3.0.0",
   orientation: "portrait",
@@ -24,7 +42,7 @@ export default {
       "applinks:movierecommender.ga"
     ],
     supportsTablet: true,
-    bundleIdentifier: IS_DEV ? "com.jesse.movieRecommender.dev" : "com.jesse.movieRecommender",
+    bundleIdentifier: build_name,
     buildNumber: "17"
   },
   android: {
@@ -60,7 +78,7 @@ export default {
       foregroundImage: "./assets/icon.png",
       backgroundColor: "#FFFFFF"
     },
-    package: IS_DEV ? "com.jesse.movieRecommender.dev" : "com.jesse.movieRecommender",
+    package: build_name,
     versionCode: 19,
     permissions: [],
     AsyncStorage_db_size_in_MB: 10

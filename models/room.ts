@@ -14,8 +14,8 @@ export interface CONNECTION {
 
 interface payload {
   amount_of_users: number;
-  wanted: Array<string>;
-  unwanted: Array<string>;
+  wanted_list: Array<string>;
+  unwanted_list: Array<string>;
   final_movie: string;
   key: string;
 }
