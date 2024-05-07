@@ -42,8 +42,6 @@ const RoomPage: React.FC<RoomPageProps> = props => {
 
     ws.onmessage = async (e) => {
       const response: ROOM = JSON.parse(await e.data)
-      // console.log("message:")
-      // console.log(e)
       if (response.success) {
         setJoinRoom(false)
         setRoom(response)

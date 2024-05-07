@@ -4,7 +4,7 @@ import VideoPlayerScroll from "../components/scrollView/videoPlayerScroll";
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
 import MovieListScroll from "../components/scrollView/MovieListScroll";
 import CastListScroll from "../components/scrollView/castListScroll";
-import AddMovieToListModal from "../components/AddMovieToListModal"
+import AddMovieToListModal from "../components/AddMovieToListModal";
 import React, { useState, useRef, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -13,13 +13,13 @@ import { Ionicons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import Constants from "expo-constants";
 import Colors from "../src/style";
-
+import ShowDetailsSlider from "../components/ShowDetailsSlider";
 
 const HEADER_MAX_HEIGHT = 240;
 const HEADER_MIN_HEIGHT = 0;
 const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
-const SHOW_TYPE = "movie"
+const SHOW_TYPE = "movie";
 
 const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
   const [object] = useState(ModelMode ? movie : route.params.jsonObject);
@@ -31,7 +31,7 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
   const [masterData, setMasterData] = useState(null);
   const [providers, setProviders] = useState({});
 
-  const [watchListModal, setWatchListModal] = useState(false)
+  const [watchListModal, setWatchListModal] = useState(false);
 
   const imageTranslateY = scrollY.interpolate({
     inputRange: [0, HEADER_SCROLL_DISTANCE],
@@ -48,7 +48,7 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => ModelMode ? callback() : navigation.goBack()}>
+      <TouchableOpacity style={styles.backButton} onPress={() => (ModelMode ? callback() : navigation.goBack())}>
         <Ionicons style={styles.backArrow} name="arrow-back" size={24} color="white" />
       </TouchableOpacity>
 
@@ -96,7 +96,7 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
               </FontText>
             </View>
 
-            {masterData && masterData.genres && (
+            {masterData?.genres?.length > 0 && (
               <View>
                 <View style={{ marginTop: 29 }}>
                   <FontText fontSize={20} font={"Roboto-Bold"}>
@@ -118,7 +118,7 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
             )}
 
             <View>
-              {providers && providers.data && (
+              {providers?.data?.length > 0 && (
                 <View>
                   <View style={{ marginTop: 29, marginBottom: 5 }}>
                     <FontText fontSize={20} font={"Roboto-Bold"}>
@@ -137,7 +137,7 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
             </View>
           </View>
 
-          {masterData && masterData.videos && (
+          {masterData?.videos?.results?.length > 0 && (
             <View>
               <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
                 <FontText fontSize={20} font={"Roboto-Bold"}>
@@ -150,31 +150,21 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
             </View>
           )}
 
-          {masterData && masterData.credits && (
+          {masterData?.credits?.cast?.length > 0 && (
             <View>
               <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
                 <FontText fontSize={20} font={"Roboto-Bold"}>
                   Cast
                 </FontText>
               </View>
-              <View style={{ flex: 1, height: 200 }}>
+              <View style={{ flex: 1, height: 230 }}>
                 <CastListScroll showType={"movie"} navigation={navigation} master_data={masterData.credits} />
               </View>
             </View>
           )}
 
-          {masterData && masterData.recommendations.results.length > 0 && (
-            <View>
-              <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
-                <FontText fontSize={20} font={"Roboto-Bold"}>
-                  Matching movies
-                </FontText>
-              </View>
-              <View style={{ flex: 1, height: 250 }}>
-                <MovieListScroll showType={"movie"} master_data={masterData.recommendations} navigation={navigation} />
-              </View>
-            </View>
-          )}
+          {masterData?.similar?.results?.length > 0 && <ShowDetailsSlider extra={true} name="Similar" navigation={navigation} list={masterData?.similar} type="movie" show_key={object.id} sort_type="similar"/>}
+          {masterData?.recommendations?.results?.length > 0 && <ShowDetailsSlider extra={true} name="Recommendations" navigation={navigation} list={masterData?.recommendations} type="movie" show_key={object.id} sort_type="recommendations"/> }
         </View>
       </Animated.ScrollView>
 
@@ -183,12 +173,17 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
         onBackButtonPress={() => setWatchListModal(false)}
         onBackdropPress={() => {
           setWatchListModal(false);
-        }}
-      >
-        <AddMovieToListModal navigation={navigation} show_type={SHOW_TYPE} movie_key={object.id} movie_data={masterData} done={async () => {setWatchListModal(false)}} />
+        }}>
+        <AddMovieToListModal
+          navigation={navigation}
+          show_type={SHOW_TYPE}
+          movie_key={object.id}
+          movie_data={masterData}
+          done={async () => {
+            setWatchListModal(false);
+          }}
+        />
       </Modal>
-
-
     </View>
   );
 };

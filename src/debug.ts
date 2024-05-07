@@ -7,12 +7,12 @@ const list = ["823464", "1011985", "929590", "359410", "1125311", "560016", "601
 export const fill_with_test = async () => {
   const watch:WatchListModel[] = await DB.fetch_watchList()
   watch.map(async e => {
-    if (e.name.includes("debug") && e.amount == 0) {
+    if (e.name.includes("debug_debug") && e.amount == 0) {
       const number = parseInt(e.name.split(":")[1])
       await do_movies(e, number, false)
     }
 
-    if (e.name.includes("limit") && e.amount == 0) {
+    if (e.name.includes("debug_limit") && e.amount == 0) {
       const number = parseInt(e.name.split(":")[1])
       await do_movies(e, number, true)
       console.log("movies: " + number)
@@ -31,10 +31,10 @@ const do_movies = async (e:any, number:number, repeat:boolean) => {
   }
   else {
     for (let i = 0; i < number; i++) {
-      if (i >= number) break
+      if (i >= list.length - 1) break
   
       const data = await getMasterDetails("movie", list[i])
-      await DB.store_movie(e.id, list[i], JSON.stringify(data), "movie")  
+      await DB.store_movie(e.id, list[i], data, "movie")  
     }
   }
 

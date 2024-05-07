@@ -20,13 +20,13 @@ const MovieOrSeries = ({}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={[styles.button, activeType === "movie" && styles.active]} onPress={() => selectedType("movie")}>
-        <FontText fontSize={15} font={"Roboto-Regular"}>
+        <FontText fontSize={15} font={"regular"}>
           Movie
         </FontText>
       </TouchableOpacity>
 
       <TouchableOpacity style={[styles.button, activeType === "tv" && styles.active]} onPress={() => selectedType("tv")}>
-        <FontText fontSize={15} font={"Roboto-Regular"}>
+        <FontText fontSize={15} font={"regular"}>
           TV show
         </FontText>
       </TouchableOpacity>

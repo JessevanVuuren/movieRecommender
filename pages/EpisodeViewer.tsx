@@ -105,7 +105,7 @@ const EpisodeViewer: React.FC<EpisodeViewerProps> = ({ navigation, route }) => {
             )}
           </View>
 
-          {data && data.videos && (
+          {data?.videos?.results > 0 && (
             <View>
               <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
                 <FontText fontSize={20} font={"Roboto-Bold"}>

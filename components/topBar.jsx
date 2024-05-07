@@ -1,22 +1,27 @@
-import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { FontAwesome, Feather, Ionicons } from "@expo/vector-icons";
-import Colors from "../src/style";
-import Constants from "expo-constants";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { FontText } from "./fontText";
 import { StatusBar } from "expo-status-bar";
-import { useNavigation } from '@react-navigation/native';
-
-import { FontText } from "../components/fontText";
 import { useEffect, useState } from "react";
+import * as DB from "../src/watchListSQL";
+import Constants from "expo-constants";
+import Colors from "../src/style";
 
 export const TopBar = (props) => {
   const [roomServerIsOnline, setRoomServerIsOnline] = useState(false);
   useEffect(() => {
     (async () => {
-      console.log(process.env.EXPO_ROOM_API + "/is-online")
       const getServer = await fetch(process.env.EXPO_ROOM_API + "/is-online");
-      if (getServer.ok) {
+
+      let unlocked = false;
+      const watch = await DB.fetch_watchList();
+      watch.map((e) => {
+        if (e.name == "unlock_room") unlocked = true;
+      });
+
+      if (getServer.ok && unlocked) {
         const isOnline = await getServer.json();
-        setRoomServerIsOnline(isOnline["status"])
+        setRoomServerIsOnline(isOnline["status"]);
       }
     })();
   }, []);
@@ -46,16 +51,21 @@ export const TopBar = (props) => {
                 <FontAwesome style={{ color: Colors.textColor }} name="search" size={17} color="black" />
               </View>
               <View style={{ marginLeft: 10 }}>
-                <FontText font={"Roboto-Medium"} fontSize={17}>
+                <FontText font={"medium"} fontSize={17} >
                   Search for a show
                 </FontText>
               </View>
             </View>
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={styles.menuRoom} onPress={goToRoom}>
-          {roomServerIsOnline && <Ionicons name="people" size={30} color="white" />}
-        </TouchableOpacity>
+        <View style={styles.menuRoom}>
+          <TouchableOpacity onPress={goToRoom}>{roomServerIsOnline && <Ionicons name="people" size={30} color="white" />}</TouchableOpacity>
+          <TouchableOpacity onPress={() => props.navigation.navigate("FilterPage")}>
+            <View style={{ marginLeft: 10, marginTop: 2.5, transform: [{ rotateZ: "90deg" }] }}>
+              <Ionicons name="options" size={30} color="white" />
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -73,6 +83,7 @@ const styles = StyleSheet.create({
     marginLeft: "5%",
   },
   menuRoom: {
+    flexDirection: "row",
     marginRight: "5%",
   },
   menuSearch: {

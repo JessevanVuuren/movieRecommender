@@ -11,7 +11,7 @@ export const baseUrlOri = "https://image.tmdb.org/t/p/original"
 
 const trending = "https://api.themoviedb.org/3/trending/{type}/day?api_key=" + EXPO_API_URL
 
-const masterInfoUrl = "https://api.themoviedb.org/3/{type}/{id}?api_key=" + EXPO_API_URL + "&append_to_response=videos,credits,images,recommendations"
+const masterInfoUrl = "https://api.themoviedb.org/3/{type}/{id}?api_key=" + EXPO_API_URL + "&append_to_response=videos,credits,images,recommendations,similar"
 
 // stream provider 
 const whereToWatch = ["https://api.themoviedb.org/3/{type}/", "/watch/providers?api_key=" + EXPO_API_URL + "&language=en-US"]
@@ -27,7 +27,8 @@ const getVideos = "https://api.themoviedb.org/3/{type}/{id}/videos?api_key=" + E
 // export const getActorInfo = ["https://api.themoviedb.org/3/person/", "?api_key=" + EXPO_API_URL + "&language=en-US"]
 const getActorInfo = "https://api.themoviedb.org/3/person/{person_id}?api_key=" + EXPO_API_URL + "&language=en-US&append_to_response=images"
 
-
+const similar = "https://api.themoviedb.org/3/{type}/{id}/similar?api_key=" + EXPO_API_URL + "&language=en-US&region=US&page="
+const recommendations = "https://api.themoviedb.org/3/{type}/{id}/recommendations?api_key=" + EXPO_API_URL + "&language=en-US&region=US&page="
 
 // get popular 
 const getPopular = ["https://api.themoviedb.org/3/{type}/popular?api_key=" + EXPO_API_URL + "&language=en-US&region=US&page="]
@@ -217,7 +218,15 @@ export const makeURL = (props, page) => {
             break
         case 'search':
             if (props.searchQuery == "") return
-            url = SearchMovie[0] + props.searchQuery + SearchMovie[1] + "1"
+            url = SearchMovie[0] + props.searchQuery + SearchMovie[1] + page
+            break
+        case 'similar':
+            url = similar.replace("{id}", props.video_id)
+            url = url + page
+            break
+        case 'recommendations':
+            url = recommendations.replace("{id}", props.video_id)
+            url = url + page
             break
         case 'actorMovieList':
             url = ActorList[0] + props.actorID + ActorList[1] + page

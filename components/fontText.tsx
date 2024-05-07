@@ -6,22 +6,33 @@ import Colors from "../src/style";
 
 import { useFonts } from "expo-font";
 
-import * as Font from "expo-font";
 
 SplashScreen.preventAutoHideAsync();
 
-const FontText = (props) => {
+interface Props {
+  font?: "bold" | "regular" | "medium" | "thin" | any;
+  numberOfLines?:number;
+  lineHeight?:number;
+  color?:string;
+  fontSize?:number;
+  underline?: boolean;
+  children?:any;
+}
+
+const FontText: React.FC<Props> = props => {
   const [fontLoad] = useFonts({
     "Roboto-Black": require("../assets/fonts/Roboto-Black.ttf"),
     "Roboto-Bold": require("../assets/fonts/Roboto-Bold.ttf"),
     "Roboto-Medium": require("../assets/fonts/Roboto-Medium.ttf"),
     "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Thin": require("../assets/fonts/Roboto-Thin.ttf"),
   });
 
   const fontTree = () => {
     if (props.font === "bold") return "Roboto-Bold" 
     if (props.font === "regular") return "Roboto-Regular" 
     if (props.font === "medium") return "Roboto-Medium" 
+    if (props.font === "thin") return "Roboto-Thin" 
     return "Roboto-Bold"
   }
 
@@ -42,6 +53,7 @@ const FontText = (props) => {
           color: props.color,
           fontFamily: fontTree(),
           fontSize: props.fontSize,
+          textDecorationLine: props.underline ? "underline" : "none"
         }}
       >
         {props.children}

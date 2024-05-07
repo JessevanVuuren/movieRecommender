@@ -40,9 +40,10 @@ export default class MovieListVerticalScroll extends React.Component {
             dim.width = SCREEN_WIDTH;
             dim.height = 50;
             break;
-          case "SEARCH":
+          case "PADDING_TOP":
             dim.width = SCREEN_WIDTH;
-            dim.height = 10;
+            dim.height = 50;
+            break;
         }
       }
     );
@@ -66,6 +67,7 @@ export default class MovieListVerticalScroll extends React.Component {
 
   getMovieList = async (initialize) => {
     const url = makeURL(this.props, this.state.pageCount);
+    
     const getMovies = await fetch(url);
     const json = await getMovies.json();
 
@@ -74,8 +76,12 @@ export default class MovieListVerticalScroll extends React.Component {
     if (initialize) {
       fullList.push({ type: "COMP", item: "" });
 
-      if (this.props.id == "popular") fullList.push({ type: "TITLE", item: "Popular" });
-      else fullList.push({ type: "SEARCH", item: "search" });
+      if (this.props.id == "popular") {
+        fullList.push({ type: "TITLE", item: "Popular" });
+      } else {
+        fullList.push({ type: "PADDING_TOP", item: "" });
+      }
+
     }
 
     for (let i = 0; i < json.results.length; i++) {
@@ -155,8 +161,6 @@ export default class MovieListVerticalScroll extends React.Component {
             </FontText>
           </View>
         );
-      case "SEARCH":
-        return <View></View>;
       case "NORMAL":
         const { poster_path } = data.item;
         return (
@@ -174,6 +178,12 @@ export default class MovieListVerticalScroll extends React.Component {
                 <Skeleton width={this.calcImgSize().width} height={this.calcImgSize().height} borderRadius={10} />
               </View>
             </TouchableOpacity>
+          </View>
+        );
+      case "PADDING_TOP":
+        return (
+          <View style={{ marginLeft: "4%", marginTop: -40 }}>
+            
           </View>
         );
     }

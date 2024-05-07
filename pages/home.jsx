@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from "react";
-
-import { StyleSheet, View } from "react-native";
-import MovieListVerticalScroll from "../components/scrollView/MovieListVerticalScroll";
-import MovieListScroll from "../components/scrollView/MovieListScroll";
-import CarouselBanner from "../components/scrollView/CarouselBanner";
-import MovieOrSeries from "../components/MovieOrSeries";
-import { FontText } from "../components/fontText";
-import { useGlobalState } from "../global/state";
-import { TopBar } from "../components/topBar";
-import Colors from "../src/style";
-import Disclaimer from "../components/Disclamer";
-import { getValue, setValue } from "../src/LocalStorage";
-import { migrateDatabase } from "../src/saveLoadWatchList";
-
-import * as DB from "../src/watchListSQL";
+import MovieListVerticalScroll from "../components/scrollView/MovieListVerticalScroll"
+import MovieListScroll from "../components/scrollView/MovieListScroll"
+import CarouselBanner from "../components/scrollView/CarouselBanner"
+import { migrateDatabase } from "../src/saveLoadWatchList"
+import { getValue, setValue } from "../src/LocalStorage"
+import MovieOrSeries from "../components/MovieOrSeries"
+import React, { useEffect, useState } from "react"
+import { FontText } from "../components/fontText"
+import { useGlobalState } from "../global/state"
+import Disclaimer from "../components/Disclamer"
+import { StyleSheet, View } from "react-native"
+import { TopBar } from "../components/topBar"
+import * as DB from "../src/watchListSQL"
+import Colors from "../src/style"
 
 const NowPlaying = ({ navigation }) => {
   const [showType] = useGlobalState("showType");
@@ -41,7 +39,7 @@ const UpComing = ({ navigation }) => {
         </FontText>
       </View>
       <View style={{ height: 220 }}>
-        <MovieListScroll id={"upComing"} showType={showType} navigation={navigation} key={showType}/>
+        <MovieListScroll id={"upComing"} showType={showType} navigation={navigation} key={showType} />
       </View>
     </View>
   );
@@ -64,8 +62,8 @@ const TopRated = ({ navigation }) => {
 };
 
 const Home = ({ route, navigation }) => {
-  const [showType] = useGlobalState("showType")
-  const [showDisclaimer, setShowDisclaimer] = useState(false)
+  const [showType] = useGlobalState("showType");
+  const [showDisclaimer, setShowDisclaimer] = useState(false);
 
   // deep linking
   // const isScreenMounted = useRef(true);
@@ -87,28 +85,28 @@ const Home = ({ route, navigation }) => {
 
   useEffect(() => {
     (async () => {
-      migrateDatabase()
-      DB.initDatabase()
-      const disclaimer = await getValue("hide_disclaimer")
+      migrateDatabase();
+      DB.initDatabase();
+      const disclaimer = await getValue("hide_disclaimer");
       if (!disclaimer) {
-        setShowDisclaimer(true)
+        setShowDisclaimer(true);
       }
-    })()
-  }, [])
+    })();
+  }, []);
 
   const hideDisclaimer = () => {
-    setValue("hide_disclaimer", true)
-    setShowDisclaimer(false)
-  }
+    setValue("hide_disclaimer", true);
+    setShowDisclaimer(false);
+  };
 
   return (
-    <View style={styles.container}>
-      <TopBar navigation={navigation} hambAction={"openD"} />
-      <MovieOrSeries />
+      <View style={styles.container}>
+        <TopBar navigation={navigation} hambAction={"openD"} />
+        <MovieOrSeries />
 
-      <MovieListVerticalScroll id={"popular"} navigation={navigation} showType={showType} component={[CarouselBanner, NowPlaying, UpComing, TopRated]}/>
-      {showDisclaimer && <Disclaimer closeDisclaimer={() => hideDisclaimer()} />}
-    </View>
+        <MovieListVerticalScroll id={"popular"} navigation={navigation} showType={showType} component={[CarouselBanner, NowPlaying, UpComing, TopRated]} />
+        {showDisclaimer && <Disclaimer closeDisclaimer={() => hideDisclaimer()} />}
+      </View>
   );
 };
 
@@ -120,6 +118,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-
-

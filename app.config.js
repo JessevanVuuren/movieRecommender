@@ -90,5 +90,8 @@ export default {
     eas: {
       projectId: "b1b04025-da10-418a-b3b8-151f2e590adc"
     }
-  }
+  },
+  plugins: [
+    "expo-localization"
+  ]
 }
