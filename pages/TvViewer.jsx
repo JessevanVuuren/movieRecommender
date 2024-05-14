@@ -2,7 +2,6 @@ import { descriptionFix, getDate, genreTVDict, baseUrlOri, getStreamProviders, g
 import { StyleSheet, View, TouchableOpacity, Text, Animated, Image, ScrollView } from "react-native";
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
 import VideoPlayerScroll from "../components/scrollView/videoPlayerScroll";
-import MovieListScroll from "../components/scrollView/MovieListScroll";
 import CastListScroll from "../components/scrollView/castListScroll";
 import AddMovieToListModal from "../components/AddMovieToListModal";
 import SeasonScroll from "../components/scrollView/SeasonScroll";

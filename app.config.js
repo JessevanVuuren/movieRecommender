@@ -79,7 +79,7 @@ export default {
       backgroundColor: "#FFFFFF"
     },
     package: build_name,
-    versionCode: 19,
+    versionCode: 21,
     permissions: [],
     AsyncStorage_db_size_in_MB: 10
   },
@@ -92,6 +92,6 @@ export default {
     }
   },
   plugins: [
-    "expo-localization"
+    "expo-localization", "expo-font"
   ]
 }

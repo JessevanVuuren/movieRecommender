@@ -1,7 +1,7 @@
 import MovieListVerticalScroll from "../components/scrollView/MovieListVerticalScroll"
 import MovieListScroll from "../components/scrollView/MovieListScroll"
 import CarouselBanner from "../components/scrollView/CarouselBanner"
-import { migrateDatabase } from "../src/saveLoadWatchList"
+import { getAllMovies, migrateDatabase, saveMovieToWatchList } from "../src/saveLoadWatchList"
 import { getValue, setValue } from "../src/LocalStorage"
 import MovieOrSeries from "../components/MovieOrSeries"
 import React, { useEffect, useState } from "react"
@@ -85,8 +85,8 @@ const Home = ({ route, navigation }) => {
 
   useEffect(() => {
     (async () => {
+      await DB.initDatabase();
       migrateDatabase();
-      DB.initDatabase();
       const disclaimer = await getValue("hide_disclaimer");
       if (!disclaimer) {
         setShowDisclaimer(true);
