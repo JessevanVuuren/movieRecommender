@@ -79,7 +79,7 @@ export default {
       backgroundColor: "#FFFFFF"
     },
     package: build_name,
-    versionCode: 21,
+    versionCode: 22,
     permissions: [],
     AsyncStorage_db_size_in_MB: 10
   },
