@@ -5,11 +5,14 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import React, { useEffect, useRef, useState } from "react"
 import { getMasterDetails } from "../../src/helper";
 import { FilterOptions } from "../../models/filter";
+import { ResponseModel } from "../../models/response";
 
 interface ShowScrollerProps {
   filter_options: FilterOptions
   navigation: any;
-  show_type: string
+  show_type: string;
+  components?: any[];
+  results: (results:ResponseModel) => void
 }
 
 const calculate_padding = (percent) => {
@@ -35,31 +38,39 @@ const ShowScroller: React.FC<ShowScrollerProps> = props => {
   const [movieList, setMovieList] = useState([])
   const image_size = calculate_image_size()
 
-  useEffect(() => { {
-    setMovieList([])
-    setCurrentPage(1)
-    setOptions(props.filter_options)
-  } }, [props.filter_options, props.show_type])
-  
   useEffect(() => {
+    {
+      setMovieList([])
+      setCurrentPage(1)
+      setOptions(props.filter_options)
+    }
+  }, [props.filter_options, props.show_type])
+
+  useEffect(() => {
+    if (props.components?.length > 0) setMovieList([{ type: "COMPS", item: null }])
+
     if (options == undefined) return
     if (options.provider.length == 0) {
       setMovieList([])
       return
     }
-    
+
     setup(options, currentPage)
   }, [options, currentPage])
 
 
   const layoutMaker = () =>
     new LayoutProvider(
-      (index) => "NORMAL",
+      (index) => index == 0 && props.components?.length > 0 ? "COMPS" : "NORMAL",
       (type, dim) => {
         switch (type) {
           case "NORMAL":
             dim.width = (Dimensions.get("window").width - calculate_padding(4)) / 3;
             dim.height = image_size.height + calculate_padding(3.5);
+            break;
+          case "COMPS":
+            dim.width = Dimensions.get("window").width;
+            dim.height = 300
             break;
         }
       }
@@ -67,10 +78,13 @@ const ShowScroller: React.FC<ShowScrollerProps> = props => {
 
   const _layoutProvider = useRef(layoutMaker()).current;
 
-  const setup = async (options: FilterOptions, page:number) => {
+  const setup = async (options: FilterOptions, page: number) => {
     console.log(options)
+
     const data = await get_filter_results(props.show_type, options, page)
     const newMovieList = data.results.map((e) => ({ type: "NORMAL", item: e }))
+
+    props.results(data)
     setMovieList([...movieList, ...newMovieList])
   }
 
@@ -91,13 +105,18 @@ const ShowScroller: React.FC<ShowScrollerProps> = props => {
 
 
   const row_renderer = (type, data) => {
-    return (
-      <View style={styles.listItem}>
-        <TouchableOpacity onPress={() => { moveToMovie(data.item.id) }}>
-          <Image style={[styles.img, { width: image_size.width, height: image_size.height }]} source={{ uri: base_url_342 + data.item.poster_path }} />
-        </TouchableOpacity>
-      </View>
-    )
+    switch (type) {
+      case "NORMAL":
+        return (
+          <View style={styles.listItem}>
+            <TouchableOpacity onPress={() => { moveToMovie(data.item.id) }}>
+              <Image style={[styles.img, { width: image_size.width, height: image_size.height }]} source={{ uri: base_url_342 + data.item.poster_path }} />
+            </TouchableOpacity>
+          </View>
+        )
+      case "COMPS":
+        return (props.components.map((Comp, i) => <Comp key={i} />))
+    }
   }
 
   if (!movieList.length) return null;

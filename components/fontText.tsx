@@ -1,8 +1,6 @@
 import { StyleSheet, View, Text } from "react-native";
-// import AppLoading from 'expo-app-loading'
 import * as SplashScreen from "expo-splash-screen";
 import React, { useState, useEffect, useCallback } from "react";
-import Colors from "../src/style";
 
 import { useFonts } from "expo-font";
 
@@ -20,29 +18,27 @@ interface Props {
 }
 
 const FontText: React.FC<Props> = props => {
-  const [fontLoad] = useFonts({
-    "Roboto-Black": require("../assets/fonts/Roboto-Black.ttf"),
-    "Roboto-Bold": require("../assets/fonts/Roboto-Bold.ttf"),
-    "Roboto-Medium": require("../assets/fonts/Roboto-Medium.ttf"),
-    "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Thin": require("../assets/fonts/Roboto-Thin.ttf"),
-  });
+  // const [fontLoad] = useFonts({
+  //   "Roboto-Black": require("../assets/fonts/Roboto-Black.ttf"),
+  //   "Roboto-Bold": require("../assets/fonts/Roboto-Bold.ttf"),
+  //   "Roboto-Medium": require("../assets/fonts/Roboto-Medium.ttf"),
+  //   "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
+  //   "Roboto-Thin": require("../assets/fonts/Roboto-Thin.ttf"),
+  // });
 
-  const fontTree = () => {
-    if (props.font === "bold") return "Roboto-Bold" 
-    if (props.font === "regular") return "Roboto-Regular" 
-    if (props.font === "medium") return "Roboto-Medium" 
-    if (props.font === "thin") return "Roboto-Thin" 
-    return "Roboto-Bold"
-  }
+  // const fontTree = () => {
+  //   if (props.font === "bold") return "Roboto-Bold" 
+  //   if (props.font === "regular") return "Roboto-Regular" 
+  //   if (props.font === "medium") return "Roboto-Medium" 
+  //   if (props.font === "thin") return "Roboto-Thin" 
+  //   return "Roboto-Bold"
+  // }
 
   const onLayoutRootView = useCallback(async () => {
-    if (fontLoad) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontLoad]);
+    await SplashScreen.hideAsync();
+  }, []);
 
-  if (!fontLoad) return null;
+  // if (!fontLoad) return null;
 
   return (
     <View onLayout={onLayoutRootView}>
@@ -50,8 +46,8 @@ const FontText: React.FC<Props> = props => {
         numberOfLines={props.numberOfLines}
         style={{
           lineHeight:props.lineHeight,
-          color: props.color,
-          fontFamily: fontTree(),
+          color: props.color || "white",
+          // fontFamily: fontTree(),
           fontSize: props.fontSize,
           textDecorationLine: props.underline ? "underline" : "none"
         }}
@@ -61,7 +57,5 @@ const FontText: React.FC<Props> = props => {
     </View>
   );
 };
-
-FontText.defaultProps = { color: Colors.textColor, numberOfLines: 0 };
 
 export { FontText };

@@ -14,7 +14,6 @@ import AddWatchListModal from "../components/AddWatchListModal";
 import WatchListItem from "../components/WatchListItem";
 import { fill_with_test } from "../src/debug";
 
-
 const WatchListView = ({ navigation, route }) => {
 
   const [watchListList, setWatchListList] = useState<WatchListModel[]>([]);
@@ -36,7 +35,7 @@ const WatchListView = ({ navigation, route }) => {
   const getWatchList = async () => {
     await fill_with_test()
 
-    const data: WatchListModel[] = await DB.fetch_watchList();
+    const data = await DB.fetch_watchList();
     setWatchListList(data);
   };
 
@@ -47,7 +46,6 @@ const WatchListView = ({ navigation, route }) => {
     await DB.store_watchList(name, color);
     getWatchList();
   };
-
 
   return (
     <View style={styles.container}>
