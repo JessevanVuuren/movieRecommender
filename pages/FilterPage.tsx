@@ -43,7 +43,7 @@ const FilterPage: React.FC<FilterPageProps> = props => {
 
         <View style={styles.filterButtons} onLayout={(e) => setMarginTop(e.nativeEvent.layout.y + e.nativeEvent.layout.height + 5)}>
           <TouchableOpacity onPress={() => setOpenFilter(!openFilter)}>
-            <FontText color={Colors.mainColor}>Open filter options</FontText>
+            <FontText color={Colors.mainColor}>{openFilter ? "Open" : "Close"} filter options</FontText>
           </TouchableOpacity>
 
           {filterOptions?.provider.length > 0 && <FontText color={Colors.mainColor}>{results?.total_results} results</FontText>}

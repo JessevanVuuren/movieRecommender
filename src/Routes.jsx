@@ -19,6 +19,7 @@ import TvViewer from "../pages/TvViewer"
 import Colors from "./style"
 import ExtraShowsList from "../pages/ExtraShowsList"
 import FilterPage from "../pages/FilterPage"
+import { CollectionViewer } from "../pages/CollectionViewer"
 
 const Drawer = createDrawerNavigator()
 const Stack = createStackNavigator()
@@ -48,6 +49,7 @@ export const Routes = ({ route, navigator}) => {
         <Stack.Screen name="WatchListMovie" component={WatchListMovie} options={{ header: () => null }} />
         <Stack.Screen name="ExtraShowsList" component={ExtraShowsList} options={{ header: () => null }} />
         <Stack.Screen name="FilterPage" component={FilterPage} options={{ header: () => null }} />
+        <Stack.Screen name="CollectionViewer" component={CollectionViewer} options={{ header: () => null }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

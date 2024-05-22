@@ -1,8 +1,9 @@
-import { FilterOptions } from "../models/filter"
-import { Genres } from "../models/genres"
 import { ProvidersModel } from "../models/providers"
-import { RegionsModel } from "../models/regions"
 import { ResponseModel } from "../models/response"
+import { Collection } from "../models/collection"
+import { FilterOptions } from "../models/filter"
+import { RegionsModel } from "../models/regions"
+import { Genres } from "../models/genres"
 
 export const base_url_342 = "https://image.tmdb.org/t/p/w342"
 export const base_url_500 = "https://image.tmdb.org/t/p/w500"
@@ -47,4 +48,11 @@ export const genres = async (show_type:string): Promise<Genres[]> => {
   const data = await( await fetch(url, option)).json()
   console.log(url + debug_url)
   return data.genres
+}
+
+export const get_collection_data = async (id:number): Promise<Collection> => {
+  const url = `${base_url}/collection/${id}`
+  const data = await( await fetch(url, option)).json()
+  console.log(url + debug_url)
+  return data
 }

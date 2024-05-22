@@ -1,3 +1,4 @@
+import { get_region_form_local } from "./utils"
 
 const EXPO_API_URL = process.env.EXPO_API_URL
 
@@ -256,11 +257,13 @@ export const makeURL = (props, page) => {
 }
 
 export const getStreamProviders = async (id, type) => {
+    console.log(whereToWatch[0].replace("{type}", type) + id + whereToWatch[1])
     const data = await fetch(whereToWatch[0].replace("{type}", type) + id + whereToWatch[1]);
     const json = await data.json();
     const fullArray = { data: [] };
-    if (json.results && json.results.US) {
-        const pro = json.results.US;
+    const region = await get_region_form_local()
+    if (json.results && json.results[region]) {
+        const pro = json.results[region];
         const nameAlreadyIn = [];
 
         if (pro.buy) {

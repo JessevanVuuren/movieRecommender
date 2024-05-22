@@ -1,18 +1,18 @@
-import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
 import { base_url_342, genres, get_providers, get_regions } from "../src/fetcher"
-import { getValue, setValue } from '../src/LocalStorage'
+import { Dropdown, MultiSelect } from 'react-native-element-dropdown'
+import { ScrollView } from 'react-native-gesture-handler'
+import { Image, StyleSheet, View } from "react-native"
 import { ProvidersModel } from '../models/providers'
 import React, { useEffect, useState } from "react"
+import { FilterOptions } from '../models/filter'
 import { RegionsModel } from "../models/regions"
-import { Image, StyleSheet, View } from "react-native"
-import { getLocales } from 'expo-localization'
+import { setValue } from '../src/LocalStorage'
+import { FontText } from './fontText'
 import Colors from "../src/style"
-import { FontText } from './fontText';
-import { FilterOptions } from '../models/filter';
-import { ScrollView } from 'react-native-gesture-handler';
 
 
 import { Genres } from '../models/genres';
+import { get_region_form_local } from '../src/utils';
 
 interface RegionsProviderProps {
   show_type: string
@@ -41,14 +41,22 @@ const RegionsProvider: React.FC<RegionsProviderProps> = props => {
     props.filter_options({ provider: selectedProviders, region: selectedRegion.iso_3166_1, genres: selectedGenres })
   }, [props.show_type, selectedProviders, selectedGenres])
 
-  const get_region_form_local = async () => {
-    const region = await getValue("region")
-    if (region) return region
-    else {
-      const local_region = getLocales()[0].regionCode
-      if (local_region != "") return local_region
-      else return "US"
-    }
+
+
+  const setup_providers = async (country_code: string) => {
+    const providers = await get_providers(country_code, props.show_type)
+    const mapping_provider: { [key: string]: ProvidersModel } = {}
+    providers.map(e => mapping_provider[e.provider_id] = e)
+    setProviderItems(providers)
+    setProviderMap(mapping_provider)
+  }
+
+  const setup_genres = async () => {
+    const genres_list = await genres(props.show_type);
+    const mapping_genres: { [key: string]: Genres } = {}
+    genres_list.map(e => mapping_genres[e.id] = e)
+    setGenresItems(genres_list)
+    setGenresMap(mapping_genres)
   }
 
   const setup = async () => {
@@ -60,24 +68,15 @@ const RegionsProvider: React.FC<RegionsProviderProps> = props => {
     const saved_region = regions.find(region => region.iso_3166_1 == country_code)
     if (saved_region) setSelectedRegion(saved_region)
 
-    const providers = await get_providers(country_code, props.show_type)
-    const mapping_provider: { [key: string]: ProvidersModel } = {}
-    providers.map(e => mapping_provider[e.provider_id] = e)
-    setProviderItems(providers)
-    setProviderMap(mapping_provider)
-
-    const genres_list = await genres(props.show_type);
-    const mapping_genres: { [key: string]: Genres } = {}
-    genres_list.map(e => mapping_genres[e.id] = e)
-    setGenresItems(genres_list)
-    setGenresMap(mapping_genres)
+    setup_providers(country_code)
+    setup_genres()
   }
 
   const save_region = async (element: RegionsModel) => {
     setValue("region", element.iso_3166_1)
     setSelectedProviders([])
     setSelectedRegion(element)
-    setProviderItems(await get_providers(element.iso_3166_1, props.show_type))
+    setup_providers(element.iso_3166_1)
   }
 
   const update_provider = async () => {
@@ -121,7 +120,7 @@ const RegionsProvider: React.FC<RegionsProviderProps> = props => {
             data={providerItems} />
         </View>
 
-        <View style={[styles.dropdown, {marginBottom:10}]}>
+        <View style={[styles.dropdown, { marginBottom: 10 }]}>
           <MultiSelect
             style={styles.dropdown_style}
             iconStyle={styles.iconStyle}
@@ -137,7 +136,7 @@ const RegionsProvider: React.FC<RegionsProviderProps> = props => {
 
       </View>
 
-      {selectedProviders?.length > 0 && 
+      {selectedProviders?.length > 0 && providerMap &&
         <ScrollView horizontal={true} style={styles.scroller}>
           {selectedProviders?.map((e, i) => <View key={i}>
             <View style={styles.providerView}>

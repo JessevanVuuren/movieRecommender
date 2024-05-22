@@ -80,8 +80,16 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
               </View>
             </View>
 
+            {masterData?.belongs_to_collection && (
+              <TouchableOpacity style={styles.collection} onPress={() => navigation.push("CollectionViewer", { collection_id: masterData.belongs_to_collection.id })}>
+                <FontText font={"Roboto-Bold"} fontSize={15}>
+                  Open movie collection
+                </FontText>
+              </TouchableOpacity>
+            )}
+
             <View>
-              <View style={{ marginTop: 29 }}>
+              <View style={{ marginTop: 7 }}>
                 <FontText font={"Roboto-Bold"} fontSize={20}>
                   Description
                 </FontText>
@@ -163,8 +171,8 @@ const Movie = ({ route, navigation, movie, ModelMode, callback }) => {
             </View>
           )}
 
-          {masterData?.similar?.results?.length > 0 && <ShowDetailsSlider extra={true} name="Similar" navigation={navigation} list={masterData?.similar} type="movie" show_key={object.id} sort_type="similar"/>}
-          {masterData?.recommendations?.results?.length > 0 && <ShowDetailsSlider extra={true} name="Recommendations" navigation={navigation} list={masterData?.recommendations} type="movie" show_key={object.id} sort_type="recommendations"/> }
+          {masterData?.similar?.results?.length > 0 && <ShowDetailsSlider extra={true} name="Similar" navigation={navigation} list={masterData?.similar} type="movie" show_key={object.id} sort_type="similar" />}
+          {masterData?.recommendations?.results?.length > 0 && <ShowDetailsSlider extra={true} name="Recommendations" navigation={navigation} list={masterData?.recommendations} type="movie" show_key={object.id} sort_type="recommendations" />}
         </View>
       </Animated.ScrollView>
 
@@ -264,6 +272,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 4,
     borderRadius: 25,
+  },
+  collection: {
+    backgroundColor: Colors.background_highlight,
+    alignItems: "center",
+    marginTop: 10,
+    height: 30,
+    justifyContent: "center",
+    borderRadius: 5,
   },
 });
 
