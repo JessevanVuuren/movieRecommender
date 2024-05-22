@@ -12,7 +12,6 @@ import { FilterOptions } from '../models/filter';
 import { ScrollView } from 'react-native-gesture-handler';
 
 
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { Genres } from '../models/genres';
 
 interface RegionsProviderProps {
@@ -138,14 +137,14 @@ const RegionsProvider: React.FC<RegionsProviderProps> = props => {
 
       </View>
 
-      {selectedProviders?.length > 0 &&
+      {selectedProviders?.length > 0 && 
         <ScrollView horizontal={true} style={styles.scroller}>
           {selectedProviders?.map((e, i) => <View key={i}>
             <View style={styles.providerView}>
               <View style={{ marginRight: 10 }}>
-                <Image source={{ uri: base_url_342 + providerMap[e].logo_path }} style={{ height: 20, width: 20 }} />
+                <Image source={{ uri: base_url_342 + providerMap[e]?.logo_path }} style={{ height: 20, width: 20 }} />
               </View>
-              <FontText>{providerMap[e].provider_name}</FontText>
+              <FontText>{providerMap[e]?.provider_name}</FontText>
             </View>
           </View>)}
         </ScrollView>
@@ -155,7 +154,7 @@ const RegionsProvider: React.FC<RegionsProviderProps> = props => {
         <ScrollView horizontal={true} style={styles.scroller}>
           {selectedGenres?.map((e, i) => <View key={i}>
             <View style={styles.providerView}>
-              <FontText>{genresMap[e].name}</FontText>
+              <FontText>{genresMap[e]?.name}</FontText>
             </View>
           </View>)}
         </ScrollView>

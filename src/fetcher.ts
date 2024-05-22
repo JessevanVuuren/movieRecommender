@@ -3,7 +3,6 @@ import { Genres } from "../models/genres"
 import { ProvidersModel } from "../models/providers"
 import { RegionsModel } from "../models/regions"
 import { ResponseModel } from "../models/response"
-import { TvShowModel } from "../models/tvshow"
 
 export const base_url_342 = "https://image.tmdb.org/t/p/w342"
 export const base_url_500 = "https://image.tmdb.org/t/p/w500"
@@ -37,7 +36,7 @@ export const get_providers = async (region:string, show_type:string): Promise<Pr
 }
 
 export const get_filter_results = async (show_type:string, options:FilterOptions, page:number): Promise<ResponseModel> => {
-  const url = `${base_url}/discover/${show_type}?with_watch_providers=${options.provider.join("|")}&watch_region=${options.region}&with_genres=${options.genres.join("|")}&page=${page}`
+  const url = `${base_url}/discover/${show_type}?with_watch_providers=${options.provider.join("|")}&watch_region=${options.region}&with_genres=${options.genres.join(",")}&page=${page}`
   const data:ResponseModel = await( await fetch(url, option)).json()
   console.log(url + debug_url)
   return data
