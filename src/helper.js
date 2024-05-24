@@ -252,7 +252,7 @@ export const makeURL = (props, page) => {
             url = MatchingMovies.replace("{id}", props.recommend_id)
             url += page
     }
-    // console.log(url.replace("{type}", props.showType))
+    console.log(url.replace("{type}", props.showType))
     return url.replace("{type}", props.showType)
 }
 

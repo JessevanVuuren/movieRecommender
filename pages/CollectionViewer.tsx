@@ -1,7 +1,7 @@
 import { StyleSheet, View, TouchableOpacity, Text, Animated } from "react-native"
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text"
 import CollectionScroll from "../components/scrollView/CollectionScroll"
-import { base_url_342, get_collection_data } from "../src/fetcher"
+import { base_url_342, base_url_ori, get_collection_data } from "../src/fetcher"
 import React, { useState, useRef, useEffect } from "react"
 import { Collection, Part } from "../models/collection"
 import { LinearGradient } from "expo-linear-gradient"
@@ -52,7 +52,7 @@ const CollectionViewer = ({ route, navigation }) => {
         <Ionicons style={styles.backArrow} name="arrow-back" size={24} color="white" />
       </TouchableOpacity>
 
-      <Animated.Image style={[styles.mainImg, { transform: [{ translateY: imageTranslateY }] }]} source={{ uri: base_url_342 + collection.backdrop_path }} />
+      <Animated.Image style={[styles.mainImg, { transform: [{ translateY: imageTranslateY }] }]} source={{ uri: base_url_ori + collection.backdrop_path }} />
 
       <Animated.ScrollView scrollEventThrottle={16} contentContainerStyle={{ paddingTop: HEADER_MAX_HEIGHT }} onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}>
         <LinearGradient colors={["rgba(255,255,255,0)", "rgba(3, 7, 30,1)"]} start={{ x: 1, y: 0 }} end={{ x: 1, y: 1 }} style={{ flex: 1, height: 80, width: "100%", marginTop: -80 }} />
