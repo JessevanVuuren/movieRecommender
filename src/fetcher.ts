@@ -4,6 +4,8 @@ import { Collection } from "../models/collection"
 import { FilterOptions } from "../models/filter"
 import { RegionsModel } from "../models/regions"
 import { Genres } from "../models/genres"
+import { MovieModel } from "../models/watchList"
+import { FilmographyCast } from "../models/filmography"
 
 export const base_url_342 = "https://image.tmdb.org/t/p/w342"
 export const base_url_500 = "https://image.tmdb.org/t/p/w500"
@@ -15,7 +17,7 @@ const base_url = "https://api.themoviedb.org/3"
 const debug_url = "&api_key=" + process.env.EXPO_API_URL
 
 const option = {
-  method:"GET",
+  method: "GET",
   headers: {
     accept: "application/json",
     Authorization: "Bearer " + process.env.EXPO_API_ATA
@@ -29,30 +31,37 @@ export const get_regions = async (): Promise<RegionsModel[]> => {
   return data.results
 }
 
-export const get_providers = async (region:string, show_type:string): Promise<ProvidersModel[]> => {
+export const get_providers = async (region: string, show_type: string): Promise<ProvidersModel[]> => {
   const url = `${base_url}/watch/providers/${show_type}?language=en-US&watch_region=${region}`
   const data = await (await fetch(url, option)).json()
   console.log(url + debug_url)
   return data.results
 }
 
-export const get_filter_results = async (show_type:string, options:FilterOptions, page:number): Promise<ResponseModel> => {
+export const get_filter_results = async (show_type: string, options: FilterOptions, page: number): Promise<ResponseModel> => {
   const url = `${base_url}/discover/${show_type}?with_watch_providers=${options.provider.join("|")}&watch_region=${options.region}&with_genres=${options.genres.join(",")}&page=${page}`
-  const data:ResponseModel = await( await fetch(url, option)).json()
+  const data: ResponseModel = await (await fetch(url, option)).json()
   console.log(url + debug_url)
   return data
 }
 
-export const genres = async (show_type:string): Promise<Genres[]> => {
+export const genres = async (show_type: string): Promise<Genres[]> => {
   const url = `${base_url}/genre/movie/list?language=en`
-  const data = await( await fetch(url, option)).json()
+  const data = await (await fetch(url, option)).json()
   console.log(url + debug_url)
   return data.genres
 }
 
-export const get_collection_data = async (id:number): Promise<Collection> => {
+export const get_collection_data = async (id: number): Promise<Collection> => {
   const url = `${base_url}/collection/${id}`
-  const data = await( await fetch(url, option)).json()
+  const data = await (await fetch(url, option)).json()
   console.log(url + debug_url)
   return data
+}
+
+export const get_filmography = async (id: number, show_type: string): Promise<FilmographyCast[]> => {
+  const url = `${base_url}/person/${id}/${show_type}_credits`
+  const data = await (await fetch(url, option)).json()
+  console.log(url + debug_url)
+  return data.cast
 }

@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import Constants from "expo-constants";
+import { MaterialIcons } from "@expo/vector-icons"
 
 import { baseUrl500, reFormatData, descriptionFix, getActorDetails } from "../src/helper";
 import MovieListScroll from "../components/scrollView/MovieListScroll";
@@ -47,17 +48,8 @@ const ActorPage = ({ route, navigation }) => {
 
       <Animated.Image style={[styles.mainImg, { transform: [{ translateY: imageTranslateY }] }]} source={{ uri: baseUrl500 + data.profile_path }} />
 
-      <Animated.ScrollView
-        scrollEventThrottle={16}
-        contentContainerStyle={{ paddingTop: HEADER_MAX_HEIGHT }}
-        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}
-      >
-        <LinearGradient
-          colors={["rgba(255,255,255,0)", "rgba(3, 7, 30,1)"]}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={{ flex: 1, height: 80, width: "100%", marginTop: -80 }}
-        />
+      <Animated.ScrollView scrollEventThrottle={16} contentContainerStyle={{ paddingTop: HEADER_MAX_HEIGHT }} onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: true })}>
+        <LinearGradient colors={["rgba(255,255,255,0)", "rgba(3, 7, 30,1)"]} start={{ x: 1, y: 0 }} end={{ x: 1, y: 1 }} style={{ flex: 1, height: 80, width: "100%", marginTop: -80 }} />
 
         <View style={{ backgroundColor: Colors.background }}>
           <AutoSizeText fontSize={43} numberOfLines={1} style={styles.titleText} mode={ResizeTextMode.max_lines}>
@@ -90,22 +82,17 @@ const ActorPage = ({ route, navigation }) => {
             </FontText>
           </View>
 
-          <View style={{ marginLeft: "4%", marginTop: 30, marginBottom: 5 }}>
+          <TouchableOpacity onPress={() => navigation.push("ActorFilmography", {actor_id: data.id})} style={{ marginLeft: "4%", marginTop: 30, marginBottom: 10, flexDirection:"row" }}>
             <FontText fontSize={20} font={"Roboto-Bold"}>
               Filmography
             </FontText>
-          </View>
+            <View style={{ marginTop: 4, backgroundColor: Colors.background_highlight, borderRadius: 3, marginLeft: 10 }}>
+              <MaterialIcons name="keyboard-arrow-right" size={24} color={Colors.textColor} />
+            </View>
+          </TouchableOpacity>
           <View style={{ flex: 1, height: 250 }}>
             <MovieListScroll showType={"movie"} id={"actorMovieList"} navigation={navigation} actorID={data.id} />
           </View>
-
-
-{/* 
-              <ViewerWrapper >
-                <Text style={{color:"white"}}>woowing</Text>
-              </ViewerWrapper> */}
-
-
         </View>
       </Animated.ScrollView>
     </View>

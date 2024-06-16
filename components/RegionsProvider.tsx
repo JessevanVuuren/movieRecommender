@@ -3,16 +3,16 @@ import { Dropdown, MultiSelect } from 'react-native-element-dropdown'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Image, StyleSheet, View } from "react-native"
 import { ProvidersModel } from '../models/providers'
+import { get_region_form_local } from '../src/utils'
 import React, { useEffect, useState } from "react"
 import { FilterOptions } from '../models/filter'
 import { RegionsModel } from "../models/regions"
 import { setValue } from '../src/LocalStorage'
+import { Genres } from '../models/genres'
 import { FontText } from './fontText'
 import Colors from "../src/style"
 
 
-import { Genres } from '../models/genres';
-import { get_region_form_local } from '../src/utils';
 
 interface RegionsProviderProps {
   show_type: string
