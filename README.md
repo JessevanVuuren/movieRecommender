@@ -1,7 +1,12 @@
-# MR - Movie Recommendations
+# Movie Recommendations
 
 [Now in the playstore](https://play.google.com/store/apps/details?id=com.jesse.movieRecommender)
 
+
+<p align="center">
+  <img src="/img/screenshot1.png" width="45%">
+  <img src="/img/screenshot2.png" width="45%">
+</p>
 
 Do you wish there is an app which provides a wide variety of the latest movies? Search no longer because you have come to the right place. Our Movie Recommendation App provides you with: 
 
