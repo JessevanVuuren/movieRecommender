@@ -8,11 +8,6 @@
   <img src="/img/screenshot2.png" width="45%">
 </p>
 
-<p align="center">
-  <img src="/img/screenshot3.png" width="45%">
-  <img src="/img/screenshot4.png" width="45%">
-</p>
-
 Do you wish there is an app which provides a wide variety of the latest movies? Search no longer because you have come to the right place. Our Movie Recommendation App provides you with: 
 
 * The Best Movie List For This Year 
@@ -36,3 +31,9 @@ We are not only providing smart movie recommendations but we will also help you 
 We are really eagoble for you to find the right movie. This app will help you find the best movie. We think this is the best movie recommendation app on the market at the moment. Please support us 💪 by downloading this movie recommendation app. 
 
 Thanx! Your help in Movie recommendations!
+
+
+<p align="center">
+  <img src="/img/screenshot3.png" width="45%">
+  <img src="/img/screenshot4.png" width="45%">
+</p>
