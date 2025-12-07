@@ -8,6 +8,11 @@
   <img src="/img/screenshot2.png" width="45%">
 </p>
 
+<p align="center">
+  <img src="/img/screenshot3.png" width="45%">
+  <img src="/img/screenshot4.png" width="45%">
+</p>
+
 Do you wish there is an app which provides a wide variety of the latest movies? Search no longer because you have come to the right place. Our Movie Recommendation App provides you with: 
 
 * The Best Movie List For This Year 
